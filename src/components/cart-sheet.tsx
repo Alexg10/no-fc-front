@@ -13,6 +13,7 @@ import { useCart } from "@/contexts/cart-context";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CartItemSkeleton } from "./skeleton/cart-item-skeleton";
 
 export function CartSheet() {
   const { cart, isLoading, updateQuantity, removeLine, isOpen, closeCart } =
@@ -36,7 +37,15 @@ export function CartSheet() {
           </SheetDescription>
         </SheetHeader>
 
-        {cartItems.length === 0 ? (
+        {isLoading && cartItems.length === 0 ? (
+          <div className="flex-1 overflow-y-auto py-4">
+            <div className="space-y-4">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <CartItemSkeleton key={index} />
+              ))}
+            </div>
+          </div>
+        ) : cartItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center flex-1 gap-4 py-12">
             <ShoppingBag className="w-16 h-16 text-zinc-400 dark:text-zinc-600" />
             <p className="text-zinc-600 dark:text-zinc-400">
@@ -64,7 +73,7 @@ export function CartSheet() {
                         <Link
                           href={`/products/${productHandle}`}
                           onClick={closeCart}
-                          className="relative flex-shrink-0 w-20 h-20 overflow-hidden rounded-lg bg-gray-100 dark:bg-zinc-800"
+                          className="relative shrink-0 w-20 h-20 overflow-hidden rounded-lg bg-gray-100 dark:bg-zinc-800"
                         >
                           <Image
                             src={image}
