@@ -1,5 +1,5 @@
-import { ProductsPageLoading } from "@/components/skeleton/products-page-loading";
 import { CollectionContent } from "@/components/collection-content";
+import { ProductsPageLoading } from "@/components/skeleton/products-page-loading";
 import { Suspense } from "react";
 
 interface CollectionPageProps {
@@ -27,4 +27,3 @@ export default async function CollectionPage({
     </div>
   );
 }
-

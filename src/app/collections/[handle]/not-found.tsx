@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function CollectionNotFound() {
   return (
@@ -9,7 +9,8 @@ export default function CollectionNotFound() {
           Collection introuvable
         </h1>
         <p className="text-zinc-600 dark:text-zinc-400 mb-8">
-          La collection que vous recherchez n&apos;existe pas ou a été supprimée.
+          La collection que vous recherchez n&apos;existe pas ou a été
+          supprimée.
         </p>
         <div className="flex gap-4 justify-center">
           <Button asChild>
@@ -23,4 +24,3 @@ export default function CollectionNotFound() {
     </div>
   );
 }
-
