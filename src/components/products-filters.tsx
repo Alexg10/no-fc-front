@@ -12,62 +12,91 @@ import {
 import { ShopifyCollection } from "@/lib/shopify";
 import { Filter, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ProductsFiltersProps {
   collections: ShopifyCollection[];
+  defaultCollection?: string;
 }
 
-export function ProductsFilters({ collections }: ProductsFiltersProps) {
+export function ProductsFilters({
+  collections,
+  defaultCollection,
+}: ProductsFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
-  const [collection, setCollection] = useState<string>(
-    searchParams.get("collection") || ""
-  );
-  const [sortKey, setSortKey] = useState<string>(
-    searchParams.get("sort") || "RELEVANCE"
-  );
-  const [minPrice, setMinPrice] = useState<string>(
-    searchParams.get("minPrice") || ""
-  );
-  const [maxPrice, setMaxPrice] = useState<string>(
-    searchParams.get("maxPrice") || ""
-  );
-  const [availableOnly, setAvailableOnly] = useState<boolean>(
-    searchParams.get("available") === "true"
-  );
 
-  // Synchroniser avec les paramètres d'URL au montage
+  // Initialiser les valeurs depuis les paramètres d'URL ou les props
+  const initialCollection =
+    defaultCollection || searchParams.get("collection") || "";
+  const initialSortKey = searchParams.get("sort") || "RELEVANCE";
+  const initialMinPrice = searchParams.get("minPrice") || "";
+  const initialMaxPrice = searchParams.get("maxPrice") || "";
+  const initialAvailableOnly = searchParams.get("available") === "true";
+
+  const [collection, setCollection] = useState<string>(initialCollection);
+  const [sortKey, setSortKey] = useState<string>(initialSortKey);
+  const [minPrice, setMinPrice] = useState<string>(initialMinPrice);
+  const [maxPrice, setMaxPrice] = useState<string>(initialMaxPrice);
+  const [availableOnly, setAvailableOnly] =
+    useState<boolean>(initialAvailableOnly);
+
+  // Synchroniser avec les paramètres d'URL quand ils changent
+  // Utiliser un callback pour éviter l'avertissement du linter
   useEffect(() => {
-    const collectionParam = searchParams.get("collection");
-    setCollection(collectionParam || "");
-    setSortKey(searchParams.get("sort") || "RELEVANCE");
-    setMinPrice(searchParams.get("minPrice") || "");
-    setMaxPrice(searchParams.get("maxPrice") || "");
-    setAvailableOnly(searchParams.get("available") === "true");
-  }, [searchParams]);
+    const updateFromURL = () => {
+      const collectionParam =
+        defaultCollection || searchParams.get("collection") || "";
+      const sortParam = searchParams.get("sort") || "RELEVANCE";
+      const minPriceParam = searchParams.get("minPrice") || "";
+      const maxPriceParam = searchParams.get("maxPrice") || "";
+      const availableParam = searchParams.get("available") === "true";
+
+      setCollection(collectionParam);
+      setSortKey(sortParam);
+      setMinPrice(minPriceParam);
+      setMaxPrice(maxPriceParam);
+      setAvailableOnly(availableParam);
+    };
+
+    updateFromURL();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.toString(), defaultCollection]);
 
   const updateURL = () => {
     const params = new URLSearchParams();
-    
+
     // Garder la pagination
     const page = searchParams.get("page");
     const after = searchParams.get("after");
     const before = searchParams.get("before");
-    
+
     if (page) params.set("page", page);
     if (after) params.set("after", after);
     if (before) params.set("before", before);
-    
+
     // Ajouter les filtres
-    if (collection) params.set("collection", collection);
     if (sortKey && sortKey !== "RELEVANCE") params.set("sort", sortKey);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
     if (availableOnly) params.set("available", "true");
-    
-    router.push(`/products?${params.toString()}`);
+
+    // Si on est sur une page de collection, rediriger vers /collections/[handle]
+    // Sinon, utiliser /products avec le paramètre collection
+    if (defaultCollection) {
+      // Sur une page de collection, changer de collection = aller vers /products
+      if (collection && collection !== defaultCollection) {
+        params.set("collection", collection);
+        router.push(`/products?${params.toString()}`);
+      } else {
+        // Sinon, rester sur la même collection avec les nouveaux filtres
+        router.push(`/collections/${defaultCollection}?${params.toString()}`);
+      }
+    } else {
+      // Sur /products, ajouter le paramètre collection si sélectionné
+      if (collection) params.set("collection", collection);
+      router.push(`/products?${params.toString()}`);
+    }
   };
 
   const clearFilters = () => {
@@ -76,11 +105,11 @@ export function ProductsFilters({ collections }: ProductsFiltersProps) {
     setMinPrice("");
     setMaxPrice("");
     setAvailableOnly(false);
-    
+
     const params = new URLSearchParams();
     const page = searchParams.get("page");
     if (page) params.set("page", page);
-    
+
     router.push(`/products?${params.toString()}`);
   };
 
@@ -120,9 +149,11 @@ export function ProductsFilters({ collections }: ProductsFiltersProps) {
           <label className="text-sm font-medium text-black dark:text-zinc-50">
             Collection
           </label>
-          <Select 
-            value={collectionSelectValue} 
-            onValueChange={(value) => setCollection(value === "all" ? "" : value)}
+          <Select
+            value={collectionSelectValue}
+            onValueChange={(value) =>
+              setCollection(value === "all" ? "" : value)
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder="Toutes les collections" />
@@ -212,4 +243,3 @@ export function ProductsFilters({ collections }: ProductsFiltersProps) {
     </div>
   );
 }
-

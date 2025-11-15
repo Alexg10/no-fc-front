@@ -27,13 +27,11 @@ export function ProductsPagination({
     const params = new URLSearchParams();
 
     // Ajouter les filtres existants
-    const collection = searchParams.get("collection");
     const sort = searchParams.get("sort");
     const minPrice = searchParams.get("minPrice");
     const maxPrice = searchParams.get("maxPrice");
     const available = searchParams.get("available");
 
-    if (collection) params.set("collection", collection);
     if (sort) params.set("sort", sort);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
@@ -49,7 +47,30 @@ export function ProductsPagination({
     }
 
     const queryString = params.toString();
-    return queryString ? `/products?${queryString}` : "/products";
+
+    // Détecter si on est sur une page de collection (via le pathname)
+    if (typeof window !== "undefined") {
+      const pathname = window.location.pathname;
+      const isCollectionPage = pathname.startsWith("/collections/");
+      const collectionHandle = isCollectionPage
+        ? pathname.split("/collections/")[1]?.split("?")[0]
+        : null;
+
+      // Si on est sur une page de collection, garder l'URL de collection
+      if (isCollectionPage && collectionHandle) {
+        return queryString
+          ? `/collections/${collectionHandle}?${queryString}`
+          : `/collections/${collectionHandle}`;
+      }
+    }
+
+    // Sinon, utiliser /products avec le paramètre collection si présent
+    const collection = searchParams.get("collection");
+    if (collection) params.set("collection", collection);
+    const productsQueryString = params.toString();
+    return productsQueryString
+      ? `/products?${productsQueryString}`
+      : "/products";
   };
 
   const nextPage = currentPage + 1;
