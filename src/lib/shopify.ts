@@ -56,6 +56,19 @@ export interface ShopifyProduct {
 
 export interface ShopifyProductEdge {
   node: ShopifyProduct;
+  cursor: string;
+}
+
+export interface ShopifyPageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string | null;
+  endCursor: string | null;
+}
+
+export interface ShopifyProductsResponse {
+  edges: ShopifyProductEdge[];
+  pageInfo: ShopifyPageInfo;
 }
 
 // Requête GraphQL pour récupérer un produit par handle
@@ -109,10 +122,10 @@ const GET_PRODUCT_BY_HANDLE = `
   }
 `;
 
-// Requête GraphQL pour récupérer la liste des produits
+// Requête GraphQL pour récupérer la liste des produits avec pagination
 const GET_PRODUCTS = `
-  query getProducts($first: Int!) {
-    products(first: $first) {
+  query getProducts($first: Int, $after: String, $before: String, $last: Int) {
+    products(first: $first, after: $after, before: $before, last: $last) {
       edges {
         node {
           id
@@ -141,6 +154,13 @@ const GET_PRODUCTS = `
             }
           }
         }
+        cursor
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
     }
   }
@@ -171,23 +191,55 @@ export async function getProductByHandle(
 }
 
 /**
- * Récupère la liste des produits
- * @param first - Nombre de produits à récupérer (par défaut: 20)
- * @returns La liste des produits
+ * Récupère la liste des produits avec pagination
+ * @param first - Nombre de produits à récupérer (par défaut: 12)
+ * @param after - Curseur pour la pagination suivante (optionnel)
+ * @param before - Curseur pour la pagination précédente (optionnel)
+ * @param last - Nombre de produits à récupérer en arrière (optionnel, utilisé avec before)
+ * @returns La liste des produits avec les informations de pagination
  */
 export async function getProducts(
-  first: number = 20
-): Promise<ShopifyProductEdge[]> {
+  first: number = 12,
+  after?: string,
+  before?: string,
+  last?: number
+): Promise<ShopifyProductsResponse> {
   try {
-    const response = await client.request(GET_PRODUCTS, {
-      variables: { first },
-    });
+    const variables: {
+      first?: number;
+      after?: string | null;
+      before?: string | null;
+      last?: number;
+    } = {};
 
-    if (response.data?.products?.edges) {
-      return response.data.products.edges as ShopifyProductEdge[];
+    if (before && last) {
+      variables.before = before;
+      variables.last = last;
+    } else {
+      variables.first = first;
+      variables.after = after || null;
     }
 
-    return [];
+    const response = await client.request(GET_PRODUCTS, {
+      variables,
+    });
+
+    if (response.data?.products) {
+      return {
+        edges: response.data.products.edges as ShopifyProductEdge[],
+        pageInfo: response.data.products.pageInfo as ShopifyPageInfo,
+      };
+    }
+
+    return {
+      edges: [],
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        startCursor: null,
+        endCursor: null,
+      },
+    };
   } catch (error) {
     console.error("Error fetching products:", error);
     throw error;

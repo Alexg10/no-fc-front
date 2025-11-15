@@ -32,6 +32,8 @@ export default async function ProductPage({
                   fill
                   className="object-cover"
                   priority
+                  loading="eager"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
             )}
@@ -47,6 +49,7 @@ export default async function ProductPage({
                       alt={image.altText || product.title}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 25vw, 20vw"
                     />
                   </div>
                 ))}
