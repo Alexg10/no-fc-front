@@ -1,3 +1,4 @@
+import { AddToCartButton } from "@/components/add-to-cart-button";
 import { getProductByHandle } from "@/lib/shopify";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -124,13 +125,72 @@ export default async function ProductPage({
               </div>
             )}
 
-            {/* Bouton d'ajout au panier (à implémenter plus tard) */}
-            <button
-              className="w-full bg-black dark:bg-white text-white dark:text-black py-3 px-6 rounded-lg font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
-              disabled
-            >
-              Ajouter au panier (à venir)
-            </button>
+            {/* Bouton d'ajout au panier */}
+            {product.variants.edges.length === 1 ? (
+              <AddToCartButton
+                variantId={product.variants.edges[0].node.id}
+                availableForSale={
+                  product.variants.edges[0].node.availableForSale
+                }
+                variantTitle={product.variants.edges[0].node.title}
+                fullWidth={true}
+              />
+            ) : product.variants.edges.length > 1 ? (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-black dark:text-zinc-50">
+                  Sélectionnez une variante pour ajouter au panier
+                </h3>
+                <div className="space-y-2">
+                  {product.variants.edges.map(({ node: variant }) => (
+                    <div
+                      key={variant.id}
+                      className="flex items-center justify-between p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg"
+                    >
+                      <div className="flex-1">
+                        <div className="font-medium text-black dark:text-zinc-50">
+                          {variant.title}
+                        </div>
+                        {variant.selectedOptions.length > 0 && (
+                          <div className="text-sm text-zinc-600 dark:text-zinc-400">
+                            {variant.selectedOptions
+                              .map((opt) => `${opt.name}: ${opt.value}`)
+                              .join(", ")}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <div className="font-semibold text-black dark:text-zinc-50">
+                            {parseFloat(variant.price.amount).toFixed(2)}{" "}
+                            {variant.price.currencyCode}
+                          </div>
+                          <div
+                            className={`text-sm ${
+                              variant.availableForSale
+                                ? "text-green-600 dark:text-green-400"
+                                : "text-red-600 dark:text-red-400"
+                            }`}
+                          >
+                            {variant.availableForSale
+                              ? "En stock"
+                              : "Rupture de stock"}
+                          </div>
+                        </div>
+                        <AddToCartButton
+                          variantId={variant.id}
+                          availableForSale={variant.availableForSale}
+                          variantTitle={variant.title}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="text-zinc-600 dark:text-zinc-400">
+                Aucune variante disponible pour ce produit.
+              </div>
+            )}
           </div>
         </div>
       </div>
