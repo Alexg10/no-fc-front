@@ -1,5 +1,12 @@
+import { ProductsFilters } from "@/components/products-filters";
 import { ProductsPagination } from "@/components/products-pagination";
-import { getProducts } from "@/lib/shopify";
+import {
+  getCollectionProducts,
+  getCollections,
+  getProducts,
+  ProductSortKey,
+  ShopifyCollection,
+} from "@/lib/shopify";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,6 +15,11 @@ interface ProductsPageProps {
     page?: string;
     after?: string;
     before?: string;
+    collection?: string;
+    sort?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    available?: string;
   }>;
 }
 
@@ -18,25 +30,83 @@ export default async function ProductsPage({
   const page = parseInt(params.page || "1", 10);
   const after = params.after;
   const before = params.before;
+  const collection = params.collection;
+  const sortParam = params.sort || "RELEVANCE";
+  const minPrice = params.minPrice ? parseFloat(params.minPrice) : undefined;
+  const maxPrice = params.maxPrice ? parseFloat(params.maxPrice) : undefined;
+  const availableOnly = params.available === "true";
 
+  // Gérer le tri avec reverse
+  let sortKey: ProductSortKey | undefined;
+  let reverse = false;
+
+  if (sortParam === "PRICE_REVERSE") {
+    sortKey = "PRICE";
+    reverse = true;
+  } else if (sortParam === "TITLE_REVERSE") {
+    sortKey = "TITLE";
+    reverse = true;
+  } else if (sortParam && sortParam !== "RELEVANCE") {
+    sortKey = sortParam as ProductSortKey;
+  }
+
+  // Récupérer les collections pour les filtres
+  const collectionsData = await getCollections();
+  const collections = collectionsData.edges.map((edge) => edge.node);
+
+  // Récupérer les produits avec filtres
+  // Si une collection est sélectionnée, utiliser getCollectionProducts
+  // Sinon, utiliser getProducts avec les autres filtres
   let productsData;
-  if (page === 1) {
-    productsData = await getProducts(12);
-  } else if (after) {
-    productsData = await getProducts(12, after);
-  } else if (before) {
-    productsData = await getProducts(12, undefined, before, 12);
+
+  if (collection) {
+    // Utiliser getCollectionProducts pour une collection spécifique
+    productsData = await getCollectionProducts(collection, {
+      first: 12,
+      after: page === 1 ? undefined : after,
+      before: before,
+      last: before ? 12 : undefined,
+      sortKey,
+      reverse,
+    });
   } else {
-    productsData = await getProducts(12);
+    // Utiliser getProducts pour tous les produits avec filtres
+    productsData = await getProducts({
+      first: 12,
+      after: page === 1 ? undefined : after,
+      before: before,
+      last: before ? 12 : undefined,
+      sortKey,
+      reverse,
+      minPrice,
+      maxPrice,
+      availableOnly,
+    });
   }
 
   const { edges: products, pageInfo } = productsData;
 
+  // Récupérer le titre de la collection si disponible
+  let collectionTitle: string | null = null;
+  if (collection) {
+    const collectionData = productsData as typeof productsData & {
+      collection?: ShopifyCollection;
+    };
+    if (collectionData.collection) {
+      collectionTitle = collectionData.collection.title;
+    } else {
+      collectionTitle =
+        collections.find((c) => c.handle === collection)?.title || null;
+    }
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-black dark:text-zinc-50 mb-8">
-        Tous les produits
+        {collectionTitle || "Tous les produits"}
       </h1>
+
+      <ProductsFilters collections={collections} />
 
       {products.length === 0 ? (
         <div className="text-center py-12">

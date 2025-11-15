@@ -71,6 +71,21 @@ export interface ShopifyProductsResponse {
   pageInfo: ShopifyPageInfo;
 }
 
+export interface ShopifyCollection {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+}
+
+export interface ShopifyCollectionEdge {
+  node: ShopifyCollection;
+}
+
+export interface ShopifyCollectionsResponse {
+  edges: ShopifyCollectionEdge[];
+}
+
 // Requête GraphQL pour récupérer un produit par handle
 const GET_PRODUCT_BY_HANDLE = `
   query getProduct($handle: String!) {
@@ -122,16 +137,34 @@ const GET_PRODUCT_BY_HANDLE = `
   }
 `;
 
-// Requête GraphQL pour récupérer la liste des produits avec pagination
+// Requête GraphQL pour récupérer la liste des produits avec pagination, filtres et tri
 const GET_PRODUCTS = `
-  query getProducts($first: Int, $after: String, $before: String, $last: Int) {
-    products(first: $first, after: $after, before: $before, last: $last) {
+  query getProducts(
+    $first: Int
+    $after: String
+    $before: String
+    $last: Int
+    $query: String
+    $sortKey: ProductSortKeys
+    $reverse: Boolean
+  ) {
+    products(
+      first: $first
+      after: $after
+      before: $before
+      last: $last
+      query: $query
+      sortKey: $sortKey
+      reverse: $reverse
+    ) {
       edges {
         node {
           id
           title
           handle
           description
+          availableForSale
+          createdAt
           images(first: 1) {
             edges {
               node {
@@ -166,6 +199,89 @@ const GET_PRODUCTS = `
   }
 `;
 
+// Requête GraphQL pour récupérer les collections
+const GET_COLLECTIONS = `
+  query getCollections($first: Int) {
+    collections(first: $first) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+        }
+      }
+    }
+  }
+`;
+
+// Requête GraphQL pour récupérer les produits d'une collection
+const GET_COLLECTION_PRODUCTS = `
+  query getCollectionProducts(
+    $handle: String!
+    $first: Int
+    $after: String
+    $before: String
+    $last: Int
+    $sortKey: ProductCollectionSortKeys
+    $reverse: Boolean
+  ) {
+    collection(handle: $handle) {
+      id
+      title
+      handle
+      description
+      products(
+        first: $first
+        after: $after
+        before: $before
+        last: $last
+        sortKey: $sortKey
+        reverse: $reverse
+      ) {
+        edges {
+          node {
+            id
+            title
+            handle
+            description
+            availableForSale
+            createdAt
+            images(first: 1) {
+              edges {
+                node {
+                  id
+                  url
+                  altText
+                  width
+                  height
+                }
+              }
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+              maxVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+          }
+          cursor
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+      }
+    }
+  }
+`;
+
 /**
  * Récupère un produit par son handle
  * @param handle - Le handle du produit (slug)
@@ -190,26 +306,76 @@ export async function getProductByHandle(
   }
 }
 
+export type ProductSortKey =
+  | "TITLE"
+  | "PRICE"
+  | "CREATED_AT"
+  | "BEST_SELLING"
+  | "RELEVANCE"
+  | "ID";
+
+export interface GetProductsOptions {
+  first?: number;
+  after?: string;
+  before?: string;
+  last?: number;
+  collection?: string;
+  sortKey?: ProductSortKey;
+  reverse?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+  availableOnly?: boolean;
+}
+
 /**
- * Récupère la liste des produits avec pagination
- * @param first - Nombre de produits à récupérer (par défaut: 12)
- * @param after - Curseur pour la pagination suivante (optionnel)
- * @param before - Curseur pour la pagination précédente (optionnel)
- * @param last - Nombre de produits à récupérer en arrière (optionnel, utilisé avec before)
- * @returns La liste des produits avec les informations de pagination
+ * Récupère la liste des produits avec pagination, filtres et tri
  */
 export async function getProducts(
-  first: number = 12,
-  after?: string,
-  before?: string,
-  last?: number
+  options: GetProductsOptions = {}
 ): Promise<ShopifyProductsResponse> {
   try {
+    const {
+      first = 12,
+      after,
+      before,
+      last,
+      collection,
+      sortKey,
+      reverse = false,
+      minPrice,
+      maxPrice,
+      availableOnly,
+    } = options;
+
+    // Construire la requête de filtre
+    const queryParts: string[] = [];
+
+    if (collection) {
+      queryParts.push(`collection:${collection}`);
+    }
+
+    if (minPrice !== undefined) {
+      queryParts.push(`variants.price:>=${minPrice}`);
+    }
+
+    if (maxPrice !== undefined) {
+      queryParts.push(`variants.price:<=${maxPrice}`);
+    }
+
+    if (availableOnly) {
+      queryParts.push("available_for_sale:true");
+    }
+
+    const query = queryParts.length > 0 ? queryParts.join(" AND ") : undefined;
+
     const variables: {
       first?: number;
       after?: string | null;
       before?: string | null;
       last?: number;
+      query?: string;
+      sortKey?: ProductSortKey;
+      reverse?: boolean;
     } = {};
 
     if (before && last) {
@@ -218,6 +384,18 @@ export async function getProducts(
     } else {
       variables.first = first;
       variables.after = after || null;
+    }
+
+    if (query) {
+      variables.query = query;
+    }
+
+    if (sortKey) {
+      variables.sortKey = sortKey;
+    }
+
+    if (reverse) {
+      variables.reverse = reverse;
     }
 
     const response = await client.request(GET_PRODUCTS, {
@@ -242,6 +420,114 @@ export async function getProducts(
     };
   } catch (error) {
     console.error("Error fetching products:", error);
+    throw error;
+  }
+}
+
+/**
+ * Récupère toutes les collections
+ */
+export async function getCollections(
+  first: number = 50
+): Promise<ShopifyCollectionsResponse> {
+  try {
+    const response = await client.request(GET_COLLECTIONS, {
+      variables: { first },
+    });
+
+    if (response.data?.collections) {
+      return {
+        edges: response.data.collections.edges as ShopifyCollectionEdge[],
+      };
+    }
+
+    return { edges: [] };
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+    throw error;
+  }
+}
+
+/**
+ * Récupère les produits d'une collection avec pagination et tri
+ */
+export async function getCollectionProducts(
+  handle: string,
+  options: {
+    first?: number;
+    after?: string;
+    before?: string;
+    last?: number;
+    sortKey?: ProductSortKey;
+    reverse?: boolean;
+  } = {}
+): Promise<ShopifyProductsResponse & { collection?: ShopifyCollection }> {
+  try {
+    const {
+      first = 12,
+      after,
+      before,
+      last,
+      sortKey,
+      reverse = false,
+    } = options;
+
+    const variables: {
+      handle: string;
+      first?: number;
+      after?: string | null;
+      before?: string | null;
+      last?: number;
+      sortKey?: ProductSortKey;
+      reverse?: boolean;
+    } = {
+      handle,
+    };
+
+    if (before && last) {
+      variables.before = before;
+      variables.last = last;
+    } else {
+      variables.first = first;
+      variables.after = after || null;
+    }
+
+    if (sortKey) {
+      variables.sortKey = sortKey;
+    }
+
+    if (reverse) {
+      variables.reverse = reverse;
+    }
+
+    const response = await client.request(GET_COLLECTION_PRODUCTS, {
+      variables,
+    });
+
+    if (response.data?.collection?.products) {
+      return {
+        edges: response.data.collection.products.edges as ShopifyProductEdge[],
+        pageInfo: response.data.collection.products.pageInfo as ShopifyPageInfo,
+        collection: {
+          id: response.data.collection.id,
+          title: response.data.collection.title,
+          handle: response.data.collection.handle,
+          description: response.data.collection.description || "",
+        },
+      };
+    }
+
+    return {
+      edges: [],
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        startCursor: null,
+        endCursor: null,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching collection products:", error);
     throw error;
   }
 }
