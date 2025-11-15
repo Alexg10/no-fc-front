@@ -5,9 +5,9 @@ import { notFound } from "next/navigation";
 export default async function ProductPage({
   params,
 }: {
-  params: { handle: string };
+  params: Promise<{ handle: string }>;
 }) {
-  const { handle } = params;
+  const { handle } = await params;
 
   try {
     const product = await getProductByHandle(handle);
