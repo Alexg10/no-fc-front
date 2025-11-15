@@ -1,4 +1,17 @@
 import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Accueil",
+  description:
+    "Bienvenue sur NOFC, votre boutique en ligne de produits de qualité. Découvrez notre sélection et trouvez ce qui vous convient.",
+  openGraph: {
+    title: "NOFC - Votre boutique en ligne",
+    description: "Découvrez notre sélection de produits de qualité",
+    type: "website",
+    locale: "fr_FR",
+  },
+};
 
 export default function Home() {
   return (

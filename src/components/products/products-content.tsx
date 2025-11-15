@@ -1,5 +1,6 @@
-import { ProductsFilters } from "@/components/products-filters";
-import { ProductsPagination } from "@/components/products-pagination";
+import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
+import { ProductsFilters } from "@/components/products/products-filters";
+import { ProductsPagination } from "@/components/products/products-pagination";
 import {
   getCollectionProducts,
   getCollections,
@@ -101,8 +102,20 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
     }
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const breadcrumbItems = [
+    { name: "Accueil", url: siteUrl },
+    {
+      name: collectionTitle || "Produits",
+      url: collection
+        ? `${siteUrl}/collections/${collection}`
+        : `${siteUrl}/products`,
+    },
+  ];
+
   return (
     <>
+      <BreadcrumbSchema items={breadcrumbItems} />
       <h1 className="text-4xl font-bold text-black dark:text-zinc-50 mb-8">
         {collectionTitle || "Tous les produits"}
       </h1>
@@ -186,4 +199,3 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
     </>
   );
 }
-
