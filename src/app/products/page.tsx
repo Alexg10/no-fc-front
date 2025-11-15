@@ -6,8 +6,8 @@ import Link from "next/link";
 interface ProductsPageProps {
   searchParams: Promise<{
     page?: string;
-    c?: string; // cursor encodé pour navigation suivante (after)
-    p?: string; // prevCursor encodé pour navigation précédente (before)
+    after?: string;
+    before?: string;
   }>;
 }
 
@@ -16,24 +16,17 @@ export default async function ProductsPage({
 }: ProductsPageProps) {
   const params = await searchParams;
   const page = parseInt(params.page || "1", 10);
-  // Récupérer les curseurs depuis l'URL (paramètres 'c' et 'p', moins visibles)
-  const cursor = params.c ? decodeURIComponent(params.c) : undefined;
-  const prevCursor = params.p ? decodeURIComponent(params.p) : undefined;
+  const after = params.after;
+  const before = params.before;
 
-  // Pour la page 1, pas de curseur
-  // Pour la navigation suivante, utiliser 'c' avec after
-  // Pour la navigation précédente, utiliser 'p' avec before
   let productsData;
   if (page === 1) {
     productsData = await getProducts(12);
-  } else if (cursor) {
-    // Navigation suivante : utiliser cursor avec after
-    productsData = await getProducts(12, cursor);
-  } else if (prevCursor) {
-    // Navigation précédente : utiliser prevCursor avec before
-    productsData = await getProducts(12, undefined, prevCursor, 12);
+  } else if (after) {
+    productsData = await getProducts(12, after);
+  } else if (before) {
+    productsData = await getProducts(12, undefined, before, 12);
   } else {
-    // Fallback : page sans curseur (ne devrait pas arriver)
     productsData = await getProducts(12);
   }
 
@@ -56,7 +49,6 @@ export default async function ProductsPage({
           {products.map(({ node: product }, index) => {
             const firstImage = product.images.edges[0]?.node;
             const price = product.priceRange.minVariantPrice;
-            // Les 8 premières images sont au-dessus de la ligne de flottaison
             const isAboveFold = index < 8;
 
             return (
@@ -65,7 +57,6 @@ export default async function ProductsPage({
                 href={`/products/${product.handle}`}
                 className="group flex flex-col bg-white dark:bg-zinc-900 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:shadow-lg transition-all duration-300 hover:border-zinc-400 dark:hover:border-zinc-600"
               >
-                {/* Image du produit */}
                 <div className="relative aspect-square w-full overflow-hidden bg-gray-100 dark:bg-zinc-800">
                   {firstImage ? (
                     <Image
@@ -96,7 +87,6 @@ export default async function ProductsPage({
                   )}
                 </div>
 
-                {/* Informations du produit */}
                 <div className="p-4 flex flex-col grow">
                   <h2 className="text-lg font-semibold text-black dark:text-zinc-50 mb-2 line-clamp-2 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
                     {product.title}
@@ -119,14 +109,8 @@ export default async function ProductsPage({
           })}
         </div>
       )}
-
-      {/* Pagination */}
       {products.length > 0 && (
-        <ProductsPagination
-          pageInfo={pageInfo}
-          currentPage={page}
-          currentCursor={pageInfo.startCursor || undefined}
-        />
+        <ProductsPagination pageInfo={pageInfo} currentPage={page} />
       )}
     </div>
   );
