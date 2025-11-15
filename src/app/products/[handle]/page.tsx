@@ -1,4 +1,4 @@
-import { getProductByHandle } from "@/app/lib/shopify";
+import { getProductByHandle } from "@/lib/shopify";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
