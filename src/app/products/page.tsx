@@ -1,9 +1,43 @@
+import { ProductsPagination } from "@/components/products-pagination";
 import { getProducts } from "@/lib/shopify";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function ProductsPage() {
-  const products = await getProducts(50); // Récupère jusqu'à 50 produits
+interface ProductsPageProps {
+  searchParams: Promise<{
+    page?: string;
+    c?: string; // cursor encodé pour navigation suivante (after)
+    p?: string; // prevCursor encodé pour navigation précédente (before)
+  }>;
+}
+
+export default async function ProductsPage({
+  searchParams,
+}: ProductsPageProps) {
+  const params = await searchParams;
+  const page = parseInt(params.page || "1", 10);
+  // Récupérer les curseurs depuis l'URL (paramètres 'c' et 'p', moins visibles)
+  const cursor = params.c ? decodeURIComponent(params.c) : undefined;
+  const prevCursor = params.p ? decodeURIComponent(params.p) : undefined;
+
+  // Pour la page 1, pas de curseur
+  // Pour la navigation suivante, utiliser 'c' avec after
+  // Pour la navigation précédente, utiliser 'p' avec before
+  let productsData;
+  if (page === 1) {
+    productsData = await getProducts(12);
+  } else if (cursor) {
+    // Navigation suivante : utiliser cursor avec after
+    productsData = await getProducts(12, cursor);
+  } else if (prevCursor) {
+    // Navigation précédente : utiliser prevCursor avec before
+    productsData = await getProducts(12, undefined, prevCursor, 12);
+  } else {
+    // Fallback : page sans curseur (ne devrait pas arriver)
+    productsData = await getProducts(12);
+  }
+
+  const { edges: products, pageInfo } = productsData;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -19,9 +53,11 @@ export default async function ProductsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map(({ node: product }) => {
+          {products.map(({ node: product }, index) => {
             const firstImage = product.images.edges[0]?.node;
             const price = product.priceRange.minVariantPrice;
+            // Les 8 premières images sont au-dessus de la ligne de flottaison
+            const isAboveFold = index < 8;
 
             return (
               <Link
@@ -38,6 +74,8 @@ export default async function ProductsPage() {
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                      loading={isAboveFold ? "eager" : "lazy"}
+                      priority={isAboveFold}
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full text-zinc-400 dark:text-zinc-600">
@@ -59,13 +97,13 @@ export default async function ProductsPage() {
                 </div>
 
                 {/* Informations du produit */}
-                <div className="p-4 flex flex-col flex-grow">
+                <div className="p-4 flex flex-col grow">
                   <h2 className="text-lg font-semibold text-black dark:text-zinc-50 mb-2 line-clamp-2 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
                     {product.title}
                   </h2>
 
                   {product.description && (
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2 flex-grow">
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2 grow">
                       {product.description}
                     </p>
                   )}
@@ -80,6 +118,15 @@ export default async function ProductsPage() {
             );
           })}
         </div>
+      )}
+
+      {/* Pagination */}
+      {products.length > 0 && (
+        <ProductsPagination
+          pageInfo={pageInfo}
+          currentPage={page}
+          currentCursor={pageInfo.startCursor || undefined}
+        />
       )}
     </div>
   );
