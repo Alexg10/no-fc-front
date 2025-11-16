@@ -50,6 +50,12 @@ export interface StrapiCenteredText {
 
 export type StrapiBlock = StrapiCenteredText;
 
+export interface StrapiProduct {
+  id: number;
+  handle: string;
+  blocks?: StrapiBlock[];
+}
+
 export interface StrapiHomepage {
   id: number;
   hero?: StrapiHomepageHero;

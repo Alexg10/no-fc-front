@@ -1,4 +1,4 @@
-import type { StrapiHomepage } from "@/types/strapi";
+import type { StrapiHomepage, StrapiProduct } from "@/types/strapi";
 import qs from "qs";
 
 // Configuration Strapi
@@ -79,8 +79,47 @@ export async function getHomepage(): Promise<StrapiHomepage | null> {
 }
 
 /**
- * Récupère une entité Strapi par son type
+ * Récupère un produit Strapi par son handle (correspond au handle Shopify)
+ * @param handle - Le handle du produit (slug Shopify)
+ * @returns Le produit Strapi ou null si non trouvé
  */
+export async function getProductByHandle(
+  handle: string
+): Promise<StrapiProduct | null> {
+  try {
+    const filters = {
+      handle: {
+        $eq: handle,
+      },
+    };
+
+    const populate = {
+      blocks: {
+        populate: "*",
+      },
+    };
+
+    const queryString = qs.stringify(
+      { filters, populate },
+      {
+        encodeValuesOnly: true,
+        addQueryPrefix: true,
+      }
+    );
+
+    const data = await strapiFetch(`/products${queryString}`);
+
+    if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+      return data.data[0] as StrapiProduct;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching product from Strapi:", error);
+    return null;
+  }
+}
+
 export async function getStrapiEntity<T>(
   endpoint: string,
   options?: { populate?: string | string[] }

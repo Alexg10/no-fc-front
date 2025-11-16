@@ -1,8 +1,9 @@
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
+import { BlockRenderer } from "@/components/common/block-renderer";
 import { ProductSchema } from "@/components/products/product-schema";
 import { generateProductMetadata } from "@/lib/metadata";
-import { getProductByHandle } from "@/lib/shopify";
+import { getProductWithCustomizations } from "@/lib/products";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -15,7 +16,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { handle } = await params;
-  const product = await getProductByHandle(handle);
+  const { shopify: product } = await getProductWithCustomizations(handle);
 
   if (!product) {
     return {
@@ -31,7 +32,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { handle } = await params;
 
   try {
-    const product = await getProductByHandle(handle);
+    const { shopify: product, strapi: strapiProduct } =
+      await getProductWithCustomizations(handle);
 
     if (!product) {
       notFound();
@@ -224,6 +226,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
               )}
             </div>
           </div>
+
+          {strapiProduct?.blocks && strapiProduct.blocks.length > 0 && (
+            <div className="col-span-full mt-12 space-y-8">
+              {strapiProduct.blocks.map((block, index) => (
+                <BlockRenderer key={block.id || index} block={block} />
+              ))}
+            </div>
+          )}
         </div>
       </>
     );
