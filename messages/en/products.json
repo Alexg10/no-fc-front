@@ -1,0 +1,24 @@
+{
+  "title": "All products",
+  "noProducts": "No products available at the moment.",
+  "noProductsInCollection": "No products available in this collection at the moment.",
+  "variants": "Available variants",
+  "selectVariant": "Select a variant to add to cart",
+  "noVariants": "No variants available for this product.",
+  "inStock": "In stock",
+  "outOfStock": "Out of stock",
+  "sort": {
+    "relevance": "Relevance",
+    "newest": "Newest",
+    "priceAsc": "Price (ascending)",
+    "priceDesc": "Price (descending)",
+    "nameAsc": "Name (A-Z)",
+    "nameDesc": "Name (Z-A)",
+    "bestSelling": "Best selling"
+  },
+  "common": {
+    "home": "Home",
+    "products": "Products"
+  }
+}
+

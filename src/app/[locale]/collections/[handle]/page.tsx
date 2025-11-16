@@ -2,10 +2,11 @@ import { CollectionContent } from "@/components/collection-content";
 import { ProductsPageLoading } from "@/components/skeleton/products-page-loading";
 import { getCollections } from "@/lib/shopify";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
 interface CollectionPageProps {
-  params: Promise<{ handle: string }>;
+  params: Promise<{ locale: string; handle: string }>;
   searchParams: Promise<{
     page?: string;
     after?: string;
@@ -17,7 +18,8 @@ interface CollectionPageProps {
 export async function generateMetadata({
   params,
 }: CollectionPageProps): Promise<Metadata> {
-  const { handle } = await params;
+  const { handle, locale } = await params;
+  const tMetadata = await getTranslations({ locale, namespace: "metadata" });
   const collectionsData = await getCollections();
   const collection = collectionsData.edges.find(
     (edge) => edge.node.handle === handle
@@ -25,27 +27,31 @@ export async function generateMetadata({
 
   if (!collection) {
     return {
-      title: "Collection introuvable | NOFC",
-      description: "La collection que vous recherchez n'existe pas.",
+      title: tMetadata("collections.notFoundTitle"),
+      description: tMetadata("collections.notFoundDescription"),
     };
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const collectionUrl = `${siteUrl}/collections/${handle}`;
+  const collectionUrl = `${siteUrl}/${locale}/collections/${handle}`;
+
+  const defaultDescription = tMetadata("collections.discoverCollection", {
+    title: collection.title,
+  });
 
   return {
     title: `${collection.title} | NOFC`,
     description: collection.description
       ? collection.description.substring(0, 160)
-      : `Découvrez la collection ${collection.title} sur NOFC`,
+      : defaultDescription,
     openGraph: {
       title: collection.title,
       description: collection.description
         ? collection.description.substring(0, 200)
-        : `Découvrez la collection ${collection.title} sur NOFC`,
+        : defaultDescription,
       url: collectionUrl,
       siteName: "NOFC",
-      locale: "fr_FR",
+      locale: locale === "en" ? "en_US" : "fr_FR",
       type: "website",
     },
     alternates: {
@@ -58,13 +64,17 @@ export default async function CollectionPage({
   params,
   searchParams,
 }: CollectionPageProps) {
-  const { handle } = await params;
+  const { handle, locale } = await params;
   const paramsSearch = await searchParams;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<ProductsPageLoading />}>
-        <CollectionContent handle={handle} searchParams={paramsSearch} />
+        <CollectionContent
+          locale={locale}
+          handle={handle}
+          searchParams={paramsSearch}
+        />
       </Suspense>
     </div>
   );

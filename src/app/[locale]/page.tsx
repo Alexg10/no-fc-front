@@ -1,42 +1,51 @@
 import { BlockRenderer } from "@/components/common/block-renderer";
 import { HeroSection } from "@/components/common/homepage/hero-section";
 import { getHomepage } from "@/lib/strapi";
+import { Link } from "@/lib/navigation";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
-import Link from "next/link";
 
-export async function generateMetadata(): Promise<Metadata> {
+interface HomePageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: HomePageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
   const homepage = await getHomepage();
-  console.log(homepage);
+
   if (homepage?.seo) {
     return {
-      title: homepage.seo.metaTitle || "Accueil | NOFC",
-      description: homepage.seo.metaDescription || "Bienvenue sur NOFC",
+      title: homepage.seo.metaTitle || t("metadata.home.title"),
+      description: homepage.seo.metaDescription || t("metadata.home.description"),
       keywords: homepage.seo.keywords,
       openGraph: {
-        title: homepage.seo.metaTitle || "NOFC - Votre boutique en ligne",
+        title: homepage.seo.metaTitle || t("metadata.home.title"),
         description:
-          homepage.seo.metaDescription ||
-          "Découvrez notre sélection de produits de qualité",
+          homepage.seo.metaDescription || t("metadata.home.description"),
         type: "website",
-        locale: "fr_FR",
+        locale: locale === "en" ? "en_US" : "fr_FR",
       },
     };
   }
 
   return {
-    title: "Accueil | NOFC",
-    description:
-      "Bienvenue sur NOFC, votre boutique en ligne de produits de qualité. Découvrez notre sélection et trouvez ce qui vous convient.",
+    title: t("metadata.home.title"),
+    description: t("metadata.home.description"),
     openGraph: {
-      title: "NOFC - Votre boutique en ligne",
-      description: "Découvrez notre sélection de produits de qualité",
+      title: t("metadata.home.title"),
+      description: t("metadata.home.description"),
       type: "website",
-      locale: "fr_FR",
+      locale: locale === "en" ? "en_US" : "fr_FR",
     },
   };
 }
 
-export default async function Home() {
+export default async function Home({ params }: HomePageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
   const homepage = await getHomepage();
 
   // Si pas de données Strapi, afficher une page par défaut
@@ -45,16 +54,16 @@ export default async function Home() {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-black dark:text-zinc-50 mb-4">
-            Bienvenue sur NOFC
+            {t("homepage.welcome")}
           </h1>
           <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8">
-            Votre boutique en ligne de produits de qualité
+            {t("homepage.subtitle")}
           </p>
           <Link
             href="/products"
             className="inline-block px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
           >
-            Voir les produits
+            {t("common.seeProducts")}
           </Link>
         </div>
       </div>
@@ -74,3 +83,4 @@ export default async function Home() {
     </main>
   );
 }
+

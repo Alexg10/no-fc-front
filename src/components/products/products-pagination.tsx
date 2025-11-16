@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { ShopifyPageInfo } from "@/lib/shopify";
+import { Link, usePathname } from "@/lib/navigation";
+import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 interface ProductsPaginationProps {
@@ -16,6 +17,8 @@ export function ProductsPagination({
   currentPage,
 }: ProductsPaginationProps) {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const t = useTranslations("common");
   const { hasNextPage, hasPreviousPage, endCursor, startCursor } = pageInfo;
 
   // Préserver les filtres dans l'URL
@@ -31,11 +34,13 @@ export function ProductsPagination({
     const minPrice = searchParams.get("minPrice");
     const maxPrice = searchParams.get("maxPrice");
     const available = searchParams.get("available");
+    const collection = searchParams.get("collection");
 
     if (sort) params.set("sort", sort);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
     if (available) params.set("available", available);
+    if (collection) params.set("collection", collection);
 
     // Ajouter la pagination
     if (page > 1) {
@@ -48,29 +53,22 @@ export function ProductsPagination({
 
     const queryString = params.toString();
 
-    // Détecter si on est sur une page de collection (via le pathname)
-    if (typeof window !== "undefined") {
-      const pathname = window.location.pathname;
-      const isCollectionPage = pathname.startsWith("/collections/");
-      const collectionHandle = isCollectionPage
-        ? pathname.split("/collections/")[1]?.split("?")[0]
-        : null;
+    // usePathname() de next-intl retourne déjà le pathname sans la locale
+    // Détecter si on est sur une page de collection
+    const isCollectionPage = pathname.startsWith("/collections/");
+    const collectionHandle = isCollectionPage
+      ? pathname.split("/collections/")[1]?.split("?")[0]
+      : null;
 
-      // Si on est sur une page de collection, garder l'URL de collection
-      if (isCollectionPage && collectionHandle) {
-        return queryString
-          ? `/collections/${collectionHandle}?${queryString}`
-          : `/collections/${collectionHandle}`;
-      }
+    // Si on est sur une page de collection, garder l'URL de collection
+    if (isCollectionPage && collectionHandle) {
+      return queryString
+        ? `/collections/${collectionHandle}?${queryString}`
+        : `/collections/${collectionHandle}`;
     }
 
-    // Sinon, utiliser /products avec le paramètre collection si présent
-    const collection = searchParams.get("collection");
-    if (collection) params.set("collection", collection);
-    const productsQueryString = params.toString();
-    return productsQueryString
-      ? `/products?${productsQueryString}`
-      : "/products";
+    // Sinon, utiliser /products
+    return queryString ? `/products?${queryString}` : "/products";
   };
 
   const nextPage = currentPage + 1;
@@ -91,18 +89,18 @@ export function ProductsPagination({
           <Button asChild variant="outline">
             <Link href={prevUrl}>
               <ChevronLeft className="mr-2 h-4 w-4" />
-              Précédent
+              {t("previous")}
             </Link>
           </Button>
         ) : (
           <Button variant="outline" disabled>
             <ChevronLeft className="mr-2 h-4 w-4" />
-            Précédent
+            {t("previous")}
           </Button>
         )}
 
         <div className="flex items-center gap-2 px-4 py-2">
-          <span className="text-sm text-zinc-600 dark:text-zinc-400">Page</span>
+          <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("page")}</span>
           <span className="font-semibold text-black dark:text-zinc-50">
             {currentPage}
           </span>
@@ -111,13 +109,13 @@ export function ProductsPagination({
         {nextUrl ? (
           <Button asChild variant="outline">
             <Link href={nextUrl}>
-              Suivant
+              {t("next")}
               <ChevronRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         ) : (
           <Button variant="outline" disabled>
-            Suivant
+            {t("next")}
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         )}

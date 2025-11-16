@@ -10,14 +10,17 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/cart-context";
+import { Link } from "@/lib/navigation";
+import { useTranslations } from "next-intl";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { CartItemSkeleton } from "./skeleton/cart-item-skeleton";
 
 export function CartSheet() {
   const { cart, isLoading, updateQuantity, removeLine, isOpen, closeCart } =
     useCart();
+  const t = useTranslations("cart");
+  const tCommon = useTranslations("common");
 
   const cartItems = cart?.lines.edges || [];
   const totalAmount = cart?.cost.totalAmount.amount || "0";
@@ -27,13 +30,11 @@ export function CartSheet() {
     <Sheet open={isOpen} onOpenChange={closeCart}>
       <SheetContent className="flex flex-col w-full sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle>Panier</SheetTitle>
+          <SheetTitle>{t("title")}</SheetTitle>
           <SheetDescription>
             {cartItems.length === 0
-              ? "Votre panier est vide"
-              : `${cart?.totalQuantity || 0} article${
-                  (cart?.totalQuantity || 0) > 1 ? "s" : ""
-                }`}
+              ? t("empty")
+              : t("items", { count: cart?.totalQuantity || 0 })}
           </SheetDescription>
         </SheetHeader>
 
@@ -49,10 +50,10 @@ export function CartSheet() {
           <div className="flex flex-col items-center justify-center flex-1 gap-4 py-12">
             <ShoppingBag className="w-16 h-16 text-zinc-400 dark:text-zinc-600" />
             <p className="text-zinc-600 dark:text-zinc-400">
-              Votre panier est vide
+              {t("empty")}
             </p>
             <Button asChild variant="outline" onClick={closeCart}>
-              <Link href="/products">Voir les produits</Link>
+              <Link href="/products">{tCommon("seeProducts")}</Link>
             </Button>
           </div>
         ) : (
@@ -161,7 +162,7 @@ export function CartSheet() {
 
             <SheetFooter className="flex-col gap-4 sm:flex-row">
               <div className="flex items-center justify-between w-full text-lg font-semibold text-black dark:text-zinc-50">
-                <span>Total:</span>
+                <span>{t("total")}:</span>
                 <span>
                   {parseFloat(totalAmount).toFixed(2)} {currencyCode}
                 </span>
@@ -169,7 +170,7 @@ export function CartSheet() {
               {cart?.checkoutUrl && (
                 <Button asChild className="w-full" size="lg">
                   <Link href={cart.checkoutUrl} target="_blank">
-                    Passer la commande
+                    {t("checkout")}
                   </Link>
                 </Button>
               )}

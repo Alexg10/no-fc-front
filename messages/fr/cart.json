@@ -1,0 +1,10 @@
+{
+  "title": "Panier",
+  "empty": "Votre panier est vide",
+  "items": "{count, plural, =0 {Votre panier est vide} =1 {# article} other {# articles}}",
+  "total": "Total",
+  "checkout": "Passer la commande",
+  "remove": "Retirer",
+  "quantity": "Quantité"
+}
+

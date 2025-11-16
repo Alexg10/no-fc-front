@@ -1,6 +1,11 @@
-import Link from "next/link";
+"use client";
+
+import { Link } from "@/lib/navigation";
+import { useTranslations } from "next-intl";
 
 export function Footer() {
+  const t = useTranslations("footer");
+
   return (
     <footer className="border-t border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
       <div className="container mx-auto px-4 py-12">
@@ -11,14 +16,14 @@ export function Footer() {
               NOFC
             </h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Votre boutique en ligne de qualité.
+              {t("description")}
             </p>
           </div>
 
           {/* Liens rapides */}
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-black dark:text-zinc-50">
-              Navigation
+              {t("navigation")}
             </h4>
             <ul className="space-y-2">
               <li>
@@ -26,7 +31,7 @@ export function Footer() {
                   href="/"
                   className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
-                  Accueil
+                  {t("home")}
                 </Link>
               </li>
               <li>
@@ -34,7 +39,7 @@ export function Footer() {
                   href="/products"
                   className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
-                  Produits
+                  {t("products")}
                 </Link>
               </li>
             </ul>
@@ -43,7 +48,7 @@ export function Footer() {
           {/* Support */}
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-black dark:text-zinc-50">
-              Support
+              {t("support")}
             </h4>
             <ul className="space-y-2">
               <li>
@@ -51,7 +56,7 @@ export function Footer() {
                   href="#"
                   className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
-                  Contact
+                  {t("contact")}
                 </Link>
               </li>
               <li>
@@ -59,7 +64,7 @@ export function Footer() {
                   href="#"
                   className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
-                  FAQ
+                  {t("faq")}
                 </Link>
               </li>
             </ul>
@@ -68,7 +73,7 @@ export function Footer() {
           {/* Informations légales */}
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-black dark:text-zinc-50">
-              Informations
+              {t("information")}
             </h4>
             <ul className="space-y-2">
               <li>
@@ -76,7 +81,7 @@ export function Footer() {
                   href="#"
                   className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
-                  Mentions légales
+                  {t("legal")}
                 </Link>
               </li>
               <li>
@@ -84,7 +89,7 @@ export function Footer() {
                   href="#"
                   className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 >
-                  Politique de confidentialité
+                  {t("privacy")}
                 </Link>
               </li>
             </ul>
@@ -94,7 +99,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-8 border-t border-zinc-200 pt-8 dark:border-zinc-800">
           <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-            © {new Date().getFullYear()} NOFC. Tous droits réservés.
+            {t("copyright", { year: new Date().getFullYear() })}
           </p>
         </div>
       </div>

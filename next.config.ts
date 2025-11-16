@@ -1,4 +1,7 @@
+import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
+
+const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
 const strapiUrl = process.env.STRAPI_URL || "";
 const strapiHostname = strapiUrl.replace(/^https?:\/\//, "").split("/")[0];
@@ -44,4 +47,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

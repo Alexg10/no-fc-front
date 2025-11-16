@@ -9,11 +9,14 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { useCart } from "@/contexts/cart-context";
+import { Link } from "@/lib/navigation";
+import { useTranslations } from "next-intl";
 import { ShoppingCart } from "lucide-react";
-import Link from "next/link";
+import { LanguageSwitcher } from "./language-switcher";
 
 export function Header() {
   const { cart, openCart } = useCart();
+  const t = useTranslations("navigation");
   const itemCount = cart?.totalQuantity || 0;
 
   return (
@@ -30,7 +33,7 @@ export function Header() {
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
                   <Link href="/" className={navigationMenuTriggerStyle()}>
-                    Accueil
+                    {t("home")}
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -40,25 +43,28 @@ export function Header() {
                     href="/products"
                     className={navigationMenuTriggerStyle()}
                   >
-                    Produits
+                    {t("products")}
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={openCart}
-            className="relative"
-          >
-            <ShoppingCart className="h-5 w-5" />
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-xs font-bold">
-                {itemCount > 99 ? "99+" : itemCount}
-              </span>
-            )}
-          </Button>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={openCart}
+              className="relative"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-xs font-bold">
+                  {itemCount > 99 ? "99+" : itemCount}
+                </span>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </header>

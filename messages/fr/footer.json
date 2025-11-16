@@ -1,0 +1,15 @@
+{
+  "description": "Votre boutique en ligne de qualité.",
+  "navigation": "Navigation",
+  "support": "Support",
+  "information": "Informations",
+  "contact": "Contact",
+  "faq": "FAQ",
+  "legal": "Mentions légales",
+  "privacy": "Politique de confidentialité",
+  "copyright": "© {year} NOFC. Tous droits réservés.",
+  "allRightsReserved": "Tous droits réservés",
+  "products": "Produits",
+  "home": "Accueil"
+}
+

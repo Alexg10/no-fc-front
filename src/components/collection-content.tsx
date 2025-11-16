@@ -6,11 +6,13 @@ import {
   getCollections,
   ProductSortKey,
 } from "@/lib/shopify";
+import { Link } from "@/lib/navigation";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface CollectionContentProps {
+  locale: string;
   handle: string;
   searchParams: {
     page?: string;
@@ -21,9 +23,12 @@ interface CollectionContentProps {
 }
 
 export async function CollectionContent({
+  locale,
   handle,
   searchParams,
 }: CollectionContentProps) {
+  const t = await getTranslations({ locale, namespace: "products" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const page = parseInt(searchParams.page || "1", 10);
   const after = searchParams.after;
   const before = searchParams.before;
@@ -67,8 +72,8 @@ export async function CollectionContent({
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const breadcrumbItems = [
-    { name: "Accueil", url: siteUrl },
-    { name: "Collections", url: `${siteUrl}/collections` },
+    { name: tCommon("home"), url: siteUrl },
+    { name: t("title"), url: `${siteUrl}/products` },
     { name: currentCollection.title, url: `${siteUrl}/collections/${handle}` },
   ];
 
@@ -90,7 +95,7 @@ export async function CollectionContent({
       {products.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-zinc-600 dark:text-zinc-400 text-lg">
-            Aucun produit disponible dans cette collection pour le moment.
+            {t("noProductsInCollection")}
           </p>
         </div>
       ) : (

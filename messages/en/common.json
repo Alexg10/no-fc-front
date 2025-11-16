@@ -1,0 +1,24 @@
+{
+  "addToCart": "Add to cart",
+  "adding": "Adding...",
+  "addingInProgress": "Adding...",
+  "outOfStock": "Out of stock",
+  "outOfStockShort": "Out",
+  "seeProducts": "See products",
+  "viewAll": "View all",
+  "previous": "Previous",
+  "next": "Next",
+  "page": "Page",
+  "applyFilters": "Apply filters",
+  "resetFilters": "Reset",
+  "filtersAndSort": "Filters and sort",
+  "allCollections": "All collections",
+  "sortBy": "Sort by",
+  "minPrice": "Min price",
+  "maxPrice": "Max price",
+  "availableOnly": "Show only in-stock products",
+  "loading": "Loading...",
+  "error": "Error",
+  "retry": "Retry"
+}
+

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/cart-context";
+import { useTranslations } from "next-intl";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
@@ -19,6 +20,7 @@ export function AddToCartButton({
   fullWidth = false,
 }: AddToCartButtonProps) {
   const { addToCart, isLoading } = useCart();
+  const t = useTranslations("common");
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = async () => {
@@ -29,7 +31,7 @@ export function AddToCartButton({
       await addToCart(variantId, 1);
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("Erreur lors de l'ajout au panier. Veuillez réessayer.");
+      alert(t("error"));
     } finally {
       setIsAdding(false);
     }
@@ -47,18 +49,18 @@ export function AddToCartButton({
       {isAdding || isLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          {fullWidth ? "Ajout en cours..." : "Ajout..."}
+          {fullWidth ? t("addingInProgress") : t("adding")}
         </>
       ) : !availableForSale ? (
         fullWidth ? (
-          "Rupture de stock"
+          t("outOfStock")
         ) : (
-          "Rupture"
+          t("outOfStockShort")
         )
       ) : fullWidth ? (
-        "Ajouter au panier"
+        t("addToCart")
       ) : (
-        "Ajouter"
+        t("addToCart")
       )}
     </Button>
   );

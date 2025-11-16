@@ -10,8 +10,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ShopifyCollection } from "@/lib/shopify";
+import { useRouter } from "@/lib/navigation";
+import { useTranslations } from "next-intl";
 import { Filter, X } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface ProductsFiltersProps {
@@ -25,6 +27,8 @@ export function ProductsFilters({
 }: ProductsFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations("common");
+  const tProducts = useTranslations("products");
 
   // Initialiser les valeurs depuis les paramètres d'URL ou les props
   const initialCollection =
@@ -81,21 +85,26 @@ export function ProductsFilters({
     if (maxPrice) params.set("maxPrice", maxPrice);
     if (availableOnly) params.set("available", "true");
 
+    const queryString = params.toString();
+    const pathWithQuery = queryString ? `?${queryString}` : "";
+
     // Si on est sur une page de collection, rediriger vers /collections/[handle]
     // Sinon, utiliser /products avec le paramètre collection
     if (defaultCollection) {
       // Sur une page de collection, changer de collection = aller vers /products
       if (collection && collection !== defaultCollection) {
         params.set("collection", collection);
-        router.push(`/products?${params.toString()}`);
+        const newQueryString = params.toString();
+        router.push(`/products${newQueryString ? `?${newQueryString}` : ""}`);
       } else {
         // Sinon, rester sur la même collection avec les nouveaux filtres
-        router.push(`/collections/${defaultCollection}?${params.toString()}`);
+        router.push(`/collections/${defaultCollection}${pathWithQuery}`);
       }
     } else {
       // Sur /products, ajouter le paramètre collection si sélectionné
       if (collection) params.set("collection", collection);
-      router.push(`/products?${params.toString()}`);
+      const newQueryString = params.toString();
+      router.push(`/products${newQueryString ? `?${newQueryString}` : ""}`);
     }
   };
 
@@ -110,7 +119,8 @@ export function ProductsFilters({
     const page = searchParams.get("page");
     if (page) params.set("page", page);
 
-    router.push(`/products?${params.toString()}`);
+    const queryString = params.toString();
+    router.push(`/products${queryString ? `?${queryString}` : ""}`);
   };
 
   // Convertir la valeur de collection pour le Select ("" devient "all")
@@ -128,7 +138,7 @@ export function ProductsFilters({
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-black dark:text-zinc-50 flex items-center gap-2">
           <Filter className="h-5 w-5" />
-          Filtres et tri
+          {t("filtersAndSort")}
         </h2>
         {hasActiveFilters && (
           <Button
@@ -138,7 +148,7 @@ export function ProductsFilters({
             className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-zinc-50"
           >
             <X className="h-4 w-4 mr-2" />
-            Réinitialiser
+            {t("resetFilters")}
           </Button>
         )}
       </div>
@@ -156,10 +166,10 @@ export function ProductsFilters({
             }
           >
             <SelectTrigger>
-              <SelectValue placeholder="Toutes les collections" />
+              <SelectValue placeholder={t("allCollections")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Toutes les collections</SelectItem>
+              <SelectItem value="all">{t("allCollections")}</SelectItem>
               {collections.map((col) => (
                 <SelectItem key={col.id} value={col.handle}>
                   {col.title}
@@ -172,20 +182,20 @@ export function ProductsFilters({
         {/* Tri */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-black dark:text-zinc-50">
-            Trier par
+            {t("sortBy")}
           </label>
           <Select value={sortKey} onValueChange={setSortKey}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="RELEVANCE">Pertinence</SelectItem>
-              <SelectItem value="CREATED_AT">Plus récent</SelectItem>
-              <SelectItem value="PRICE">Prix croissant</SelectItem>
-              <SelectItem value="PRICE_REVERSE">Prix décroissant</SelectItem>
-              <SelectItem value="TITLE">Nom (A-Z)</SelectItem>
-              <SelectItem value="TITLE_REVERSE">Nom (Z-A)</SelectItem>
-              <SelectItem value="BEST_SELLING">Meilleures ventes</SelectItem>
+              <SelectItem value="RELEVANCE">{tProducts("sort.relevance")}</SelectItem>
+              <SelectItem value="CREATED_AT">{tProducts("sort.newest")}</SelectItem>
+              <SelectItem value="PRICE">{tProducts("sort.priceAsc")}</SelectItem>
+              <SelectItem value="PRICE_REVERSE">{tProducts("sort.priceDesc")}</SelectItem>
+              <SelectItem value="TITLE">{tProducts("sort.nameAsc")}</SelectItem>
+              <SelectItem value="TITLE_REVERSE">{tProducts("sort.nameDesc")}</SelectItem>
+              <SelectItem value="BEST_SELLING">{tProducts("sort.bestSelling")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -193,7 +203,7 @@ export function ProductsFilters({
         {/* Prix minimum */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-black dark:text-zinc-50">
-            Prix minimum
+            {t("minPrice")}
           </label>
           <input
             type="number"
@@ -207,7 +217,7 @@ export function ProductsFilters({
         {/* Prix maximum */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-black dark:text-zinc-50">
-            Prix maximum
+            {t("maxPrice")}
           </label>
           <input
             type="number"
@@ -230,14 +240,14 @@ export function ProductsFilters({
           htmlFor="available"
           className="text-sm font-medium text-black dark:text-zinc-50 cursor-pointer"
         >
-          Afficher uniquement les produits en stock
+          {t("availableOnly")}
         </label>
       </div>
 
       {/* Bouton Appliquer */}
       <div className="pt-2">
         <Button onClick={updateURL} className="w-full md:w-auto">
-          Appliquer les filtres
+          {t("applyFilters")}
         </Button>
       </div>
     </div>

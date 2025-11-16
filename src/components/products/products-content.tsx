@@ -1,6 +1,7 @@
 import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
 import { ProductsFilters } from "@/components/products/products-filters";
 import { ProductsPagination } from "@/components/products/products-pagination";
+import { Link } from "@/lib/navigation";
 import {
   getCollectionProducts,
   getCollections,
@@ -8,10 +9,11 @@ import {
   ProductSortKey,
   ShopifyCollection,
 } from "@/lib/shopify";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import Link from "next/link";
 
 interface ProductsContentProps {
+  locale: string;
   searchParams: {
     page?: string;
     after?: string;
@@ -24,7 +26,12 @@ interface ProductsContentProps {
   };
 }
 
-export async function ProductsContent({ searchParams }: ProductsContentProps) {
+export async function ProductsContent({
+  locale,
+  searchParams,
+}: ProductsContentProps) {
+  const t = await getTranslations({ locale, namespace: "products" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const page = parseInt(searchParams.page || "1", 10);
   const after = searchParams.after;
   const before = searchParams.before;
@@ -104,9 +111,9 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const breadcrumbItems = [
-    { name: "Accueil", url: siteUrl },
+    { name: tCommon("home"), url: siteUrl },
     {
-      name: collectionTitle || "Produits",
+      name: collectionTitle || t("title"),
       url: collection
         ? `${siteUrl}/collections/${collection}`
         : `${siteUrl}/products`,
@@ -117,7 +124,7 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
     <>
       <BreadcrumbSchema items={breadcrumbItems} />
       <h1 className="text-4xl font-bold text-black dark:text-zinc-50 mb-8">
-        {collectionTitle || "Tous les produits"}
+        {collectionTitle || t("title")}
       </h1>
 
       <ProductsFilters collections={collections} />
@@ -125,7 +132,7 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
       {products.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-zinc-600 dark:text-zinc-400 text-lg">
-            Aucun produit disponible pour le moment.
+            {collection ? t("noProductsInCollection") : t("noProducts")}
           </p>
         </div>
       ) : (

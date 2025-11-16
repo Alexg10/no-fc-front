@@ -4,24 +4,26 @@ import { BlockRenderer } from "@/components/common/block-renderer";
 import { ProductSchema } from "@/components/products/product-schema";
 import { generateProductMetadata } from "@/lib/metadata";
 import { getProductWithCustomizations } from "@/lib/products";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
 interface ProductPageProps {
-  params: Promise<{ handle: string }>;
+  params: Promise<{ locale: string; handle: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
-  const { handle } = await params;
+  const { handle, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
   const { shopify: product } = await getProductWithCustomizations(handle);
 
   if (!product) {
     return {
-      title: "Produit introuvable",
-      description: "Le produit que vous recherchez n'existe pas.",
+      title: t("productNotFound.title"),
+      description: t("productNotFound.description"),
     };
   }
 
@@ -29,7 +31,9 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { handle } = await params;
+  const { handle, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "products" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
 
   try {
     const { shopify: product, strapi: strapiProduct } =
@@ -45,9 +49,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
     // Breadcrumbs pour Schema.org
     const breadcrumbItems = [
-      { name: "Accueil", url: siteUrl },
-      { name: "Produits", url: `${siteUrl}/products` },
-      { name: product.title, url: `${siteUrl}/products/${handle}` },
+      { name: tCommon("home"), url: siteUrl },
+      { name: tCommon("products"), url: `${siteUrl}/${locale}/products` },
+      { name: product.title, url: `${siteUrl}/${locale}/products/${handle}` },
     ];
 
     return (
@@ -115,7 +119,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {product.variants.edges.length > 0 && (
                 <div className="space-y-4">
                   <h2 className="text-xl font-semibold text-black dark:text-zinc-50">
-                    Variantes disponibles
+                    {t("variants")}
                   </h2>
                   <div className="space-y-2">
                     {product.variants.edges.map(({ node: variant }) => (
@@ -148,8 +152,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             }`}
                           >
                             {variant.availableForSale
-                              ? "En stock"
-                              : "Rupture de stock"}
+                              ? t("inStock")
+                              : t("outOfStock")}
                           </div>
                         </div>
                       </div>
@@ -171,7 +175,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               ) : product.variants.edges.length > 1 ? (
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-black dark:text-zinc-50">
-                    Sélectionnez une variante pour ajouter au panier
+                    {t("selectVariant")}
                   </h3>
                   <div className="space-y-2">
                     {product.variants.edges.map(({ node: variant }) => (
@@ -205,8 +209,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
                               }`}
                             >
                               {variant.availableForSale
-                                ? "En stock"
-                                : "Rupture de stock"}
+                                ? t("inStock")
+                                : t("outOfStock")}
                             </div>
                           </div>
                           <AddToCartButton
@@ -221,7 +225,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
               ) : (
                 <div className="text-zinc-600 dark:text-zinc-400">
-                  Aucune variante disponible pour ce produit.
+                  {t("noVariants")}
                 </div>
               )}
             </div>
@@ -242,3 +246,4 @@ export default async function ProductPage({ params }: ProductPageProps) {
     throw error;
   }
 }
+

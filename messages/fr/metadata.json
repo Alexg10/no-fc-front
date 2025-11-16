@@ -1,0 +1,20 @@
+{
+  "home": {
+    "title": "Accueil | NOFC",
+    "description": "Bienvenue sur NOFC, votre boutique en ligne de produits de qualité. Découvrez notre sélection et trouvez ce qui vous convient."
+  },
+  "products": {
+    "title": "Tous les produits | NOFC",
+    "description": "Découvrez notre sélection complète de produits de qualité. Parcourez notre catalogue et trouvez ce qui vous convient."
+  },
+  "collections": {
+    "notFoundTitle": "Collection introuvable | NOFC",
+    "notFoundDescription": "La collection que vous recherchez n'existe pas.",
+    "discoverCollection": "Découvrez la collection {title} sur NOFC"
+  },
+  "productNotFound": {
+    "title": "Produit introuvable",
+    "description": "Le produit que vous recherchez n'existe pas."
+  }
+}
+

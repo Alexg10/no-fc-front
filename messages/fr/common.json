@@ -1,0 +1,26 @@
+{
+  "addToCart": "Ajouter au panier",
+  "adding": "Ajout...",
+  "addingInProgress": "Ajout en cours...",
+  "outOfStock": "Rupture de stock",
+  "outOfStockShort": "Rupture",
+  "seeProducts": "Voir les produits",
+  "viewAll": "Voir tout",
+  "previous": "Précédent",
+  "next": "Suivant",
+  "page": "Page",
+  "applyFilters": "Appliquer les filtres",
+  "resetFilters": "Réinitialiser",
+  "filtersAndSort": "Filtres et tri",
+  "allCollections": "Toutes les collections",
+  "sortBy": "Trier par",
+  "minPrice": "Prix min",
+  "maxPrice": "Prix max",
+  "availableOnly": "Afficher uniquement les produits en stock",
+  "loading": "Chargement...",
+  "error": "Erreur",
+  "retry": "Réessayer",
+  "home": "Accueil",
+  "products": "Produits"
+}
+
