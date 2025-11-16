@@ -18,7 +18,7 @@ export async function generateMetadata({
 }: ProductPageProps): Promise<Metadata> {
   const { handle, locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
-  const { shopify: product } = await getProductWithCustomizations(handle);
+  const { shopify: product } = await getProductWithCustomizations(handle, locale);
 
   if (!product) {
     return {
@@ -37,7 +37,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   try {
     const { shopify: product, strapi: strapiProduct } =
-      await getProductWithCustomizations(handle);
+      await getProductWithCustomizations(handle, locale);
 
     if (!product) {
       notFound();

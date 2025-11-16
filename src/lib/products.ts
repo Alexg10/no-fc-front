@@ -11,15 +11,17 @@ export interface ProductWithCustomizations {
 /**
  * Récupère un produit avec ses customisations depuis Shopify et Strapi en parallèle
  * @param handle - Le handle du produit (slug)
+ * @param locale - La locale pour récupérer la version traduite depuis Strapi
  * @returns Un objet contenant les données Shopify et Strapi
  */
 export async function getProductWithCustomizations(
-  handle: string
+  handle: string,
+  locale: string
 ): Promise<ProductWithCustomizations> {
   try {
     const [shopifyProduct, strapiProduct] = await Promise.all([
       getShopifyProduct(handle),
-      getStrapiProduct(handle),
+      getStrapiProduct(handle, locale),
     ]);
 
     return {

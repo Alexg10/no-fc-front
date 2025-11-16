@@ -66,3 +66,17 @@ export interface StrapiHomepage {
     keywords?: string;
   };
 }
+
+export interface StrapiFetchOptions extends RequestInit {
+  locale?: string;
+}
+
+export interface StrapiApiResponse {
+  data: unknown;
+  meta?: unknown;
+}
+
+export interface StrapiFetchResult {
+  data: StrapiApiResponse | null;
+  status: number;
+}

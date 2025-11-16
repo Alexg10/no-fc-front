@@ -14,7 +14,7 @@ export async function generateMetadata({
 }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  const homepage = await getHomepage();
+  const homepage = await getHomepage(locale);
 
   if (homepage?.seo) {
     return {
@@ -46,7 +46,7 @@ export async function generateMetadata({
 export default async function Home({ params }: HomePageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  const homepage = await getHomepage();
+  const homepage = await getHomepage(locale);
 
   // Si pas de données Strapi, afficher une page par défaut
   if (!homepage) {

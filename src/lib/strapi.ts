@@ -1,4 +1,9 @@
-import type { StrapiHomepage, StrapiProduct } from "@/types/strapi";
+import type {
+  StrapiFetchOptions,
+  StrapiFetchResult,
+  StrapiHomepage,
+  StrapiProduct,
+} from "@/types/strapi";
 import qs from "qs";
 
 // Configuration Strapi
@@ -17,28 +22,51 @@ export function getStrapiImageUrl(url: string | undefined): string {
   return `${baseUrl}${imageUrl}`;
 }
 
-async function strapiFetch(endpoint: string, options?: RequestInit) {
-  const url = `${STRAPI_URL}/api${endpoint}`;
+async function strapiFetch(
+  endpoint: string,
+  options?: StrapiFetchOptions
+): Promise<StrapiFetchResult> {
+  let url = `${STRAPI_URL}/api${endpoint}`;
+
+  // Ajouter le paramètre locale si fourni
+  if (options?.locale) {
+    const separator = endpoint.includes("?") ? "&" : "?";
+    url = `${url}${separator}locale=${options.locale}`;
+  }
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(STRAPI_API_TOKEN && { Authorization: `Bearer ${STRAPI_API_TOKEN}` }),
     ...options?.headers,
   };
+
+  // Extraire locale des options pour ne pas le passer à fetch
+  const { locale, ...fetchOptions } = options || {};
+
   const response = await fetch(url, {
-    ...options,
+    ...fetchOptions,
     headers,
     next: { revalidate: 60 },
   });
+
+  // Pour les 404, retourner null au lieu de throw (locale peut ne pas exister)
+  if (response.status === 404) {
+    return { data: null, status: 404 };
+  }
+
   if (!response.ok) {
     throw new Error(
       `Strapi API error: ${response.status} ${response.statusText}`
     );
   }
-  return response.json();
+
+  const data = await response.json();
+  return { data, status: response.status };
 }
 
-export async function getHomepage(): Promise<StrapiHomepage | null> {
+export async function getHomepage(
+  locale: string
+): Promise<StrapiHomepage | null> {
   try {
     const populate = {
       seo: {
@@ -70,8 +98,16 @@ export async function getHomepage(): Promise<StrapiHomepage | null> {
       }
     );
 
-    const data = await strapiFetch(`/homepage${queryString}`);
-    return data.data || null;
+    let result = await strapiFetch(`/homepage${queryString}`, { locale });
+
+    if (result.status === 404 && locale !== "fr") {
+      result = await strapiFetch(`/homepage${queryString}`, { locale: "fr" });
+    }
+    if (result.status === 404) {
+      result = await strapiFetch(`/homepage${queryString}`);
+    }
+
+    return (result.data?.data as StrapiHomepage) || null;
   } catch (error) {
     console.error("Error fetching homepage from Strapi:", error);
     return null;
@@ -81,10 +117,12 @@ export async function getHomepage(): Promise<StrapiHomepage | null> {
 /**
  * Récupère un produit Strapi par son handle (correspond au handle Shopify)
  * @param handle - Le handle du produit (slug Shopify)
+ * @param locale - La locale pour récupérer la version traduite
  * @returns Le produit Strapi ou null si non trouvé
  */
 export async function getProductByHandle(
-  handle: string
+  handle: string,
+  locale: string
 ): Promise<StrapiProduct | null> {
   try {
     const filters = {
@@ -107,10 +145,17 @@ export async function getProductByHandle(
       }
     );
 
-    const data = await strapiFetch(`/products${queryString}`);
+    let result = await strapiFetch(`/products${queryString}`, { locale });
+    if (result.status === 404 && locale !== "fr") {
+      result = await strapiFetch(`/products${queryString}`, { locale: "fr" });
+    }
+    if (result.status === 404) {
+      result = await strapiFetch(`/products${queryString}`);
+    }
 
-    if (data.data && Array.isArray(data.data) && data.data.length > 0) {
-      return data.data[0] as StrapiProduct;
+    const products = result.data?.data;
+    if (products && Array.isArray(products) && products.length > 0) {
+      return products[0] as StrapiProduct;
     }
 
     return null;
@@ -136,8 +181,8 @@ export async function getStrapiEntity<T>(
     const url = `/${endpoint}${
       params.toString() ? `?${params.toString()}` : ""
     }`;
-    const data = await strapiFetch(url);
-    return data.data || null;
+    const result = await strapiFetch(url);
+    return (result.data?.data as T) || null;
   } catch (error) {
     console.error(`Error fetching ${endpoint} from Strapi:`, error);
     return null;
