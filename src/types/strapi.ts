@@ -48,7 +48,17 @@ export interface StrapiCenteredText {
   text?: string;
 }
 
-export type StrapiBlock = StrapiCenteredText;
+export interface StrapiHomeProducts {
+  __component: "homepage.home-products";
+  id: number;
+  title?: string;
+  products?: Array<{
+    id: number;
+    handle: string;
+  }>;
+}
+
+export type StrapiBlock = StrapiCenteredText | StrapiHomeProducts;
 
 export interface StrapiProduct {
   id: number;
