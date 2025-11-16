@@ -19,6 +19,7 @@
   "availableOnly": "Show only in-stock products",
   "loading": "Loading...",
   "error": "Error",
-  "retry": "Retry"
+  "retry": "Retry",
+  "home": "Home",
+  "products": "Products"
 }
-
