@@ -335,6 +335,21 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 - **Strapi services**: `/service` generates API service functions
 - **Commits**: `/commit` with gitmoji formatting
 
+## ⚠️ IMPORTANT RULE: Commit Validation Required
+
+**MANDATORY**: Claude MUST NEVER commit automatically without explicit user validation.
+
+**Required Process**:
+1. Claude PREPARES changes (stages files, drafts message)
+2. Claude DISPLAYS what will be committed (diff, message, files)
+3. Claude ASKS for explicit confirmation from user
+4. User VALIDATES or REFUSES the commit
+5. Only after user approval does Claude execute `git commit`
+
+**When in doubt**: Ask permission before committing, never assume.
+
+**No exceptions**: All commits require user approval.
+
 ## Useful Links
 
 - [Next.js 16 Docs](https://nextjs.org/docs)

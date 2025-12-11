@@ -158,6 +158,21 @@ Décrivez simplement vos changements et le système générera automatiquement l
 git commit -m "✨ feat: Add user registration"
 ```
 
+## ⚠️ IMPORTANT - Validation requise avant commit
+
+**RÈGLE OBLIGATOIRE**: Claude ne commit JAMAIS automatiquement sans validation de l'utilisateur.
+
+Processus strict:
+1. Claude **PRÉPARE** le commit (staged changes, message)
+2. Claude **AFFICHE** les changements à committer
+3. Claude **DEMANDE** une confirmation explicite
+4. Utilisateur **VALIDE** ou **REFUSE** le commit
+5. Seulement après validation, Claude exécute `git commit`
+
+**En cas de doute**: Demander la permission plutôt que de committer.
+
+Exceptions: Aucune. Tous les commits doivent être validés par l'utilisateur.
+
 ## 📖 Ressources
 
 - [Gitmoji](https://gitmoji.dev/) - Guide officiel des emojis Git
