@@ -4,8 +4,8 @@ import { BlockRenderer } from "@/components/common/block-renderer";
 import { ProductSchema } from "@/components/products/product-schema";
 import { generateProductMetadata } from "@/lib/metadata";
 import { getProductWithCustomizations } from "@/lib/products";
-import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -18,7 +18,10 @@ export async function generateMetadata({
 }: ProductPageProps): Promise<Metadata> {
   const { handle, locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
-  const { shopify: product } = await getProductWithCustomizations(handle, locale);
+  const { shopify: product } = await getProductWithCustomizations(
+    handle,
+    locale
+  );
 
   if (!product) {
     return {
@@ -246,4 +249,3 @@ export default async function ProductPage({ params }: ProductPageProps) {
     throw error;
   }
 }
-

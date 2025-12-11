@@ -3,7 +3,7 @@ import { createStorefrontApiClient } from "@shopify/storefront-api-client";
 // Initialisation du client Shopify
 const client = createStorefrontApiClient({
   storeDomain: process.env.SHOPIFY_STORE_DOMAIN!,
-  apiVersion: "2024-10",
+  apiVersion: "2025-01",
   publicAccessToken: process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
 });
 

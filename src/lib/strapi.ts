@@ -4,9 +4,9 @@ import type {
   StrapiHomepage,
   StrapiProduct,
 } from "@/types/strapi";
+import { getLocale } from "next-intl/server";
 import qs from "qs";
 
-// Configuration Strapi
 const STRAPI_URL = process.env.STRAPI_URL || "http://localhost:1337";
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || "";
 
@@ -22,16 +22,24 @@ export function getStrapiImageUrl(url: string | undefined): string {
   return `${baseUrl}${imageUrl}`;
 }
 
-async function strapiFetch(
+export async function strapiFetch(
   endpoint: string,
   options?: StrapiFetchOptions
 ): Promise<StrapiFetchResult> {
   let url = `${STRAPI_URL}/api${endpoint}`;
 
-  // Ajouter le paramètre locale si fourni
-  if (options?.locale) {
+  let locale = options?.locale;
+  if (!locale) {
+    try {
+      locale = await getLocale();
+    } catch {
+      locale = undefined;
+    }
+  }
+
+  if (locale) {
     const separator = endpoint.includes("?") ? "&" : "?";
-    url = `${url}${separator}locale=${options.locale}`;
+    url = `${url}${separator}locale=${locale}`;
   }
 
   const headers: HeadersInit = {
@@ -40,8 +48,7 @@ async function strapiFetch(
     ...options?.headers,
   };
 
-  // Extraire locale des options pour ne pas le passer à fetch
-  const { locale, ...fetchOptions } = options || {};
+  const { locale: _locale, ...fetchOptions } = options || {};
 
   const response = await fetch(url, {
     ...fetchOptions,
@@ -65,7 +72,7 @@ async function strapiFetch(
 }
 
 export async function getHomepage(
-  locale: string
+  locale?: string
 ): Promise<StrapiHomepage | null> {
   try {
     const populate = {
@@ -98,7 +105,9 @@ export async function getHomepage(
       }
     );
 
-    let result = await strapiFetch(`/homepage${queryString}`, { locale });
+    let result = await strapiFetch(`/homepage${queryString}`, {
+      ...(locale && { locale }),
+    });
 
     if (result.status === 404 && locale !== "fr") {
       result = await strapiFetch(`/homepage${queryString}`, { locale: "fr" });
@@ -117,12 +126,12 @@ export async function getHomepage(
 /**
  * Récupère un produit Strapi par son handle (correspond au handle Shopify)
  * @param handle - Le handle du produit (slug Shopify)
- * @param locale - La locale pour récupérer la version traduite
+ * @param locale - La locale pour récupérer la version traduite (optionnelle, auto-détectée si omise)
  * @returns Le produit Strapi ou null si non trouvé
  */
 export async function getProductByHandle(
   handle: string,
-  locale: string
+  locale?: string
 ): Promise<StrapiProduct | null> {
   try {
     const filters = {
@@ -145,7 +154,9 @@ export async function getProductByHandle(
       }
     );
 
-    let result = await strapiFetch(`/products${queryString}`, { locale });
+    let result = await strapiFetch(`/products${queryString}`, {
+      ...(locale && { locale }),
+    });
     if (result.status === 404 && locale !== "fr") {
       result = await strapiFetch(`/products${queryString}`, { locale: "fr" });
     }
