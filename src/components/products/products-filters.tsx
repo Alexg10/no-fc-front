@@ -1,14 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { CollectionFilter } from "@/components/products/_components/collection-filter";
+import { SortControl } from "@/components/products/_components/sort-control";
+import { PriceRangeFilter } from "@/components/products/_components/price-range-filter";
+import { AvailabilityFilter } from "@/components/products/_components/availability-filter";
 import { ShopifyCollection } from "@/lib/shopify";
 import { useRouter } from "@/lib/navigation";
 import { useTranslations } from "next-intl";
@@ -28,7 +24,6 @@ export function ProductsFilters({
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations("common");
-  const tProducts = useTranslations("products");
 
   // Initialiser les valeurs depuis les paramètres d'URL ou les props
   const initialCollection =
@@ -46,7 +41,6 @@ export function ProductsFilters({
     useState<boolean>(initialAvailableOnly);
 
   // Synchroniser avec les paramètres d'URL quand ils changent
-  // Utiliser un callback pour éviter l'avertissement du linter
   useEffect(() => {
     const updateFromURL = () => {
       const collectionParam =
@@ -123,9 +117,6 @@ export function ProductsFilters({
     router.push(`/products${queryString ? `?${queryString}` : ""}`);
   };
 
-  // Convertir la valeur de collection pour le Select ("" devient "all")
-  const collectionSelectValue = collection || "all";
-
   const hasActiveFilters =
     collection ||
     (sortKey && sortKey !== "RELEVANCE") ||
@@ -154,99 +145,23 @@ export function ProductsFilters({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Collection */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-black dark:text-zinc-50">
-            Collection
-          </label>
-          <Select
-            value={collectionSelectValue}
-            onValueChange={(value) =>
-              setCollection(value === "all" ? "" : value)
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={t("allCollections")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("allCollections")}</SelectItem>
-              {collections.map((col) => (
-                <SelectItem key={col.id} value={col.handle}>
-                  {col.title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Tri */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-black dark:text-zinc-50">
-            {t("sortBy")}
-          </label>
-          <Select value={sortKey} onValueChange={setSortKey}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="RELEVANCE">{tProducts("sort.relevance")}</SelectItem>
-              <SelectItem value="CREATED_AT">{tProducts("sort.newest")}</SelectItem>
-              <SelectItem value="PRICE">{tProducts("sort.priceAsc")}</SelectItem>
-              <SelectItem value="PRICE_REVERSE">{tProducts("sort.priceDesc")}</SelectItem>
-              <SelectItem value="TITLE">{tProducts("sort.nameAsc")}</SelectItem>
-              <SelectItem value="TITLE_REVERSE">{tProducts("sort.nameDesc")}</SelectItem>
-              <SelectItem value="BEST_SELLING">{tProducts("sort.bestSelling")}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Prix minimum */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-black dark:text-zinc-50">
-            {t("minPrice")}
-          </label>
-          <input
-            type="number"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            placeholder="0"
-            className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-950 text-black dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
-          />
-        </div>
-
-        {/* Prix maximum */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-black dark:text-zinc-50">
-            {t("maxPrice")}
-          </label>
-          <input
-            type="number"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            placeholder="∞"
-            className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-950 text-black dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
-          />
-        </div>
-      </div>
-
-      {/* Disponibilité */}
-      <div className="flex items-center space-x-2 pt-2">
-        <Checkbox
-          id="available"
-          checked={availableOnly}
-          onCheckedChange={(checked) => setAvailableOnly(checked === true)}
+        <CollectionFilter
+          collections={collections}
+          value={collection}
+          onChange={setCollection}
         />
-        <label
-          htmlFor="available"
-          className="text-sm font-medium text-black dark:text-zinc-50 cursor-pointer"
-        >
-          {t("availableOnly")}
-        </label>
+        <SortControl value={sortKey} onChange={setSortKey} />
+        <PriceRangeFilter
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          onMinChange={setMinPrice}
+          onMaxChange={setMaxPrice}
+        />
       </div>
 
-      {/* Bouton Appliquer */}
-      <div className="pt-2">
-        <Button onClick={updateURL} className="w-full md:w-auto">
+      <div className="flex items-center justify-between pt-2">
+        <AvailabilityFilter checked={availableOnly} onChange={setAvailableOnly} />
+        <Button onClick={updateURL} className="w-auto">
           {t("applyFilters")}
         </Button>
       </div>
