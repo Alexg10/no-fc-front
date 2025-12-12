@@ -1,7 +1,6 @@
 import type {
   StrapiFetchOptions,
   StrapiFetchResult,
-  StrapiHomepage,
   StrapiProduct,
 } from "@/types/strapi";
 import { getLocale } from "next-intl/server";
@@ -69,58 +68,6 @@ export async function strapiFetch(
 
   const data = await response.json();
   return { data, status: response.status };
-}
-
-export async function getHomepage(
-  locale?: string
-): Promise<StrapiHomepage | null> {
-  try {
-    const populate = {
-      seo: {
-        fields: ["metaTitle", "metaDescription", "keywords"],
-      },
-      hero: {
-        populate: {
-          fields: ["title", "subtitle", "description"],
-          background: {
-            populate: "*",
-            fields: ["alternativeText", "formats", "url"],
-          },
-          button: {
-            populate: "*",
-            fields: ["label", "link", "target"],
-          },
-        },
-      },
-      blocks: {
-        populate: "*",
-      },
-    };
-
-    const queryString = qs.stringify(
-      { populate },
-      {
-        encodeValuesOnly: true,
-        addQueryPrefix: true,
-      }
-    );
-
-    let result = await strapiFetch(`/homepage${queryString}`, {
-      ...(locale && { locale }),
-    });
-
-    if (result.status === 404 && locale !== "fr") {
-      result = await strapiFetch(`/homepage${queryString}`, { locale: "fr" });
-    }
-    if (result.status === 404) {
-      result = await strapiFetch(`/homepage${queryString}`);
-    }
-
-    return (result.data?.data as StrapiHomepage) || null;
-  } catch (error) {
-    console.error("Error fetching homepage from Strapi:", error);
-    return null;
-  }
 }
 
 /**

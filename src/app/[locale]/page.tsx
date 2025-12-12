@@ -1,19 +1,12 @@
-import { BlockRenderer } from "@/components/common/block-renderer";
-import { HeroSection } from "@/components/common/homepage/hero-section";
-import { getHomepage } from "@/lib/strapi";
+import { HeroArticle } from "@/components/common/homepage/hero-article";
+import { HomeBlocks } from "@/components/common/homepage/home-blocks";
+import { getHomepage } from "@/services/strapi/homepageService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
-}
-
-// Skeleton pour Hero
-function HeroSkeleton() {
-  return (
-    <div className="w-full h-96 bg-linear-to-b from-gray-200 to-gray-100 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
-  );
 }
 
 // Skeleton pour Block
@@ -30,7 +23,7 @@ export async function generateMetadata({
 }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  const homepage = await getHomepage(locale);
+  const homepage = await getHomepage();
 
   if (homepage?.seo) {
     return {
@@ -60,44 +53,17 @@ export async function generateMetadata({
   };
 }
 
-// Component Server pour Hero
-async function HomeHero({ locale }: { locale: string }) {
-  const homepage = await getHomepage(locale);
-
-  if (!homepage?.hero) {
-    return null;
-  }
-
-  return <HeroSection hero={homepage.hero} />;
-}
-
-async function HomeBlocks({ locale }: { locale: string }) {
-  const homepage = await getHomepage(locale);
-
-  if (!homepage?.blocks || homepage.blocks.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="space-y-12">
-      {homepage.blocks.map((block, index) => (
-        <BlockRenderer key={block.id || index} block={block} />
-      ))}
-    </div>
-  );
-}
-
-export default async function Home({ params }: HomePageProps) {
-  const { locale } = await params;
+export default async function Home() {
+  const homepage = await getHomepage();
 
   return (
     <main className="min-h-screen">
-      <Suspense fallback={<HeroSkeleton />}>
-        <HomeHero locale={locale} />
-      </Suspense>
+      {homepage?.heroArticle?.article && (
+        <HeroArticle article={homepage?.heroArticle?.article} />
+      )}
 
       <Suspense fallback={<BlockSkeleton />}>
-        <HomeBlocks locale={locale} />
+        {homepage?.blocks && <HomeBlocks blocks={homepage?.blocks} />}
       </Suspense>
     </main>
   );
