@@ -1,9 +1,8 @@
 import { BlockRenderer } from "@/components/common/block-renderer";
 import { HeroSection } from "@/components/common/homepage/hero-section";
 import { getHomepage } from "@/lib/strapi";
-import { Link } from "@/lib/navigation";
-import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
 interface HomePageProps {
@@ -36,7 +35,8 @@ export async function generateMetadata({
   if (homepage?.seo) {
     return {
       title: homepage.seo.metaTitle || t("metadata.home.title"),
-      description: homepage.seo.metaDescription || t("metadata.home.description"),
+      description:
+        homepage.seo.metaDescription || t("metadata.home.description"),
       keywords: homepage.seo.keywords,
       openGraph: {
         title: homepage.seo.metaTitle || t("metadata.home.title"),
@@ -71,31 +71,6 @@ async function HomeHero({ locale }: { locale: string }) {
   return <HeroSection hero={homepage.hero} />;
 }
 
-// Fallback par défaut quand pas de données
-function DefaultHome({ locale }: { locale: string }) {
-  // Note: Pas de possibilité d'utiliser getTranslations ici car c'est un composant client
-  // Donc on utilise la clé directement
-  return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-black dark:text-zinc-50 mb-4">
-          Welcome
-        </h1>
-        <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8">
-          Discover our products
-        </p>
-        <Link
-          href="/products"
-          className="inline-block px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
-        >
-          See Products
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-// Component Server pour Blocks
 async function HomeBlocks({ locale }: { locale: string }) {
   const homepage = await getHomepage(locale);
 
@@ -127,4 +102,3 @@ export default async function Home({ params }: HomePageProps) {
     </main>
   );
 }
-
