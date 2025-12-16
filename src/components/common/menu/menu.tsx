@@ -2,6 +2,7 @@
 
 import { LogoIcons } from "@/components/icons/logo-icons";
 import { Link } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
 import { StrapiMenu } from "@/types/strapi/menu";
 import { useState } from "react";
 import { LanguageSwitcher } from "../language-switcher";
@@ -22,14 +23,21 @@ export function Menu({ menu }: { menu: StrapiMenu }) {
           <LogoIcons />
         </button>
       </div>
-      {isOpen && (
-        <div className="flex flex-col gap-2 p-2 top-full right-0 w-full">
-          <NavigationMenuContainer menu={menu as StrapiMenu} />
-          <div className="flex">
-            <LanguageSwitcher />
+      <div
+        className={cn(
+          "top-full right-0 w-full grid transition-all duration-300 ease-in-out",
+          isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] "
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="p-2 pt-6 gap-2 flex flex-col">
+            <NavigationMenuContainer menu={menu as StrapiMenu} />
+            <div className="flex">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
