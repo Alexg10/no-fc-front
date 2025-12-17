@@ -61,10 +61,19 @@ export interface StrapiSimplePageContent {
   content?: BlocksContent | string;
 }
 
+export interface StrapiArticleQuote {
+  __component: "article.quote";
+  id: number;
+  quote?: BlocksContent;
+  name?: string;
+  description?: string;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
-  | StrapiSimplePageContent;
+  | StrapiSimplePageContent
+  | StrapiArticleQuote;
 
 export interface StrapiProduct {
   id: number;
