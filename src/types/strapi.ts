@@ -54,7 +54,17 @@ export interface StrapiHomeProducts {
   }>;
 }
 
-export type StrapiBlock = StrapiCenteredText | StrapiHomeProducts;
+export interface StrapiSimplePageContent {
+  __component: "simple-page.content";
+  id: number;
+  title?: string;
+  content?: BlocksContent | string;
+}
+
+export type StrapiBlock =
+  | StrapiCenteredText
+  | StrapiHomeProducts
+  | StrapiSimplePageContent;
 
 export interface StrapiProduct {
   id: number;

@@ -15,6 +15,12 @@
   "productNotFound": {
     "title": "Produit introuvable",
     "description": "Le produit que vous recherchez n'existe pas."
+  },
+  "pages": {
+    "notFound": {
+      "title": "Page introuvable",
+      "description": "La page que vous recherchez n'existe pas."
+    }
   }
 }
 
