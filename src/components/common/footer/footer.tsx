@@ -2,6 +2,7 @@ import Grid from "@/components/common/grid";
 import { getFooter } from "@/services/strapi/footerService";
 import { StrapiLink } from "@/types/strapi";
 import { FooterBottom } from "./footer-bottom";
+import { FooterNoFc } from "./footer-nofc";
 import { FooterTop } from "./footer-top";
 
 export async function Footer() {
@@ -22,6 +23,7 @@ export async function Footer() {
           />
         </div>
       </Grid>
+      <FooterNoFc />
     </footer>
   );
 }
