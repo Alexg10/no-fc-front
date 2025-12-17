@@ -21,149 +21,46 @@ jobs:
         id: pr-diff
         run: |
           git fetch origin ${{ github.base_ref }}
-          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD)
-          # Limiter la taille du diff pour éviter de dépasser les limites de l'API
-          echo "$DIFF" | head -c 50000 > pr_diff.txt
-          echo "Diff saved to pr_diff.txt"
+          git diff origin/${{ github.base_ref }}...HEAD > pr_diff.txt
+          echo "Diff saved"
 
       - name: Review with Claude
         id: claude-review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          # Vérifier que la clé API est présente
           if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "❌ ERREUR: ANTHROPIC_API_KEY n'est pas définie"
-            echo "Veuillez configurer la clé dans Settings > Secrets and variables > Actions"
+            echo "ERROR: ANTHROPIC_API_KEY not set"
             exit 1
           fi
           
-          echo "✓ Clé API détectée"
+          echo "API key found"
           
-          # Lire le diff
-          DIFF_CONTENT=$(cat pr_diff.txt)
-          echo "✓ Diff chargé ($(wc -c < pr_diff.txt) caractères)"
+          DIFF=$(cat pr_diff.txt | head -c 40000)
           
-          # Créer le prompt
-          PROMPT="Tu es un expert en revue de code pour un projet Next.js avec shadcn/ui, Strapi (headless CMS) et Shopify (headless commerce).
-
-## Contexte du projet:
-- **Stack:** Next.js (React), TypeScript/JavaScript
-- **UI:** shadcn/ui (components Tailwind + Radix UI)
-- **CMS:** Strapi (headless)
-- **E-commerce:** Shopify (headless via Storefront API)
-
-## Guidelines à vérifier:
-
-### Next.js Best Practices:
-- Utilisation appropriée de Server Components vs Client Components
-- Optimisation des images avec next/image
-- Gestion correcte du routing (App Router ou Pages Router)
-- Performance et SEO (metadata, sitemap, robots.txt)
-- Lazy loading et code splitting appropriés
-
-### shadcn/ui:
-- Composants importés correctement depuis @/components/ui
-- Personnalisation via Tailwind classes (pas de CSS inline)
-- Accessibilité (ARIA labels, keyboard navigation)
-- Variants et compositions appropriées
-
-### Strapi Integration:
-- Appels API sécurisés (tokens, variables d'environnement)
-- Gestion des erreurs et états de chargement
-- Typage correct des réponses API
-- Pagination et filtres optimisés
-- Cache et revalidation des données
-
-### Shopify Headless:
-- Utilisation correcte de la Storefront API
-- Gestion du panier (cart) et checkout
-- Webhooks configurés si nécessaire
-- Gestion des variants et inventory
-- Sécurisation des tokens d'accès
-
-### Sécurité:
-- Variables d'environnement (.env.local) pour les secrets
-- Validation des inputs utilisateur
-- Protection CSRF si formulaires
-- Sanitization des données de Strapi/Shopify
-- Rate limiting sur les API routes
-
-### Performance:
-- Bundle size optimisé
-- Images optimisées et responsive
-- Lazy loading des composants lourds
-- Mise en cache appropriée (SWR, React Query, etc.)
-- ISR ou SSG quand possible
-
-## Analyse demandée:
-
-1. **Résumé des changements**
-2. **Points positifs** ✅
-3. **Problèmes potentiels** ⚠️
-   - Bugs possibles
-   - Anti-patterns Next.js
-   - Problèmes d'intégration Strapi/Shopify
-   - Composants shadcn mal utilisés
-4. **Sécurité** 🔒
-5. **Performance** ⚡
-6. **Recommandations** 💡
-
-Sois constructif, précis et concentre-toi sur les aspects spécifiques à cette stack.
-
-Voici le diff:
-
-\`\`\`diff
-${DIFF_CONTENT}
-\`\`\`"
+          cat > request.json << 'EOF'
+{
+  "model": "claude-sonnet-4-20250514",
+  "max_tokens": 4000,
+  "messages": [{
+    "role": "user",
+    "content": "Tu es un expert en revue de code Next.js + shadcn/ui + Strapi + Shopify.\n\nAnalyse cette PR et donne:\n1. Resume des changements\n2. Points positifs\n3. Problemes potentiels\n4. Securite\n5. Performance\n6. Recommandations\n\nFocus sur: Next.js best practices, shadcn/ui, Strapi API, Shopify integration.\n\nDiff:\n\nPLACEHOLDER"
+  }]
+}
+EOF
           
-          # Créer le JSON avec jq pour échapper correctement
-          jq -n \
-            --arg prompt "$PROMPT" \
-            '{
-              model: "claude-sonnet-4-20250514",
-              max_tokens: 4000,
-              messages: [
-                {
-                  role: "user",
-                  content: $prompt
-                }
-              ]
-            }' > request.json
+          ESCAPED_DIFF=$(echo "$DIFF" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          sed -i "s/PLACEHOLDER/$ESCAPED_DIFF/g" request.json
           
-          echo "✓ Requête JSON préparée"
-          
-          # Appeler l'API Claude avec gestion d'erreur
-          HTTP_CODE=$(curl -s -w "%{http_code}" -o response.json \
-            https://api.anthropic.com/v1/messages \
+          curl -s https://api.anthropic.com/v1/messages \
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
             -H "content-type: application/json" \
-            -d @request.json)
+            -d @request.json \
+            -o response.json
           
-          echo "✓ Appel API effectué (HTTP $HTTP_CODE)"
-          
-          # Vérifier le code HTTP
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "❌ ERREUR API (HTTP $HTTP_CODE)"
-            echo "Réponse complète:"
-            cat response.json
-            exit 1
-          fi
-          
-          # Extraire le contenu de la réponse
-          REVIEW=$(cat response.json | jq -r '.content[0].text // "Erreur: pas de texte dans la réponse"')
-          
-          if [ "$REVIEW" = "null" ] || [ -z "$REVIEW" ]; then
-            echo "❌ ERREUR: Réponse vide de Claude"
-            echo "Réponse complète:"
-            cat response.json
-            exit 1
-          fi
-          
-          # Sauvegarder pour l'étape suivante
-          echo "$REVIEW" > review.txt
-          echo "✓ Revue sauvegardée ($(wc -c < review.txt) caractères)"
+          cat response.json | jq -r '.content[0].text' > review.txt
+          echo "Review saved"
 
       - name: Post review comment
         uses: actions/github-script@v7
@@ -177,5 +74,5 @@ ${DIFF_CONTENT}
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `## 🤖 Revue automatique par Claude\n\n${review}\n\n---\n*Cette revue a été générée automatiquement par Claude AI*`
+              body: `## 🤖 Revue par Claude\n\n${review}\n\n---\n*Revue automatique*`
             });
