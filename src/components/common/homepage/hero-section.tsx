@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { getStrapiImageUrl } from "@/lib/strapi";
 import { Link } from "@/lib/navigation";
-import type { StrapiHomepageHero } from "@/types/strapi";
+import { getStrapiImageUrl } from "@/lib/strapi";
+import { StrapiHomepageHero } from "@/types/strapi/homepage";
 import Image from "next/image";
 
 interface HeroSectionProps {
