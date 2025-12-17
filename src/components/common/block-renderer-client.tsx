@@ -1,11 +1,11 @@
 "use client";
 
 import { getStrapiImageUrl } from "@/lib/strapi";
-import Image from "next/image";
 import {
   BlocksRenderer,
   type BlocksContent,
 } from "@strapi/blocks-react-renderer";
+import Image from "next/image";
 
 interface BlockRendererClientProps {
   content: BlocksContent;
@@ -39,7 +39,13 @@ export function BlockRendererClient({ content }: BlockRendererClientProps) {
           </p>
         ),
         heading: ({ children, level }) => {
-          const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+          const HeadingTag = `h${level}` as
+            | "h1"
+            | "h2"
+            | "h3"
+            | "h4"
+            | "h5"
+            | "h6";
           const classes = {
             1: "text-4xl font-bold text-black dark:text-zinc-50 mb-6 mt-8",
             2: "text-3xl font-bold text-black dark:text-zinc-50 mb-5 mt-7",
@@ -88,4 +94,3 @@ export function BlockRendererClient({ content }: BlockRendererClientProps) {
     />
   );
 }
-
