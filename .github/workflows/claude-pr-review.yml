@@ -31,36 +31,72 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
+          # Vérifier que la clé API est présente
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "❌ ERREUR: ANTHROPIC_API_KEY n'est pas définie"
+            echo "Veuillez configurer la clé dans Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          
+          echo "✓ Clé API détectée"
+          
           # Lire le diff
           DIFF_CONTENT=$(cat pr_diff.txt)
-
+          echo "✓ Diff chargé ($(wc -c < pr_diff.txt) caractères)"
+          
+          # Échapper le JSON correctement
+          DIFF_ESCAPED=$(echo "$DIFF_CONTENT" | jq -Rs .)
+          
           # Préparer le prompt pour Claude
-          cat > request.json <<EOF
+          cat > request.json <<'EOFPROMPT'
           {
             "model": "claude-sonnet-4-20250514",
             "max_tokens": 4000,
             "messages": [
               {
                 "role": "user",
-                "content": "Tu es un expert en revue de code pour un projet Next.js avec shadcn/ui, Strapi (headless CMS) et Shopify (headless commerce).\n\n## Contexte du projet:\n- **Stack:** Next.js (React), TypeScript/JavaScript\n- **UI:** shadcn/ui (components Tailwind + Radix UI)\n- **CMS:** Strapi (headless)\n- **E-commerce:** Shopify (headless via Storefront API)\n\n## Guidelines à vérifier:\n\n### Next.js Best Practices:\n- Utilisation appropriée de Server Components vs Client Components\n- Optimisation des images avec next/image\n- Gestion correcte du routing (App Router ou Pages Router)\n- Utilisation de getStaticProps/getServerSideProps si Pages Router\n- Performance et SEO (metadata, sitemap, robots.txt)\n- Lazy loading et code splitting appropriés\n\n### shadcn/ui:\n- Composants importés correctement depuis @/components/ui\n- Personnalisation via Tailwind classes (pas de CSS inline)\n- Accessibilité (ARIA labels, keyboard navigation)\n- Variants et compositions appropriées\n\n### Strapi Integration:\n- Appels API sécurisés (tokens, variables d'environnement)\n- Gestion des erreurs et états de chargement\n- Typage correct des réponses API\n- Pagination et filtres optimisés\n- Cache et revalidation des données\n\n### Shopify Headless:\n- Utilisation correcte de la Storefront API\n- Gestion du panier (cart) et checkout\n- Webhooks configurés si nécessaire\n- Gestion des variants et inventory\n- Sécurisation des tokens d'accès\n\n### Sécurité:\n- Variables d'environnement (.env.local) pour les secrets\n- Validation des inputs utilisateur\n- Protection CSRF si formulaires\n- Sanitization des données de Strapi/Shopify\n- Rate limiting sur les API routes\n\n### Performance:\n- Bundle size optimisé\n- Images optimisées et responsive\n- Lazy loading des composants lourds\n- Mise en cache appropriée (SWR, React Query, etc.)\n- ISR ou SSG quand possible\n\n## Analyse demandée:\n\n1. **Résumé des changements**\n2. **Points positifs** ✅\n3. **Problèmes potentiels** ⚠️\n   - Bugs possibles\n   - Anti-patterns Next.js\n   - Problèmes d'intégration Strapi/Shopify\n   - Composants shadcn mal utilisés\n4. **Sécurité** 🔒\n5. **Performance** ⚡\n6. **Recommandations** 💡\n\nSois constructif, précis et concentre-toi sur les aspects spécifiques à cette stack.\n\nVoici le diff:\n\n\`\`\`diff\n${DIFF_CONTENT}\n\`\`\`"
+                "content": "Tu es un expert en revue de code pour un projet Next.js avec shadcn/ui, Strapi (headless CMS) et Shopify (headless commerce).\n\n## Contexte du projet:\n- **Stack:** Next.js (React), TypeScript/JavaScript\n- **UI:** shadcn/ui (components Tailwind + Radix UI)\n- **CMS:** Strapi (headless)\n- **E-commerce:** Shopify (headless via Storefront API)\n\n## Guidelines à vérifier:\n\n### Next.js Best Practices:\n- Utilisation appropriée de Server Components vs Client Components\n- Optimisation des images avec next/image\n- Gestion correcte du routing (App Router ou Pages Router)\n- Utilisation de getStaticProps/getServerSideProps si Pages Router\n- Performance et SEO (metadata, sitemap, robots.txt)\n- Lazy loading et code splitting appropriés\n\n### shadcn/ui:\n- Composants importés correctement depuis @/components/ui\n- Personnalisation via Tailwind classes (pas de CSS inline)\n- Accessibilité (ARIA labels, keyboard navigation)\n- Variants et compositions appropriées\n\n### Strapi Integration:\n- Appels API sécurisés (tokens, variables d'environnement)\n- Gestion des erreurs et états de chargement\n- Typage correct des réponses API\n- Pagination et filtres optimisés\n- Cache et revalidation des données\n\n### Shopify Headless:\n- Utilisation correcte de la Storefront API\n- Gestion du panier (cart) et checkout\n- Webhooks configurés si nécessaire\n- Gestion des variants et inventory\n- Sécurisation des tokens d'accès\n\n### Sécurité:\n- Variables d'environnement (.env.local) pour les secrets\n- Validation des inputs utilisateur\n- Protection CSRF si formulaires\n- Sanitization des données de Strapi/Shopify\n- Rate limiting sur les API routes\n\n### Performance:\n- Bundle size optimisé\n- Images optimisées et responsive\n- Lazy loading des composants lourds\n- Mise en cache appropriée (SWR, React Query, etc.)\n- ISR ou SSG quand possible\n\n## Analyse demandée:\n\n1. **Résumé des changements**\n2. **Points positifs** ✅\n3. **Problèmes potentiels** ⚠️\n   - Bugs possibles\n   - Anti-patterns Next.js\n   - Problèmes d'intégration Strapi/Shopify\n   - Composants shadcn mal utilisés\n4. **Sécurité** 🔒\n5. **Performance** ⚡\n6. **Recommandations** 💡\n\nSois constructif, précis et concentre-toi sur les aspects spécifiques à cette stack.\n\nVoici le diff:\n\n```diff\nDIFF_PLACEHOLDER\n```"
               }
             ]
           }
-          EOF
-
-          # Appeler l'API Claude
-          RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
+EOFPROMPT
+          
+          # Remplacer le placeholder par le diff réel
+          jq --arg diff "$DIFF_CONTENT" '.messages[0].content |= sub("DIFF_PLACEHOLDER"; $diff)' request.json > request_final.json
+          
+          echo "✓ Requête JSON préparée"
+          
+          # Appeler l'API Claude avec gestion d'erreur
+          HTTP_CODE=$(curl -s -w "%{http_code}" -o response.json \
+            https://api.anthropic.com/v1/messages \
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
             -H "content-type: application/json" \
-            -d @request.json)
-
+            -d @request_final.json)
+          
+          echo "✓ Appel API effectué (HTTP $HTTP_CODE)"
+          
+          # Vérifier le code HTTP
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ ERREUR API (HTTP $HTTP_CODE)"
+            echo "Réponse complète:"
+            cat response.json
+            exit 1
+          fi
+          
           # Extraire le contenu de la réponse
-          REVIEW=$(echo "$RESPONSE" | jq -r '.content[0].text')
-
+          REVIEW=$(cat response.json | jq -r '.content[0].text // "Erreur: pas de texte dans la réponse"')
+          
+          if [ "$REVIEW" = "null" ] || [ -z "$REVIEW" ]; then
+            echo "❌ ERREUR: Réponse vide de Claude"
+            echo "Réponse complète:"
+            cat response.json
+            exit 1
+          fi
+          
           # Sauvegarder pour l'étape suivante
           echo "$REVIEW" > review.txt
-          echo "Review saved to review.txt"
+          echo "✓ Revue sauvegardée ($(wc -c < review.txt) caractères)"
 
       - name: Post review comment
         uses: actions/github-script@v7
@@ -69,7 +105,7 @@ jobs:
           script: |
             const fs = require('fs');
             const review = fs.readFileSync('review.txt', 'utf8');
-
+            
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
