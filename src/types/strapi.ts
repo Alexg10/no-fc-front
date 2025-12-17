@@ -13,6 +13,13 @@ export interface StrapiImage {
   };
 }
 
+export interface StrapiLink {
+  id: number;
+  label: string;
+  link: string;
+  target?: string;
+}
+
 export interface StrapiHomepageSection {
   id: number;
   title?: string;

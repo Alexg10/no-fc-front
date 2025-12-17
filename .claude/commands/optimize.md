@@ -1,5 +1,5 @@
 ---
-name: otpimize
+name: optimize
 description: Optimize and follow Next16 best practices
 ---
 
