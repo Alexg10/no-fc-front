@@ -15,6 +15,9 @@ export async function getArticleBySlug(
       cover: {
         fields: ["url", "alternativeText", "width", "height", "formats"],
       },
+      blocks: {
+        populate: "*",
+      },
     },
   });
   const result = await strapiFetch(`/articles?${query}`);
