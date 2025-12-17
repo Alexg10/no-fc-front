@@ -44,25 +44,92 @@ jobs:
           DIFF_CONTENT=$(cat pr_diff.txt)
           echo "✓ Diff chargé ($(wc -c < pr_diff.txt) caractères)"
           
-          # Échapper le JSON correctement
-          DIFF_ESCAPED=$(echo "$DIFF_CONTENT" | jq -Rs .)
+          # Créer le prompt
+          PROMPT="Tu es un expert en revue de code pour un projet Next.js avec shadcn/ui, Strapi (headless CMS) et Shopify (headless commerce).
+
+## Contexte du projet:
+- **Stack:** Next.js (React), TypeScript/JavaScript
+- **UI:** shadcn/ui (components Tailwind + Radix UI)
+- **CMS:** Strapi (headless)
+- **E-commerce:** Shopify (headless via Storefront API)
+
+## Guidelines à vérifier:
+
+### Next.js Best Practices:
+- Utilisation appropriée de Server Components vs Client Components
+- Optimisation des images avec next/image
+- Gestion correcte du routing (App Router ou Pages Router)
+- Performance et SEO (metadata, sitemap, robots.txt)
+- Lazy loading et code splitting appropriés
+
+### shadcn/ui:
+- Composants importés correctement depuis @/components/ui
+- Personnalisation via Tailwind classes (pas de CSS inline)
+- Accessibilité (ARIA labels, keyboard navigation)
+- Variants et compositions appropriées
+
+### Strapi Integration:
+- Appels API sécurisés (tokens, variables d'environnement)
+- Gestion des erreurs et états de chargement
+- Typage correct des réponses API
+- Pagination et filtres optimisés
+- Cache et revalidation des données
+
+### Shopify Headless:
+- Utilisation correcte de la Storefront API
+- Gestion du panier (cart) et checkout
+- Webhooks configurés si nécessaire
+- Gestion des variants et inventory
+- Sécurisation des tokens d'accès
+
+### Sécurité:
+- Variables d'environnement (.env.local) pour les secrets
+- Validation des inputs utilisateur
+- Protection CSRF si formulaires
+- Sanitization des données de Strapi/Shopify
+- Rate limiting sur les API routes
+
+### Performance:
+- Bundle size optimisé
+- Images optimisées et responsive
+- Lazy loading des composants lourds
+- Mise en cache appropriée (SWR, React Query, etc.)
+- ISR ou SSG quand possible
+
+## Analyse demandée:
+
+1. **Résumé des changements**
+2. **Points positifs** ✅
+3. **Problèmes potentiels** ⚠️
+   - Bugs possibles
+   - Anti-patterns Next.js
+   - Problèmes d'intégration Strapi/Shopify
+   - Composants shadcn mal utilisés
+4. **Sécurité** 🔒
+5. **Performance** ⚡
+6. **Recommandations** 💡
+
+Sois constructif, précis et concentre-toi sur les aspects spécifiques à cette stack.
+
+Voici le diff:
+
+\`\`\`diff
+${DIFF_CONTENT}
+\`\`\`"
           
-          # Préparer le prompt pour Claude
-          cat > request.json <<'EOFPROMPT'
-          {
-            "model": "claude-sonnet-4-20250514",
-            "max_tokens": 4000,
-            "messages": [
-              {
-                "role": "user",
-                "content": "Tu es un expert en revue de code pour un projet Next.js avec shadcn/ui, Strapi (headless CMS) et Shopify (headless commerce).\n\n## Contexte du projet:\n- **Stack:** Next.js (React), TypeScript/JavaScript\n- **UI:** shadcn/ui (components Tailwind + Radix UI)\n- **CMS:** Strapi (headless)\n- **E-commerce:** Shopify (headless via Storefront API)\n\n## Guidelines à vérifier:\n\n### Next.js Best Practices:\n- Utilisation appropriée de Server Components vs Client Components\n- Optimisation des images avec next/image\n- Gestion correcte du routing (App Router ou Pages Router)\n- Utilisation de getStaticProps/getServerSideProps si Pages Router\n- Performance et SEO (metadata, sitemap, robots.txt)\n- Lazy loading et code splitting appropriés\n\n### shadcn/ui:\n- Composants importés correctement depuis @/components/ui\n- Personnalisation via Tailwind classes (pas de CSS inline)\n- Accessibilité (ARIA labels, keyboard navigation)\n- Variants et compositions appropriées\n\n### Strapi Integration:\n- Appels API sécurisés (tokens, variables d'environnement)\n- Gestion des erreurs et états de chargement\n- Typage correct des réponses API\n- Pagination et filtres optimisés\n- Cache et revalidation des données\n\n### Shopify Headless:\n- Utilisation correcte de la Storefront API\n- Gestion du panier (cart) et checkout\n- Webhooks configurés si nécessaire\n- Gestion des variants et inventory\n- Sécurisation des tokens d'accès\n\n### Sécurité:\n- Variables d'environnement (.env.local) pour les secrets\n- Validation des inputs utilisateur\n- Protection CSRF si formulaires\n- Sanitization des données de Strapi/Shopify\n- Rate limiting sur les API routes\n\n### Performance:\n- Bundle size optimisé\n- Images optimisées et responsive\n- Lazy loading des composants lourds\n- Mise en cache appropriée (SWR, React Query, etc.)\n- ISR ou SSG quand possible\n\n## Analyse demandée:\n\n1. **Résumé des changements**\n2. **Points positifs** ✅\n3. **Problèmes potentiels** ⚠️\n   - Bugs possibles\n   - Anti-patterns Next.js\n   - Problèmes d'intégration Strapi/Shopify\n   - Composants shadcn mal utilisés\n4. **Sécurité** 🔒\n5. **Performance** ⚡\n6. **Recommandations** 💡\n\nSois constructif, précis et concentre-toi sur les aspects spécifiques à cette stack.\n\nVoici le diff:\n\n```diff\nDIFF_PLACEHOLDER\n```"
-              }
-            ]
-          }
-EOFPROMPT
-          
-          # Remplacer le placeholder par le diff réel
-          jq --arg diff "$DIFF_CONTENT" '.messages[0].content |= sub("DIFF_PLACEHOLDER"; $diff)' request.json > request_final.json
+          # Créer le JSON avec jq pour échapper correctement
+          jq -n \
+            --arg prompt "$PROMPT" \
+            '{
+              model: "claude-sonnet-4-20250514",
+              max_tokens: 4000,
+              messages: [
+                {
+                  role: "user",
+                  content: $prompt
+                }
+              ]
+            }' > request.json
           
           echo "✓ Requête JSON préparée"
           
@@ -72,7 +139,7 @@ EOFPROMPT
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
             -H "content-type: application/json" \
-            -d @request_final.json)
+            -d @request.json)
           
           echo "✓ Appel API effectué (HTTP $HTTP_CODE)"
           
