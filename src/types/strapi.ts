@@ -1,27 +1,16 @@
 import type { BlocksContent } from "@strapi/blocks-react-renderer";
-
+import { StrapiHomepageArticle } from "./strapi/homepage";
 export interface StrapiImage {
   id: number;
   url: string;
   alternativeText?: string;
   width?: number;
   height?: number;
-}
-
-export interface StrapiHomepageHero {
-  id: number;
-  title: string;
-  subtitle?: string;
-  description?: string;
-  image?: StrapiImage;
-  background?: StrapiImage;
-  button?: {
-    label: string;
-    link: string;
-    target?: string;
+  formats?: {
+    large: {
+      url: string;
+    };
   };
-  ctaText?: string;
-  ctaLink?: string;
 }
 
 export interface StrapiHomepageSection {
@@ -68,7 +57,7 @@ export interface StrapiProduct {
 
 export interface StrapiHomepage {
   id: number;
-  hero?: StrapiHomepageHero;
+  heroArticle?: StrapiHomepageArticle;
   blocks?: StrapiBlock[];
   seo?: {
     metaTitle?: string;
@@ -89,4 +78,10 @@ export interface StrapiApiResponse {
 export interface StrapiFetchResult {
   data: StrapiApiResponse | null;
   status: number;
+}
+
+export interface StrapiSeo {
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string;
 }

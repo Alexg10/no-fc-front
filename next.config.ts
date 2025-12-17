@@ -44,6 +44,7 @@ if (strapiHostname && strapiHostname !== "localhost:1337") {
 const nextConfig: NextConfig = {
   images: {
     remotePatterns,
+    unoptimized: process.env.NODE_ENV === "development",
   },
 };
 
