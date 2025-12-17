@@ -1,10 +1,10 @@
 import { CartSheet } from "@/components/cart-sheet";
-import { Footer } from "@/components/common/footer";
+import { Footer } from "@/components/common/footer/footer";
 import { Header } from "@/components/common/header";
 import { CartProvider } from "@/contexts/cart-context";
+import { routing } from "@/routing";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { routing } from "@/routing";
 import { notFound } from "next/navigation";
 
 export default async function LocaleLayout({
@@ -35,4 +35,3 @@ export default async function LocaleLayout({
     </NextIntlClientProvider>
   );
 }
-
