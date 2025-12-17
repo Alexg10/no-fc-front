@@ -5,74 +5,61 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  claude-review:
+  review:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
       contents: read
+      pull-requests: write
+      id-token: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Get PR diff
-        id: pr-diff
-        run: |
-          git fetch origin ${{ github.base_ref }}
-          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD)
-          # Limiter la taille du diff pour éviter de dépasser les limites de l'API
-          echo "$DIFF" | head -c 50000 > pr_diff.txt
-          echo "Diff saved to pr_diff.txt"
-
-      - name: Review with Claude
-        id: claude-review
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          # Lire le diff
-          DIFF_CONTENT=$(cat pr_diff.txt)
-
-          # Préparer le prompt pour Claude
-          cat > request.json <<EOF
-          {
-            "model": "claude-sonnet-4-20250514",
-            "max_tokens": 4000,
-            "messages": [
-              {
-                "role": "user",
-                "content": "Tu es un expert en revue de code pour un projet Next.js avec shadcn/ui, Strapi (headless CMS) et Shopify (headless commerce).\n\n## Contexte du projet:\n- **Stack:** Next.js (React), TypeScript/JavaScript\n- **UI:** shadcn/ui (components Tailwind + Radix UI)\n- **CMS:** Strapi (headless)\n- **E-commerce:** Shopify (headless via Storefront API)\n\n## Guidelines à vérifier:\n\n### Next.js Best Practices:\n- Utilisation appropriée de Server Components vs Client Components\n- Optimisation des images avec next/image\n- Gestion correcte du routing (App Router ou Pages Router)\n- Utilisation de getStaticProps/getServerSideProps si Pages Router\n- Performance et SEO (metadata, sitemap, robots.txt)\n- Lazy loading et code splitting appropriés\n\n### shadcn/ui:\n- Composants importés correctement depuis @/components/ui\n- Personnalisation via Tailwind classes (pas de CSS inline)\n- Accessibilité (ARIA labels, keyboard navigation)\n- Variants et compositions appropriées\n\n### Strapi Integration:\n- Appels API sécurisés (tokens, variables d'environnement)\n- Gestion des erreurs et états de chargement\n- Typage correct des réponses API\n- Pagination et filtres optimisés\n- Cache et revalidation des données\n\n### Shopify Headless:\n- Utilisation correcte de la Storefront API\n- Gestion du panier (cart) et checkout\n- Webhooks configurés si nécessaire\n- Gestion des variants et inventory\n- Sécurisation des tokens d'accès\n\n### Sécurité:\n- Variables d'environnement (.env.local) pour les secrets\n- Validation des inputs utilisateur\n- Protection CSRF si formulaires\n- Sanitization des données de Strapi/Shopify\n- Rate limiting sur les API routes\n\n### Performance:\n- Bundle size optimisé\n- Images optimisées et responsive\n- Lazy loading des composants lourds\n- Mise en cache appropriée (SWR, React Query, etc.)\n- ISR ou SSG quand possible\n\n## Analyse demandée:\n\n1. **Résumé des changements**\n2. **Points positifs** ✅\n3. **Problèmes potentiels** ⚠️\n   - Bugs possibles\n   - Anti-patterns Next.js\n   - Problèmes d'intégration Strapi/Shopify\n   - Composants shadcn mal utilisés\n4. **Sécurité** 🔒\n5. **Performance** ⚡\n6. **Recommandations** 💡\n\nSois constructif, précis et concentre-toi sur les aspects spécifiques à cette stack.\n\nVoici le diff:\n\n\`\`\`diff\n${DIFF_CONTENT}\n\`\`\`"
-              }
-            ]
-          }
-          EOF
-
-          # Appeler l'API Claude
-          RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
-            -H "x-api-key: $ANTHROPIC_API_KEY" \
-            -H "anthropic-version: 2023-06-01" \
-            -H "content-type: application/json" \
-            -d @request.json)
-
-          # Extraire le contenu de la réponse
-          REVIEW=$(echo "$RESPONSE" | jq -r '.content[0].text')
-
-          # Sauvegarder pour l'étape suivante
-          echo "$REVIEW" > review.txt
-          echo "Review saved to review.txt"
-
-      - name: Post review comment
-        uses: actions/github-script@v7
+      - name: PR Review by Claude
+        uses: anthropics/claude-code-action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const review = fs.readFileSync('review.txt', 'utf8');
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            /review-pr REPO: ${{ github.repository }} PR_NUMBER: ${{ github.event.pull_request.number }}
 
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: `## 🤖 Revue automatique par Claude\n\n${review}\n\n---\n*Cette revue a été générée automatiquement par Claude AI*`
-            });
+            Tu es un expert en revue de code pour un projet avec cette stack:
+            - Next.js (App Router ou Pages Router)
+            - shadcn/ui (Tailwind + Radix UI)
+            - Strapi (headless CMS)
+            - Shopify (headless via Storefront API)
+
+            Concentre-toi sur:
+
+            **Next.js:**
+            - Server vs Client Components
+            - Optimisation images (next/image)
+            - Data fetching (SSG, SSR, ISR)
+            - Performance et SEO
+
+            **shadcn/ui:**
+            - Imports corrects depuis @/components/ui
+            - Utilisation de Tailwind (pas de CSS inline)
+            - Accessibilité
+
+            **Strapi:**
+            - Sécurité des appels API (tokens, env vars)
+            - Typage des réponses
+            - Cache et revalidation
+
+            **Shopify:**
+            - Storefront API usage
+            - Gestion cart/checkout
+            - Sécurité des tokens
+
+            **Général:**
+            - Variables d'environnement pour secrets
+            - Validation des inputs
+            - Performance (bundle size, lazy loading)
+
+            Donne une revue constructive avec: résumé, points positifs, problèmes potentiels, sécurité, performance, recommandations.
+
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment"

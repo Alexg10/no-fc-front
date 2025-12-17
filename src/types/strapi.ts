@@ -13,6 +13,13 @@ export interface StrapiImage {
   };
 }
 
+export interface StrapiLink {
+  id: number;
+  label: string;
+  link: string;
+  target?: string;
+}
+
 export interface StrapiHomepageSection {
   id: number;
   title?: string;
@@ -47,7 +54,26 @@ export interface StrapiHomeProducts {
   }>;
 }
 
-export type StrapiBlock = StrapiCenteredText | StrapiHomeProducts;
+export interface StrapiSimplePageContent {
+  __component: "simple-page.content";
+  id: number;
+  title?: string;
+  content?: BlocksContent | string;
+}
+
+export interface StrapiArticleQuote {
+  __component: "article.quote";
+  id: number;
+  quote?: BlocksContent;
+  name?: string;
+  description?: string;
+}
+
+export type StrapiBlock =
+  | StrapiCenteredText
+  | StrapiHomeProducts
+  | StrapiSimplePageContent
+  | StrapiArticleQuote;
 
 export interface StrapiProduct {
   id: number;
