@@ -22,13 +22,69 @@ jobs:
           git fetch origin ${{ github.base_ref }}
           git diff origin/${{ github.base_ref }}...HEAD > pr_diff.txt
 
-      - name: Review with Claude
+      - name: Create review script
+        run: |
+          cat > review.py << 'ENDOFPYTHON'
+          import json
+          import os
+          import requests
+          
+          # Lire le diff
+          with open('pr_diff.txt', 'r') as f:
+              diff = f.read()[:30000]
+          
+          # Créer le prompt
+          prompt = f"""Tu es expert en Next.js, shadcn/ui, Strapi et Shopify.
+
+Analyse cette Pull Request et donne:
+
+1. **Résumé des changements**
+2. **Points positifs** ✅
+3. **Problèmes potentiels** ⚠️ (bugs, anti-patterns Next.js, intégration Strapi/Shopify, shadcn)
+4. **Sécurité** 🔒
+5. **Performance** ⚡
+6. **Recommandations** 💡
+
+Focus: Next.js best practices, Server/Client Components, shadcn/ui, Strapi API, Shopify integration.
+
+Diff:
+```
+{diff}
+```
+"""
+          
+          # Appel API
+          response = requests.post(
+              'https://api.anthropic.com/v1/messages',
+              headers={
+                  'x-api-key': os.environ['ANTHROPIC_API_KEY'],
+                  'anthropic-version': '2023-06-01',
+                  'content-type': 'application/json',
+              },
+              json={
+                  'model': 'claude-sonnet-4-20250514',
+                  'max_tokens': 4000,
+                  'messages': [{'role': 'user', 'content': prompt}]
+              }
+          )
+          
+          # Sauvegarder la réponse
+          if response.status_code == 200:
+              data = response.json()
+              review = data['content'][0]['text']
+              with open('review.txt', 'w') as f:
+                  f.write(review)
+              print(f"✓ Review saved ({len(review)} chars)")
+          else:
+              print(f"✗ API Error: {response.status_code}")
+              print(response.text)
+              exit(1)
+          ENDOFPYTHON
+
+      - name: Run review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          DIFF=$(cat pr_diff.txt | head -c 30000 | jq -Rs .)
-          echo "{\"model\":\"claude-sonnet-4-20250514\",\"max_tokens\":4000,\"messages\":[{\"role\":\"user\",\"content\":\"Tu es expert en Next.js+shadcn+Strapi+Shopify. Analyse cette PR: resume, points positifs, problemes, securite, performance, recommandations. Diff: $DIFF\"}]}" > request.json
-          curl -s https://api.anthropic.com/v1/messages -H "x-api-key: $ANTHROPIC_API_KEY" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" -d @request.json | jq -r '.content[0].text' > review.txt
+        run: python review.py
 
       - name: Post review
         uses: actions/github-script@v7
