@@ -22,8 +22,9 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
-            /review-pr REPO: ${{ github.repository }} PR_NUMBER: ${{ github.event.pull_request.number }}
+            Analyse la Pull Request #${{ github.event.pull_request.number }} du repository ${{ github.repository }}.
 
             Tu es un expert en revue de code pour un projet avec cette stack:
             - Next.js (App Router ou Pages Router)
