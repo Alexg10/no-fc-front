@@ -69,11 +69,18 @@ export interface StrapiArticleQuote {
   description?: string;
 }
 
+export interface StrapiArticleDescription {
+  __component: "article.description";
+  id: number;
+  description?: BlocksContent;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
   | StrapiSimplePageContent
-  | StrapiArticleQuote;
+  | StrapiArticleQuote
+  | StrapiArticleDescription;
 
 export interface StrapiProduct {
   id: number;
