@@ -1,3 +1,4 @@
+import { ArticleDescriptionBlock } from "@/components/dynamic-blocks/article-description-block";
 import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-block";
 import { CenteredTextBlock } from "@/components/dynamic-blocks/centered-text-block";
 import { Content } from "@/components/dynamic-blocks/content";
@@ -18,6 +19,8 @@ export function BlockRenderer({ block }: BlockRendererProps) {
       return <Content block={block} />;
     case "article.quote":
       return <ArticleQuoteBlock block={block} />;
+    case "article.description":
+      return <ArticleDescriptionBlock block={block} />;
     default:
       console.warn(`Unknown block type: ${(block as StrapiBlock).__component}`);
       return null;
