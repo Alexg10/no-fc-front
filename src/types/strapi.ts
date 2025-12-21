@@ -75,12 +75,19 @@ export interface StrapiArticleDescription {
   description?: BlocksContent;
 }
 
+export interface StrapiArticleCarousel {
+  __component: "article.carousel";
+  id: number;
+  images?: StrapiImage[];
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
   | StrapiSimplePageContent
   | StrapiArticleQuote
-  | StrapiArticleDescription;
+  | StrapiArticleDescription
+  | StrapiArticleCarousel;
 
 export interface StrapiProduct {
   id: number;
