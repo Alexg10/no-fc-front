@@ -81,13 +81,23 @@ export interface StrapiArticleCarousel {
   images?: StrapiImage[];
 }
 
+export interface StrapiArticleTitleContent {
+  __component: "article.title-content";
+  id: number;
+  title?: string;
+  twoColumns?: boolean;
+  image?: StrapiImage;
+  content?: BlocksContent;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
   | StrapiSimplePageContent
   | StrapiArticleQuote
   | StrapiArticleDescription
-  | StrapiArticleCarousel;
+  | StrapiArticleCarousel
+  | StrapiArticleTitleContent;
 
 export interface StrapiProduct {
   id: number;

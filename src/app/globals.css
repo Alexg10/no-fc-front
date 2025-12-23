@@ -130,3 +130,8 @@
   margin-left: -50vw;
   margin-right: -50vw;
 }
+
+.text-2-cols {
+  column-count: 2;
+  column-gap: 40px;
+}
