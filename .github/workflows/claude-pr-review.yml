@@ -10,11 +10,10 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      id-token: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -23,44 +22,17 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          mode: agent
           prompt: |
             Analyse la Pull Request #${{ github.event.pull_request.number }} du repository ${{ github.repository }}.
 
-            Tu es un expert en revue de code pour un projet avec cette stack:
-            - Next.js (App Router ou Pages Router)
-            - shadcn/ui (Tailwind + Radix UI)
-            - Strapi (headless CMS)
-            - Shopify (headless via Storefront API)
+            Tu es un expert en revue de code pour un projet Next.js + Strapi + Shopify.
 
             Concentre-toi sur:
-
-            **Next.js:**
             - Server vs Client Components
             - Optimisation images (next/image)
-            - Data fetching (SSG, SSR, ISR)
             - Performance et SEO
-
-            **shadcn/ui:**
-            - Imports corrects depuis @/components/ui
-            - Utilisation de Tailwind (pas de CSS inline)
-            - Accessibilité
-
-            **Strapi:**
-            - Sécurité des appels API (tokens, env vars)
-            - Typage des réponses
-            - Cache et revalidation
-
-            **Shopify:**
-            - Storefront API usage
-            - Gestion cart/checkout
-            - Sécurité des tokens
-
-            **Général:**
+            - Typage TypeScript
             - Variables d'environnement pour secrets
-            - Validation des inputs
             - Performance (bundle size, lazy loading)
 
             Donne une revue constructive avec: résumé, points positifs, problèmes potentiels, sécurité, performance, recommandations.
-
-          show_full_output: false
