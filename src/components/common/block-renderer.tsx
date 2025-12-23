@@ -1,5 +1,6 @@
 import { ArticleDescriptionBlock } from "@/components/dynamic-blocks/article-description-block";
 import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-block";
+import { CarouselBlock } from "@/components/dynamic-blocks/carousel-block";
 import { CenteredTextBlock } from "@/components/dynamic-blocks/centered-text-block";
 import { Content } from "@/components/dynamic-blocks/content";
 import { HomeProductsBlock } from "@/components/dynamic-blocks/home-products-block";
@@ -21,6 +22,8 @@ export function BlockRenderer({ block }: BlockRendererProps) {
       return <ArticleQuoteBlock block={block} />;
     case "article.description":
       return <ArticleDescriptionBlock block={block} />;
+    case "article.carousel":
+      return <CarouselBlock block={block} />;
     default:
       console.warn(`Unknown block type: ${(block as StrapiBlock).__component}`);
       return null;
