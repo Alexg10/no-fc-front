@@ -18,7 +18,7 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
   }
 
   return (
-    <section className="my-8 cursor-grab">
+    <section className="my-8 cursor-grab full-width">
       <Splide
         options={{
           type: "loop",
