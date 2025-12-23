@@ -23,6 +23,7 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          mode: agent
           prompt: |
             Analyse la Pull Request #${{ github.event.pull_request.number }} du repository ${{ github.repository }}.
 
@@ -62,5 +63,4 @@ jobs:
 
             Donne une revue constructive avec: résumé, points positifs, problèmes potentiels, sécurité, performance, recommandations.
 
-          claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment"
+          show_full_output: false
