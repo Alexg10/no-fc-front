@@ -13,7 +13,9 @@
     "fresh-install": "rm -rf node_modules pnpm-lock.yaml && pnpm install",
     "component": "node scripts/create-component.js",
     "page": "node scripts/create-page.js",
-    "translation": "node scripts/create-translation.js"
+    "translation": "node scripts/create-translation.js",
+    "lhci:mobile": "lhci autorun",
+    "lhci:desktop": "lhci autorun --collect.settings.preset=desktop"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",

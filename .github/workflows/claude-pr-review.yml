@@ -1,4 +1,4 @@
-name: Claude Auto Review with Tracking
+name: Claude PR Review (Disabled)
 
 on:
   pull_request:
@@ -6,66 +6,20 @@ on:
 
 jobs:
   review:
+    name: Check PR Status
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-      id-token: write
-
     steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 1
-
-      - uses: anthropics/claude-code-action@v1
-        env:
-          CLAUDE_CODE_VERSION: "v1.0.0"
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          track_progress: true
-          prompt: |
-            REPO: ${{ github.repository }}
-            PR NUMBER: ${{ github.event.pull_request.number }}
-
-            Analyse la Pull Request du repository ${{ github.repository }}.
-
-            Tu es un expert en revue de code pour un projet avec cette stack:
-            - Next.js (App Router ou Pages Router)
-            - shadcn/ui (Tailwind + Radix UI)
-            - Strapi (headless CMS)
-            - Shopify (headless via Storefront API)
-
-            Concentre-toi sur:
-
-            **Next.js:**
-            - Server vs Client Components
-            - Optimisation images (next/image)
-            - Data fetching (SSG, SSR, ISR)
-            - Performance et SEO
-
-            **shadcn/ui:**
-            - Imports corrects depuis @/components/ui
-            - Utilisation de Tailwind (pas de CSS inline)
-            - Accessibilité
-
-            **Strapi:**
-            - Sécurité des appels API (tokens, env vars)
-            - Typage des réponses
-            - Cache et revalidation
-
-            **Shopify:**
-            - Storefront API usage
-            - Gestion cart/checkout
-            - Sécurité des tokens
-
-            **Général:**
-            - Variables d'environnement pour secrets
-            - Validation des inputs
-            - Performance (bundle size, lazy loading)
-
-            Donne une revue constructive avec: résumé, points positifs, problèmes potentiels, sécurité, performance, recommandations.
-            Utilise des inline comments pour les problèmes spécifiques au code.
-
-          claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+      - name: ℹ️ Claude PR Review Disabled
+        run: |
+          echo "Claude PR Review workflow is temporarily disabled"
+          echo "Reason: anthropics/claude-code-action SDK exit code 1 error"
+          echo ""
+          echo "To validate your changes locally:"
+          echo "  pnpm build    # Build Next.js"
+          echo "  pnpm lint     # Run ESLint"
+          echo "  pnpm type-check  # Run TypeScript"
+          echo ""
+          echo "This workflow can be re-enabled when:"
+          echo "1. Upgrading to latest claude-code-action version"
+          echo "2. Verifying ANTHROPIC_API_KEY secret configuration"
+          echo "3. Testing MCP server connectivity"

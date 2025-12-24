@@ -2,7 +2,8 @@
 
 import { getStrapiImageUrl } from "@/lib/strapi";
 import type { StrapiArticleCarousel } from "@/types/strapi";
-import { useCallback, useRef } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+
 import Image from "next/image";
 
 interface CarouselBlockProps {
@@ -11,29 +12,20 @@ interface CarouselBlockProps {
 
 export function CarouselBlock({ block }: CarouselBlockProps) {
   const images = block.images || [];
-  const containerRef = useRef<HTMLDivElement>(null);
 
+  const [containerRef] = useEmblaCarousel({
+    loop: true,
+    align: "center",
+    dragFree: true,
+  });
   if (images.length === 0) {
     return null;
   }
 
-  const scroll = useCallback((direction: "prev" | "next") => {
-    if (!containerRef.current) return;
-
-    const scrollAmount = direction === "next" ? 400 : -400;
-    containerRef.current.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
-  }, []);
-
-  const scrollPrev = useCallback(() => scroll("prev"), [scroll]);
-  const scrollNext = useCallback(() => scroll("next"), [scroll]);
-
   return (
-    <section className="my-8 w-full">
+    <section className="my-8 w-full full-width">
       <div
-        className="overflow-hidden scroll-smooth"
+        className="overflow-hidden scroll-smooth cursor-grab"
         ref={containerRef}
       >
         <div className="flex -ml-4">
@@ -54,24 +46,6 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Navigation buttons */}
-      <div className="mt-4 flex justify-center gap-4">
-        <button
-          onClick={scrollPrev}
-          className="rounded-lg bg-gray-200 p-2 hover:bg-gray-300 transition-colors"
-          aria-label="Previous slide"
-        >
-          ←
-        </button>
-        <button
-          onClick={scrollNext}
-          className="rounded-lg bg-gray-200 p-2 hover:bg-gray-300 transition-colors"
-          aria-label="Next slide"
-        >
-          →
-        </button>
       </div>
     </section>
   );
