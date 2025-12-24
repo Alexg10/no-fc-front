@@ -5,66 +5,14 @@ on:
     branches: [develop, main]
   push:
     branches: [develop, main]
-
 jobs:
-  lighthouse:
+  lighthouseci:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build Next.js
-        run: pnpm build
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: npm install && npm install -g @lhci/cli@0.6.x
+      - run: npm run build
+      - run: lhci autorun
         env:
-          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN || 'dummy.myshopify.com' }}
-          SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN || 'dummy_token' }}
-          STRAPI_URL: ${{ secrets.STRAPI_URL || 'http://localhost:1337' }}
-          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN || '' }}
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
-
-      - name: Start Next.js server
-        run: |
-          pnpm start &
-          sleep 3
-        env:
-          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN || 'dummy.myshopify.com' }}
-          SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN || 'dummy_token' }}
-          STRAPI_URL: ${{ secrets.STRAPI_URL || 'http://localhost:1337' }}
-          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN || '' }}
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
-
-      - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v12
-        with:
-          urls: |
-            http://localhost:3000
-            http://localhost:3000/fr
-            http://localhost:3000/en
-          configPath: "./lighthouserc.json"
-          uploadArtifacts: true
-          temporaryPublicStorage: true
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
