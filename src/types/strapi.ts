@@ -90,6 +90,12 @@ export interface StrapiArticleTitleContent {
   content?: BlocksContent;
 }
 
+export interface StrapiArticleImages {
+  __component: "article.images";
+  id: number;
+  images?: StrapiImage[];
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -97,7 +103,8 @@ export type StrapiBlock =
   | StrapiArticleQuote
   | StrapiArticleDescription
   | StrapiArticleCarousel
-  | StrapiArticleTitleContent;
+  | StrapiArticleTitleContent
+  | StrapiArticleImages;
 
 export interface StrapiProduct {
   id: number;
