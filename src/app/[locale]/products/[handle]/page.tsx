@@ -1,6 +1,7 @@
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
 import { BlockRenderer } from "@/components/common/block-renderer";
+import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { ProductSchema } from "@/components/products/product-schema";
 import { generateProductMetadata } from "@/lib/metadata";
 import { getProductWithCustomizations } from "@/lib/products";
@@ -8,6 +9,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 interface ProductPageProps {
   params: Promise<{ locale: string; handle: string }>;
@@ -237,7 +239,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {strapiProduct?.blocks && strapiProduct.blocks.length > 0 && (
             <div className="col-span-full mt-12 space-y-8">
               {strapiProduct.blocks.map((block, index) => (
-                <BlockRenderer key={block.id || index} block={block} />
+                <Suspense
+                  key={block.id || index}
+                  fallback={<BlockSkeleton />}
+                >
+                  <BlockRenderer
+                    block={block}
+                    locale={locale}
+                  />
+                </Suspense>
               ))}
             </div>
           )}

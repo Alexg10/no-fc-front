@@ -1,15 +1,17 @@
 import { BlockRenderer } from "@/components/common/block-renderer";
+import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import Grid from "@/components/common/grid";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import { getArticleBySlug } from "@/services/strapi/articleService";
 import Image from "next/image";
+import { Suspense } from "react";
 
 export default async function ArticlePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const article = await getArticleBySlug(slug);
 
   if (!article) {
@@ -41,9 +43,12 @@ export default async function ArticlePage({
           {article.blocks && article.blocks.length > 0 && (
             <div>
               {article.blocks.map((block, index) => (
-                <div key={`${block.__component}-${index}`}>
-                  <BlockRenderer block={block} />
-                </div>
+                <Suspense
+                  key={`${block.__component}-${index}`}
+                  fallback={<BlockSkeleton />}
+                >
+                  <BlockRenderer block={block} locale={locale} />
+                </Suspense>
               ))}
             </div>
           )}

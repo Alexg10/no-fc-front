@@ -20,6 +20,17 @@ export interface StrapiLink {
   target?: string;
 }
 
+export interface StrapiProduct {
+  id: number;
+  handle: string;
+  title: string;
+  description: BlocksContent;
+  image: StrapiImage;
+  price: number;
+  available?: boolean;
+  shopifyId: string;
+}
+
 export interface StrapiHomepageSection {
   id: number;
   title?: string;
@@ -96,6 +107,12 @@ export interface StrapiArticleImages {
   images?: StrapiImage[];
 }
 
+export interface StrapiArticlesProduct {
+  __component: "article.product";
+  id: number;
+  product?: StrapiProduct;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -104,7 +121,8 @@ export type StrapiBlock =
   | StrapiArticleDescription
   | StrapiArticleCarousel
   | StrapiArticleTitleContent
-  | StrapiArticleImages;
+  | StrapiArticleImages
+  | StrapiArticlesProduct;
 
 export interface StrapiProduct {
   id: number;

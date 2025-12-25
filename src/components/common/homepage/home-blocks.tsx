@@ -1,7 +1,14 @@
 import { BlockRenderer } from "@/components/common/block-renderer";
+import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { StrapiBlock } from "@/types/strapi";
+import { Suspense } from "react";
 
-export function HomeBlocks({ blocks }: { blocks: StrapiBlock[] }) {
+interface HomeBlocksProps {
+  blocks: StrapiBlock[];
+  locale?: string;
+}
+
+export function HomeBlocks({ blocks, locale }: HomeBlocksProps) {
   if (!blocks || blocks.length === 0) {
     return null;
   }
@@ -9,7 +16,9 @@ export function HomeBlocks({ blocks }: { blocks: StrapiBlock[] }) {
   return (
     <div className="space-y-12">
       {blocks.map((block, index) => (
-        <BlockRenderer key={block.id || index} block={block} />
+        <Suspense key={block.id || index} fallback={<BlockSkeleton />}>
+          <BlockRenderer block={block} locale={locale} />
+        </Suspense>
       ))}
     </div>
   );
