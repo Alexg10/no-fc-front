@@ -5,6 +5,7 @@ import { CenteredTextBlock } from "@/components/dynamic-blocks/centered-text-blo
 import { Content } from "@/components/dynamic-blocks/content";
 import { HomeProductsBlock } from "@/components/dynamic-blocks/home-products-block";
 import { ImagesBlock } from "@/components/dynamic-blocks/images-block";
+import { ProductBlock } from "@/components/dynamic-blocks/product-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
 import type { StrapiBlock } from "@/types/strapi";
 
@@ -30,6 +31,8 @@ export function BlockRenderer({ block }: BlockRendererProps) {
       return <TitleContentBlock block={block} />;
     case "article.images":
       return <ImagesBlock block={block} />;
+    case "article.product":
+      return <ProductBlock block={block} />;
     default:
       console.warn(`Unknown block type: ${(block as StrapiBlock).__component}`);
       return null;
