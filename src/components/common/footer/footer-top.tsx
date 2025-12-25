@@ -1,7 +1,8 @@
 "use client";
 
-import { Link } from "@/lib/navigation";
 import { StrapiLink } from "@/types/strapi";
+import { Newsletter } from "../newsletter/newsletter";
+import { FooterTopLinks } from "./footer-top-links";
 
 export function FooterTop({
   footerTopLinks,
@@ -9,17 +10,12 @@ export function FooterTop({
   footerTopLinks: StrapiLink[];
 }) {
   return (
-    <div>
-      <div className="flex flex-col gap-4">
-        {footerTopLinks?.map((footerTopLink) => (
-          <Link
-            href={footerTopLink.link}
-            target={footerTopLink.target}
-            key={footerTopLink.id}
-          >
-            {footerTopLink.label}
-          </Link>
-        ))}
+    <div className="flex flex-col lg:flex-row gap-4 lg:grid lg:grid-cols-12 lg:gap-8">
+      <div className="lg:col-span-5">
+        <Newsletter />
+      </div>
+      <div className="flex flex-col gap-4 lg:col-span-6">
+        <FooterTopLinks footerTopLinks={footerTopLinks} />
       </div>
     </div>
   );
