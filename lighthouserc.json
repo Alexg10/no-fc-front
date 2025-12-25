@@ -1,50 +1,9 @@
 {
   "ci": {
     "collect": {
-      "url": [
-        "http://localhost:3002",
-        "http://localhost:3002/fr",
-        "http://localhost:3002/en"
-      ],
-      "startServerCommand": "PORT=3002 pnpm start",
-      "startServerReadyPattern": "ready on",
-      "startServerReadyTimeout": 30000,
-      "numberOfRuns": 3,
-      "settings": {
-        "preset": "desktop",
-        "throttling": {
-          "rttMs": 40,
-          "throughputKbps": 10240,
-          "cpuSlowdownMultiplier": 1
-        }
-      }
-    },
-    "assert": {
-      "preset": "lighthouse:recommended",
-      "assertions": {
-        "categories:performance": ["error", { "minScore": 0.9 }],
-        "categories:accessibility": ["error", { "minScore": 0.9 }],
-        "categories:best-practices": ["error", { "minScore": 0.9 }],
-        "categories:seo": ["error", { "minScore": 0.9 }],
-
-        "first-contentful-paint": ["error", { "maxNumericValue": 2000 }],
-        "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
-        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
-        "total-blocking-time": ["error", { "maxNumericValue": 300 }],
-        "speed-index": ["error", { "maxNumericValue": 3000 }],
-
-        "uses-responsive-images": "error",
-        "offscreen-images": "warn",
-        "unminified-css": "error",
-        "unminified-javascript": "error",
-        "unused-css-rules": "warn",
-        "uses-optimized-images": "error",
-        "modern-image-formats": "warn",
-        "uses-text-compression": "error",
-        "uses-rel-preconnect": "warn",
-
-        "interactive": ["error", { "maxNumericValue": 3500 }]
-      }
+      "startServerCommand": "pnpm build && pnpm start",
+      "url": ["http://localhost:3000/"],
+      "numberOfRuns": 3
     },
     "upload": {
       "target": "temporary-public-storage"

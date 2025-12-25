@@ -69,11 +69,42 @@ export interface StrapiArticleQuote {
   description?: string;
 }
 
+export interface StrapiArticleDescription {
+  __component: "article.description";
+  id: number;
+  description?: BlocksContent;
+}
+
+export interface StrapiArticleCarousel {
+  __component: "article.carousel";
+  id: number;
+  images?: StrapiImage[];
+}
+
+export interface StrapiArticleTitleContent {
+  __component: "article.title-content";
+  id: number;
+  title?: string;
+  twoColumns?: boolean;
+  image?: StrapiImage;
+  content?: BlocksContent;
+}
+
+export interface StrapiArticleImages {
+  __component: "article.images";
+  id: number;
+  images?: StrapiImage[];
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
   | StrapiSimplePageContent
-  | StrapiArticleQuote;
+  | StrapiArticleQuote
+  | StrapiArticleDescription
+  | StrapiArticleCarousel
+  | StrapiArticleTitleContent
+  | StrapiArticleImages;
 
 export interface StrapiProduct {
   id: number;

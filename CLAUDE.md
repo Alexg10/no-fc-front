@@ -337,18 +337,28 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ## ⚠️ IMPORTANT RULE: Commit Validation Required
 
-**MANDATORY**: Claude MUST NEVER commit automatically without explicit user validation.
+**MANDATORY**: Claude MUST NEVER commit automatically without EXPLICIT user approval.
+
+**STRICT REQUIREMENT**:
+- ❌ NO automatic commits
+- ❌ NO assumptions about user intent
+- ❌ NO "just committing since I'm already here"
+- ✅ ALWAYS ask for explicit confirmation first
 
 **Required Process**:
-1. Claude PREPARES changes (stages files, drafts message)
-2. Claude DISPLAYS what will be committed (diff, message, files)
-3. Claude ASKS for explicit confirmation from user
-4. User VALIDATES or REFUSES the commit
-5. Only after user approval does Claude execute `git commit`
+1. Claude identifies files that need changes
+2. Claude PREPARES changes (edits files)
+3. Claude DISPLAYS what will be committed:
+   - List of changed files
+   - Git diff preview
+   - Proposed commit message
+4. Claude ASKS user: "Should I commit these changes? (y/n)"
+5. User EXPLICITLY says "yes" or "y"
+6. ONLY THEN Claude executes `git commit` and `git push`
 
-**When in doubt**: Ask permission before committing, never assume.
+**No exceptions. Ever.**
 
-**No exceptions**: All commits require user approval.
+If user says anything other than explicit approval, do NOT commit.
 
 ## Useful Links
 
