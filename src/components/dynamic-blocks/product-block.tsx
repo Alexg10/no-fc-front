@@ -81,9 +81,6 @@ export async function ProductBlock({ block, locale = "" }: ProductBlockProps) {
                   Voir la fiche produit
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="w-full">
-                Ajouter au panier
-              </Button>
             </div>
           </div>
         </div>
