@@ -53,7 +53,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: HomePageProps) {
+  const { locale } = await params;
   const homepage = await getHomepage();
 
   return (
@@ -63,7 +66,9 @@ export default async function Home() {
       )}
 
       <Suspense fallback={<BlockSkeleton />}>
-        {homepage?.blocks && <HomeBlocks blocks={homepage?.blocks} />}
+        {homepage?.blocks && (
+          <HomeBlocks blocks={homepage?.blocks} locale={locale} />
+        )}
       </Suspense>
     </main>
   );

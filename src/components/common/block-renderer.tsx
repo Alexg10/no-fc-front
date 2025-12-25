@@ -11,9 +11,10 @@ import type { StrapiBlock } from "@/types/strapi";
 
 interface BlockRendererProps {
   block: StrapiBlock;
+  locale?: string;
 }
 
-export function BlockRenderer({ block }: BlockRendererProps) {
+export async function BlockRenderer({ block, locale }: BlockRendererProps) {
   switch (block.__component) {
     case "common.centered-text":
       return <CenteredTextBlock block={block} />;
@@ -32,7 +33,7 @@ export function BlockRenderer({ block }: BlockRendererProps) {
     case "article.images":
       return <ImagesBlock block={block} />;
     case "article.product":
-      return <ProductBlock block={block} />;
+      return <ProductBlock block={block} locale={locale} />;
     default:
       console.warn(`Unknown block type: ${(block as StrapiBlock).__component}`);
       return null;
