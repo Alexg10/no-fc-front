@@ -7,6 +7,7 @@ import { HomeProductsBlock } from "@/components/dynamic-blocks/home-products-blo
 import { ImagesBlock } from "@/components/dynamic-blocks/images-block";
 import { ProductBlock } from "@/components/dynamic-blocks/product-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
+import { VideoFullWidthBlock } from "@/components/dynamic-blocks/video-full-width-block";
 import type { StrapiBlock } from "@/types/strapi";
 
 interface BlockRendererProps {
@@ -18,6 +19,8 @@ export async function BlockRenderer({ block, locale }: BlockRendererProps) {
   switch (block.__component) {
     case "common.centered-text":
       return <CenteredTextBlock block={block} />;
+    case "common.video-full-width":
+      return <VideoFullWidthBlock block={block} />;
     case "homepage.home-products":
       return <HomeProductsBlock block={block} />;
     case "simple-page.content":

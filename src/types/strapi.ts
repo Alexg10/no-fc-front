@@ -113,6 +113,14 @@ export interface StrapiArticlesProduct {
   product?: StrapiProduct;
 }
 
+export interface StrapiCommonVideoFullWidth {
+  __component: "common.video-full-width";
+  id: number;
+  playerText?: string;
+  url?: string;
+  cover?: StrapiImage;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -122,7 +130,8 @@ export type StrapiBlock =
   | StrapiArticleCarousel
   | StrapiArticleTitleContent
   | StrapiArticleImages
-  | StrapiArticlesProduct;
+  | StrapiArticlesProduct
+  | StrapiCommonVideoFullWidth;
 
 export interface StrapiProduct {
   id: number;
