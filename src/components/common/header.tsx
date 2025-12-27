@@ -10,14 +10,9 @@ export async function Header() {
   return (
     <header className="fixed flex justify-center top-0 z-50 w-full">
       <Grid>
-        <div className="col-span-full flex  items-center justify-between pt-4">
+        <div className="col-span-full flex relative items-center justify-between top-4">
           <Menu menu={menu as StrapiMenu} />
-
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <ShoppingCartContainer />
-            </div>
-          </div>
+          <ShoppingCartContainer />
         </div>
       </Grid>
     </header>
