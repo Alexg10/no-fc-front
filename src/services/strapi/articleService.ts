@@ -2,6 +2,22 @@ import { strapiFetch } from "@/lib/strapi";
 import { StrapiArticle } from "@/types/strapi/article";
 import qs from "qs";
 
+export async function getArticles(): Promise<StrapiArticle[]> {
+  const query = qs.stringify({
+    sort: ["publishedAt:desc"],
+    populate: {
+      cover: {
+        fields: ["url", "alternativeText", "width", "height", "formats"],
+      },
+    },
+  });
+  const result = await strapiFetch(`/articles?${query}`, {
+    next: { revalidate: 3600 },
+  });
+  const articles = Array.isArray(result.data?.data) ? result.data.data : [];
+  return articles as unknown as StrapiArticle[];
+}
+
 export async function getArticleBySlug(
   slug: string
 ): Promise<StrapiArticle | null> {

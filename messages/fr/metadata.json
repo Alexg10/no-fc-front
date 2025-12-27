@@ -21,6 +21,9 @@
       "title": "Page introuvable",
       "description": "La page que vous recherchez n'existe pas."
     }
+  },
+  "articles": {
+    "title": "Articles",
+    "description": "Découvrez nos articles et insights"
   }
 }
-
