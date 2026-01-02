@@ -1,9 +1,9 @@
+import { CollectionsSection } from "@/components/products/collections-section";
 import { ProductsContent } from "@/components/products/products-content";
+import { ProductsPageHeroSection } from "@/components/products/products-page-hero-section";
 import { CollectionsListLoading } from "@/components/skeleton/collections-list-loading";
 import { ProductsPageHeroLoading } from "@/components/skeleton/products-page-hero-loading";
 import { ProductsPageLoading } from "@/components/skeleton/products-page-loading";
-import { CollectionsSection } from "@/components/products/collections-section";
-import { ProductsPageHeroSection } from "@/components/products/products-page-hero-section";
 import { getProductsPage } from "@/services/strapi/productsPageService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";

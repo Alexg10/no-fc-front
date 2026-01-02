@@ -1,13 +1,8 @@
+import { StrapiCollection } from "@/types/strapi/products-page";
 import { CollectionsList } from "./collections-list";
 
 interface CollectionsSectionProps {
-  collections?: Array<{
-    id: number;
-    name: string;
-    handle: string;
-    description?: string;
-    image?: { id: number; url: string; alternativeText?: string };
-  }>;
+  collections?: StrapiCollection[];
 }
 
 export async function CollectionsSection({
