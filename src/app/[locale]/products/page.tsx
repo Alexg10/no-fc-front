@@ -1,4 +1,6 @@
+import { ArticleCollection } from "@/components/articles/article-collection";
 import { ProductsContent } from "@/components/products/products-content";
+import { ArticleCollectionLoading } from "@/components/skeleton/article-collection-loading";
 import { ProductsPageLoading } from "@/components/skeleton/products-page-loading";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -50,6 +52,9 @@ export default async function ProductsPage({
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Suspense fallback={<ArticleCollectionLoading limit={3} />}>
+        <ArticleCollection collectionHandle="best-sellers" limit={4} />
+      </Suspense>
       <Suspense fallback={<ProductsPageLoading />}>
         <ProductsContent locale={locale} searchParams={paramsSearch} />
       </Suspense>
