@@ -1,4 +1,5 @@
 import { ArticleCollection } from "@/components/articles/article-collection";
+import { PageHeader } from "@/components/common/page-header";
 import { CollectionsSection } from "@/components/products/collections-section";
 import { ProductsContent } from "@/components/products/products-content";
 import { ProductsPageHeroSection } from "@/components/products/products-page-hero-section";
@@ -57,25 +58,28 @@ export default async function ProductsPage({
   const productsPageData = await getProductsPage();
 
   return (
-    <div className="space-y-12">
-      <Suspense fallback={<CollectionsListLoading />}>
-        <CollectionsSection collections={productsPageData?.collections} />
-      </Suspense>
-      <Suspense fallback={<ProductsPageHeroLoading />}>
-        <ProductsPageHeroSection hero={productsPageData?.hero} />
-      </Suspense>
-
-      <div className="container mx-auto px-4 py-8">
-        <Suspense fallback={<ArticleCollectionLoading limit={3} />}>
-          <ArticleCollection collectionHandle="best-sellers" limit={4} />
+    <>
+      <PageHeader title="Products" marqueeLabel="Shop" />
+      <main className="space-y-12">
+        <Suspense fallback={<CollectionsListLoading />}>
+          <CollectionsSection collections={productsPageData?.collections} />
         </Suspense>
-      </div>
-
-      <div className="container mx-auto px-4">
-        <Suspense fallback={<ProductsPageLoading />}>
-          <ProductsContent locale={locale} searchParams={paramsSearch} />
+        <Suspense fallback={<ProductsPageHeroLoading />}>
+          <ProductsPageHeroSection hero={productsPageData?.hero} />
         </Suspense>
-      </div>
-    </div>
+
+        <div className="container mx-auto px-4 py-8">
+          <Suspense fallback={<ArticleCollectionLoading limit={3} />}>
+            <ArticleCollection collectionHandle="best-sellers" limit={4} />
+          </Suspense>
+        </div>
+
+        <div className="container mx-auto px-4">
+          <Suspense fallback={<ProductsPageLoading />}>
+            <ProductsContent locale={locale} searchParams={paramsSearch} />
+          </Suspense>
+        </div>
+      </main>
+    </>
   );
 }
