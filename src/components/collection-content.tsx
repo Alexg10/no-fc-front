@@ -47,7 +47,6 @@ export async function CollectionContent({
     sortKey = sortParam as ProductSortKey;
   }
 
-  // Paralléliser: récupérer collections et produits en même temps
   const [collectionsData, productsData] = await Promise.all([
     getCollections(),
     getCollectionProducts(handle, {
@@ -116,4 +115,3 @@ export async function CollectionContent({
     </>
   );
 }
-

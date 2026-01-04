@@ -69,15 +69,17 @@ export default async function CollectionPage({
   const paramsSearch = await searchParams;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
       <PageHeader title={`Collection ${handle}`} marqueeLabel="Shop" />
-      <Suspense fallback={<ProductsPageLoading />}>
-        <CollectionContent
-          locale={locale}
-          handle={handle}
-          searchParams={paramsSearch}
-        />
-      </Suspense>
-    </div>
+      <main className="container mx-auto px-4 py-8">
+        <Suspense fallback={<ProductsPageLoading />}>
+          <CollectionContent
+            locale={locale}
+            handle={handle}
+            searchParams={paramsSearch}
+          />
+        </Suspense>
+      </main>
+    </>
   );
 }
