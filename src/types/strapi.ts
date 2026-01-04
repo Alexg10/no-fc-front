@@ -121,6 +121,20 @@ export interface StrapiCommonVideoFullWidth {
   cover?: StrapiImage;
 }
 
+export interface StrapiSimplePageFaqs {
+  __component: "simple-page.faqs";
+  id: number;
+  faqSections?: Array<{
+    id: number;
+    title: string;
+    faqs?: Array<{
+      id: number;
+      question: string;
+      answer: string;
+    }>;
+  }>;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -131,7 +145,8 @@ export type StrapiBlock =
   | StrapiArticleTitleContent
   | StrapiArticleImages
   | StrapiArticlesProduct
-  | StrapiCommonVideoFullWidth;
+  | StrapiCommonVideoFullWidth
+  | StrapiSimplePageFaqs;
 
 export interface StrapiProduct {
   id: number;

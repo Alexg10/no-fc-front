@@ -2,10 +2,11 @@ import { ArticleDescriptionBlock } from "@/components/dynamic-blocks/article-des
 import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-block";
 import { CarouselBlock } from "@/components/dynamic-blocks/carousel-block";
 import { CenteredTextBlock } from "@/components/dynamic-blocks/centered-text-block";
-import { Content } from "@/components/dynamic-blocks/content";
 import { HomeProductsBlock } from "@/components/dynamic-blocks/home-products-block";
 import { ImagesBlock } from "@/components/dynamic-blocks/images-block";
 import { ProductBlock } from "@/components/dynamic-blocks/product-block";
+import { Content } from "@/components/dynamic-blocks/simple-page/content";
+import { FaqsBlock } from "@/components/dynamic-blocks/simple-page/faqs-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
 import { VideoFullWidthBlock } from "@/components/dynamic-blocks/video-full-width-block";
 import type { StrapiBlock } from "@/types/strapi";
@@ -25,6 +26,8 @@ export async function BlockRenderer({ block, locale }: BlockRendererProps) {
       return <HomeProductsBlock block={block} />;
     case "simple-page.content":
       return <Content block={block} />;
+    case "simple-page.faqs":
+      return <FaqsBlock block={block} />;
     case "article.quote":
       return <ArticleQuoteBlock block={block} />;
     case "article.description":
