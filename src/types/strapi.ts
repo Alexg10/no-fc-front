@@ -130,7 +130,7 @@ export interface StrapiSimplePageFaqs {
     faqs?: Array<{
       id: number;
       question: string;
-      answer: string;
+      answer: BlocksContent;
     }>;
   }>;
 }

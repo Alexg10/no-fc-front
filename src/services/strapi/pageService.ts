@@ -16,6 +16,15 @@ export async function getPageBySlug(
       populate: {
         blocks: {
           populate: "*",
+          on: {
+            "simple-page.faqs": {
+              populate: {
+                faqSections: {
+                  populate: "*",
+                },
+              },
+            },
+          },
         },
       },
       locale,
