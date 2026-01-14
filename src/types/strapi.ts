@@ -135,10 +135,17 @@ export interface StrapiSimplePageFaqs {
   }>;
 }
 
+export interface StrapiHomepageNewestArticles {
+  __component: "homepage.newest-articles";
+  id: number;
+  title?: BlocksContent;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
   | StrapiSimplePageContent
+  | StrapiHomepageNewestArticles
   | StrapiArticleQuote
   | StrapiArticleDescription
   | StrapiArticleCarousel

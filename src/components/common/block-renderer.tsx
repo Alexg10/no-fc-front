@@ -1,3 +1,4 @@
+import { NewestArticles } from "@/components/common/homepage/newest-articles";
 import { ArticleDescriptionBlock } from "@/components/dynamic-blocks/article-description-block";
 import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-block";
 import { CarouselBlock } from "@/components/dynamic-blocks/carousel-block";
@@ -24,6 +25,8 @@ export async function BlockRenderer({ block, locale }: BlockRendererProps) {
       return <VideoFullWidthBlock block={block} />;
     case "homepage.home-products":
       return <HomeProductsBlock block={block} />;
+    case "homepage.newest-articles":
+      return <NewestArticles block={block} locale={locale} />;
     case "simple-page.content":
       return <Content block={block} />;
     case "simple-page.faqs":

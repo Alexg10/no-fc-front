@@ -59,3 +59,23 @@ export async function getLastArticle(): Promise<StrapiArticle | null> {
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];
   return articles[0] ? (articles[0] as unknown as StrapiArticle) : null;
 }
+
+export async function getPreviousTwoArticles(): Promise<StrapiArticle[]> {
+  const query = qs.stringify({
+    sort: ["publishedAt:desc"],
+    pagination: {
+      start: 1,
+      limit: 2,
+    },
+    populate: {
+      cover: {
+        fields: ["url", "alternativeText", "width", "height", "formats"],
+      },
+    },
+  });
+  const result = await strapiFetch(`/articles?${query}`, {
+    next: { revalidate: 3600 },
+  });
+  const articles = Array.isArray(result.data?.data) ? result.data.data : [];
+  return articles as unknown as StrapiArticle[];
+}
