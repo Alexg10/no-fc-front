@@ -40,3 +40,22 @@ export async function getArticleBySlug(
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];
   return articles[0] as unknown as StrapiArticle;
 }
+
+export async function getLastArticle(): Promise<StrapiArticle | null> {
+  const query = qs.stringify({
+    sort: ["publishedAt:desc"],
+    pagination: {
+      limit: 1,
+    },
+    populate: {
+      cover: {
+        fields: ["url", "alternativeText", "width", "height", "formats"],
+      },
+    },
+  });
+  const result = await strapiFetch(`/articles?${query}`, {
+    next: { revalidate: 3600 },
+  });
+  const articles = Array.isArray(result.data?.data) ? result.data.data : [];
+  return articles[0] ? (articles[0] as unknown as StrapiArticle) : null;
+}

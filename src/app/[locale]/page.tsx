@@ -61,9 +61,7 @@ export default async function Home({
 
   return (
     <main className="min-h-screen">
-      {homepage?.heroArticle?.article && (
-        <HeroArticle article={homepage?.heroArticle?.article} />
-      )}
+      <HeroArticle article={homepage?.heroArticle?.article} />
 
       <Suspense fallback={<BlockSkeleton />}>
         {homepage?.blocks && (
