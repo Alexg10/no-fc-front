@@ -13,7 +13,7 @@ export function ShoppingCartContainer() {
         variant="outline"
         size="icon"
         onClick={openCart}
-        className="relative"
+        className="relative rounded-none size-15 lg:size-22 "
       >
         <ShoppingCart className="h-5 w-5" />
         {itemCount > 0 && (

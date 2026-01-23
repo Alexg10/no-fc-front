@@ -42,7 +42,7 @@ export function LanguageSwitcher() {
       onValueChange={handleLocaleChange}
       disabled={isPending}
     >
-      <SelectTrigger className="w-[140px]">
+      <SelectTrigger className="w-auto lg:w-[140px]">
         <SelectValue>
           {localeNames[currentLocale] || currentLocale.toUpperCase()}
         </SelectValue>

@@ -12,13 +12,16 @@ export function Menu({ menu }: { menu: StrapiMenu }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="absolute top-0 left-0 flex-col h-full">
-      <div className="relative bg-white p-4 ">
-        <div className="border-2 relative border-black flex items-center [&:after]:content-[''] [&:after]:w-[2px] [&:after]:h-full [&:after]:bg-black [&:after]:absolute [&:after]:top-0 [&:after]:right-1/2 [&:after]:translate-x-1/2">
-          <Link href="/" className="flex items-center p-2 size-20">
+      <div className="relative bg-white p-2 lg:p-4 ">
+        <div className={cn("border-2 relative border-black flex items-center",
+        "[&:after]:content-[''] [&:after]:w-[2px] [&:after]:h-full [&:after]:bg-black [&:after]:absolute [&:after]:top-0 [&:after]:right-1/2 [&:after]:translate-x-1/2"
+        
+        )}>
+          <Link href="/" className="flex items-center p-2 size-11 lg:size-20">
             <LogoIcons />
           </Link>
           <button
-            className="flex items-center p-2 size-20 cursor-pointer"
+            className="flex items-center p-2 size-11 lg:size-20 cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}
           >
             <LogoIcons />
