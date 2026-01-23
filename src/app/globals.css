@@ -137,9 +137,61 @@
   }
 
   .font-polymath {
-    font-family: var(--font-polymath);
+    font-family: var(--font-polymath-text);
     font-weight: 400;
   }
+}
+
+@utility heading-xl-polymath {
+  @apply lg:text-[120px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility heading-l-polymath {
+  @apply lg:text-[96px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility heading-m-polymath {
+  @apply lg:text-[64px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility heading-s-polymath {
+  @apply lg:text-[40px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility text-xl-polymath {
+  @apply lg:text-[24px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility text-l-polymath {
+  @apply lg:text-[18px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility text-polymath {
+  @apply lg:text-[16px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility heading-xl-obviously {
+  @apply font-obviously-narrow lg:text-[120px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility heading-l-obviously {
+  @apply font-obviously-narrow lg:text-[96px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility heading-m-obviously {
+  @apply font-obviously-narrow lg:text-[64px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility heading-s-obviously {
+  @apply font-obviously-narrow lg:text-[40px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility text-xl-obviously {
+  @apply font-obviously-narrow lg:text-[24px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
+}
+
+@utility text-obviously {
+  @apply font-obviously-narrow lg:text-[16px] lg:font-medium lg:leading-[0.85] tracking-[-1%];
 }
 
 
