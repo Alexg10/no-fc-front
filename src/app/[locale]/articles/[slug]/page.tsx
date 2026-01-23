@@ -1,9 +1,8 @@
+import { ArticleHero } from "@/components/articles/article-hero";
 import { BlockRenderer } from "@/components/common/block-renderer";
-import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import Grid from "@/components/common/grid";
-import { getStrapiImageUrl } from "@/lib/strapi";
+import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { getArticleBySlug } from "@/services/strapi/articleService";
-import Image from "next/image";
 import { Suspense } from "react";
 
 export default async function ArticlePage({
@@ -18,28 +17,12 @@ export default async function ArticlePage({
     return null;
   }
 
+
   return (
-    <main className="min-h-screen">
-      {article.cover && (
-        <div className="relative h-[90vh] w-full overflow-hidden">
-          <Image
-            src={getStrapiImageUrl(article.cover.url)}
-            alt={article.cover.alternativeText || article.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
-      <section className="bg-black text-white">
-        <Grid>
-          <div className="col-span-full">
-            <h1 className="text-4xl font-bold">{article.title}</h1>
-          </div>
-        </Grid>
-      </section>
+    <article className="min-h-[120dvh]">
+      <ArticleHero article={article} />
       <Grid>
-        <article className="col-span-full space-y-8">
+        <main className="col-span-full space-y-8">
           {article.blocks && article.blocks.length > 0 && (
             <div>
               {article.blocks.map((block, index) => (
@@ -52,8 +35,8 @@ export default async function ArticlePage({
               ))}
             </div>
           )}
-        </article>
+        </main>
       </Grid>
-    </main>
+    </article>
   );
 }
