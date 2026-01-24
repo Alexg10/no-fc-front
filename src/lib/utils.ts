@@ -5,11 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function getColorClass(color?: string): string {
-  const colorMap: Record<string, string> = {
-    pink: "text-pink",
-    lime: "text-lime",
-    blue: "text-blue",
+export function getColorClass(color?: string, type: 'text' | 'bg' = 'text'): string {
+  const colorMap: Record<string, Record<'text' | 'bg', string>> = {
+    pink: { text: "text-pink", bg: "bg-pink" },
+    lime: { text: "text-lime", bg: "bg-lime" },
+    blue: { text: "text-blue", bg: "bg-blue" },
   }
-  return color ? colorMap[color] || "" : ""
+  return color ? colorMap[color]?.[type] || "" : ""
 }

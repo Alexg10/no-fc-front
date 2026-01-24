@@ -126,6 +126,9 @@
   }
 
   body {
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
     @apply bg-background text-foreground;
   }
 }
@@ -160,8 +163,13 @@
 }
 
 @utility heading-s-polymath {
-  @apply lg:text-[40px] font-medium leading-[0.85] tracking-[-1%];
+  @apply text-[20px] lg:text-[40px] font-medium leading-[0.85] tracking-[-1%];
 }
+
+@utility heading-s-polymath-display {
+  @apply font-polymath-display text-[24px] lg:text-[40px] leading-[120%];
+}
+
 
 @utility text-xl-polymath {
   @apply lg:text-[24px] font-medium leading-[0.85] tracking-[-1%];

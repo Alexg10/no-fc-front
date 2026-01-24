@@ -36,7 +36,7 @@ export function BlockRendererClient({ content, className }: BlockRendererClientP
           );
         },
         paragraph: ({ children }) => (
-          <p className="mb-4 leading-relaxed">
+          <p>
             {children}
           </p>
         ),

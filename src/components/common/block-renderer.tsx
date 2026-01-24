@@ -1,5 +1,5 @@
 import { NewestArticles } from "@/components/common/homepage/newest-articles";
-import { ArticleDescriptionBlock } from "@/components/dynamic-blocks/article-description-block";
+import { ArticleIntroBlock } from "@/components/dynamic-blocks/article-intro-block";
 import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-block";
 import { CarouselBlock } from "@/components/dynamic-blocks/carousel-block";
 import { CenteredTextBlock } from "@/components/dynamic-blocks/centered-text-block";
@@ -11,13 +11,15 @@ import { FaqsBlock } from "@/components/dynamic-blocks/simple-page/faqs-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
 import { VideoFullWidthBlock } from "@/components/dynamic-blocks/video-full-width-block";
 import type { StrapiBlock } from "@/types/strapi";
+import { ColorList } from "@/types/strapi/article";
 
 interface BlockRendererProps {
   block: StrapiBlock;
   locale?: string;
+  mainColor: ColorList
 }
 
-export async function BlockRenderer({ block, locale }: BlockRendererProps) {
+export async function BlockRenderer({ block, locale, mainColor }: BlockRendererProps) {
   switch (block.__component) {
     case "common.centered-text":
       return <CenteredTextBlock block={block} />;
@@ -34,7 +36,7 @@ export async function BlockRenderer({ block, locale }: BlockRendererProps) {
     case "article.quote":
       return <ArticleQuoteBlock block={block} />;
     case "article.description":
-      return <ArticleDescriptionBlock block={block} />;
+      return <ArticleIntroBlock block={block} mainColor={mainColor} />;
     case "article.carousel":
       return <CarouselBlock block={block} />;
     case "article.title-content":

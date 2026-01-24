@@ -80,7 +80,7 @@ export interface StrapiArticleQuote {
   description?: string;
 }
 
-export interface StrapiArticleDescription {
+export interface StrapiArticleIntro {
   __component: "article.description";
   id: number;
   description?: BlocksContent;

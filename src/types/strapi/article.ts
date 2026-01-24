@@ -11,6 +11,8 @@ export interface StrapiArticle {
   blocks?: StrapiBlock[];
   publishedAt?: string;
   shortDescription: BlocksContent;
-  mainColor: "pink" | "lime" | "blue"
+  mainColor: ColorList;
   issueNumber: string;
 }
+
+export type ColorList = 'blue' | 'lime' | 'pink';

@@ -1,0 +1,32 @@
+import { BlockRendererClient } from "@/components/common/block-renderer-client";
+import { cn, getColorClass } from "@/lib/utils";
+import type { StrapiArticleIntro } from "@/types/strapi";
+import { ColorList } from "@/types/strapi/article";
+import type { BlocksContent } from "@strapi/blocks-react-renderer";
+import Grid from "../common/grid";
+
+interface ArticleIntroBlockProps {
+  block: StrapiArticleIntro;
+  mainColor: ColorList;
+}
+
+export function ArticleIntroBlock({
+  block,
+  mainColor,
+}: ArticleIntroBlockProps) {
+  return (
+    <div className={cn("py-20 relative lg:py-42 heading-s-polymath-display", getColorClass(mainColor, 'bg'))}>
+      <div className="absolute inset-0 bg-cover bg-center mix-blend-darken opacity-90 pointer-events-none"
+      style={{
+        backgroundImage: `url(/images/article/intro_noise.webp)`
+      }}
+      
+      />
+      <Grid>
+        <div className="col-span-full lg:col-start-3 lg:col-end-11">
+          <BlockRendererClient content={block.description as BlocksContent} />
+        </div>
+      </Grid>
+    </div>
+  );
+}
