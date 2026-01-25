@@ -10,7 +10,8 @@
       "Bash(pnpm add:*)",
       "Bash(pnpm build:*)",
       "Bash(git checkout:*)",
-      "Bash(pnpm type-check:*)"
+      "Bash(pnpm type-check:*)",
+      "Bash(pnpm lint:*)"
     ],
     "deny": [],
     "ask": []

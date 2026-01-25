@@ -19,7 +19,7 @@ export default async function ArticlePage({
   const mainColor = article?.mainColor;
 
   return (
-    <article className="min-h-[120dvh]">
+    <article className="min-h-[120dvh] bg-off-white">
       <ArticleHero article={article} mainColor={mainColor} />
         <main>
           {article.blocks && article.blocks.length > 0 && (

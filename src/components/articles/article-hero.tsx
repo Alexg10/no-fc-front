@@ -31,7 +31,7 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
         <Grid>
           <div className="col-span-full md:col-start-2 md:col-end-6 lg:col-start-3 lg:col-end-10 text-center flex flex-col justify-center items-center gap-4">
             <IssueNumberBadge issueNumber={article.issueNumber} issueLabel={t("issue")} />
-            <h1 className={cn("heading-xl-obviously mt-2", getColorClass(mainColor))}>{article.title}</h1>
+            <h1 className={cn("heading-xl-obviously mt-2 uppercase", getColorClass(mainColor))}>{article.title}</h1>
             <BlockRendererClient content={article.shortDescription} className="text-white text-l-polymath" />
           </div>
         </Grid>

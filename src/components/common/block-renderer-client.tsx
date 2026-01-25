@@ -1,6 +1,7 @@
 "use client";
 
 import { getStrapiImageUrl } from "@/lib/strapi";
+import { createHeadingElement } from "@/lib/heading-utils";
 import {
   BlocksRenderer,
   type BlocksContent,
@@ -41,26 +42,18 @@ export function BlockRendererClient({ content, className }: BlockRendererClientP
           </p>
         ),
         heading: ({ children, level }) => {
-          const HeadingTag = `h${level}` as
-            | "h1"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6";
           const classes = {
             1: "text-4xl font-bold mb-6 mt-8",
             2: "text-3xl font-bold mb-5 mt-7",
-            3: "text-2xl font-semibold mb-4 mt-6",
+            3: "text-xl-polymath-display font-bold mb-6 mt-6",
             4: "text-xl font-semibold mb-3 mt-5",
             5: "text-lg font-medium mb-2 mt-4",
             6: "text-base font-medium mb-2 mt-3",
           };
-          return (
-            <HeadingTag className={classes[level as keyof typeof classes]}>
-              {children}
-            </HeadingTag>
-          );
+          return createHeadingElement(level as 1 | 2 | 3 | 4 | 5 | 6, {
+            className: classes[level as keyof typeof classes],
+            children,
+          });
         },
         list: ({ children, format }) => {
           const ListTag = format === "ordered" ? "ol" : "ul";

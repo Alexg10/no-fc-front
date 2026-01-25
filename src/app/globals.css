@@ -170,17 +170,20 @@
   @apply font-polymath-display text-[24px] lg:text-[40px] leading-[120%];
 }
 
-
 @utility text-xl-polymath {
-  @apply lg:text-[24px] font-medium leading-[0.85] tracking-[-1%];
+  @apply text-[24px] lg:text-[24px] font-medium leading-[0.85] tracking-[-1%];
+}
+
+@utility text-xl-polymath-display {
+  @apply font-polymath-display text-[24px] lg:text-[24px] font-medium leading-[0.85] tracking-[-1%];
 }
 
 @utility text-l-polymath {
-  @apply text-[16px] lg:text-[18px] font-medium leading-[0.85] tracking-[-1%];
+  @apply text-[16px] lg:text-[18px] font-medium leading-[140%] tracking-[-0.25px];
 }
 
 @utility text-polymath {
-  @apply lg:text-[16px] font-medium leading-[0.85] tracking-[-1%];
+  @apply text-[14px] lg:text-[16px] font-medium leading-[0.85] tracking-[-1%];
 }
 
 @utility heading-xl-obviously {
@@ -188,7 +191,7 @@
 }
 
 @utility heading-l-obviously {
-  @apply font-obviously-narrow lg:text-[96px] font-medium leading-[0.85] tracking-[-1%];
+  @apply text-[40px] font-obviously-narrow lg:text-[80px] font-medium leading-[0.85] tracking-[-1px];
 }
 
 @utility heading-m-obviously {

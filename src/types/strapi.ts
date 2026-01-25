@@ -6,6 +6,7 @@ export interface StrapiImage {
   alternativeText?: string;
   width?: number;
   height?: number;
+  caption?: string;
   formats?: {
     large: {
       url: string;
