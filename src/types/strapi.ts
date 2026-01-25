@@ -91,6 +91,8 @@ export interface StrapiArticleCarousel {
   __component: "article.carousel";
   id: number;
   images?: StrapiImage[];
+  backgroundColor?: "white" | "black" | "pink" | "lime" | "blue";
+  backgroundImage?: StrapiImage;
 }
 
 export interface StrapiArticleTitleContent {
