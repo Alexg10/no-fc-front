@@ -58,7 +58,7 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
         animationFrameId.current = null;
       }
     };
-  }, [isDesktop, isInSection]);
+  }, [isDesktop, isInSection, lerpCursor]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!isDesktop || !sectionRef.current) return;

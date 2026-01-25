@@ -15,10 +15,11 @@ interface Breakpoints {
 }
 
 export function useBreakpoints(): Breakpoints {
+  const [isMounted, setIsMounted] = useState(false);
   const [breakpoints, setBreakpoints] = useState<Breakpoints>({
     isMobile: false,
     isTablet: false,
-    isDesktop: true,
+    isDesktop: false,
     isUnderTablet: false,
     isUnderDesktop: false,
   });
@@ -37,10 +38,21 @@ export function useBreakpoints(): Breakpoints {
     };
 
     updateBreakpoints();
+    setIsMounted(true);
 
     window.addEventListener("resize", updateBreakpoints);
     return () => window.removeEventListener("resize", updateBreakpoints);
   }, []);
+
+  if (!isMounted) {
+    return {
+      isMobile: false,
+      isTablet: false,
+      isDesktop: true,
+      isUnderTablet: false,
+      isUnderDesktop: false,
+    };
+  }
 
   return breakpoints;
 }
