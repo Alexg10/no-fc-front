@@ -142,19 +142,28 @@ export interface StrapiHomepageNewestArticles {
   title?: BlocksContent;
 }
 
+export interface StrapiArticleImageCols {
+  __component: "article.image-cols";
+  id: number;
+  image?: StrapiImage;
+  imageRight?: boolean;
+  content?: BlocksContent;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
   | StrapiSimplePageContent
   | StrapiHomepageNewestArticles
   | StrapiArticleQuote
-  | StrapiArticleDescription
+  | StrapiArticleIntro
   | StrapiArticleCarousel
   | StrapiArticleTitleContent
   | StrapiArticleImages
   | StrapiArticlesProduct
   | StrapiCommonVideoFullWidth
-  | StrapiSimplePageFaqs;
+  | StrapiSimplePageFaqs
+  | StrapiArticleImageCols;
 
 export interface StrapiProduct {
   id: number;

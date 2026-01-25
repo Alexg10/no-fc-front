@@ -224,3 +224,28 @@
   column-count: 2;
   column-gap: 40px;
 }
+
+/* List styles for BlockRenderer */
+.block-renderer ol {
+  list-style-type: decimal;
+}
+
+.block-renderer ol ol {
+  list-style-type: lower-alpha;
+}
+
+.block-renderer ol ol ol {
+  list-style-type: lower-roman;
+}
+
+.block-renderer ul {
+  list-style-type: disc;
+}
+
+.block-renderer ul ul {
+  list-style-type: circle;
+}
+
+.block-renderer ul ul ul {
+  list-style-type: square;
+}

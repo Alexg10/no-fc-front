@@ -1,5 +1,6 @@
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import Grid from "@/components/common/grid";
+import { ImageCaption } from "@/components/ui/image-caption";
 import { Title } from "@/components/ui/title";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import type { StrapiArticleTitleContent } from "@/types/strapi";
@@ -13,7 +14,7 @@ interface TitleContentBlockProps {
 export function TitleContentBlock({ block }: TitleContentBlockProps) {
 
   return (
-    <section className="py-20">
+    <section className="py-20 pb-16">
       <Grid>
         <div className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-10">
           {block.title && (
@@ -29,7 +30,7 @@ export function TitleContentBlock({ block }: TitleContentBlockProps) {
             )}
           </div>
           {block.image && (
-            <div className="max-w-[476px] mx-auto">
+            <figure className="max-w-[476px] mx-auto">
               <Image
                 src={getStrapiImageUrl(block.image?.url)}
                 alt={block.title || "Block image"}
@@ -45,9 +46,9 @@ export function TitleContentBlock({ block }: TitleContentBlockProps) {
                 quality={90}
               />
               {block.image.caption && (
-                <p className="text-polymath text-center mt-4">{block.image.caption}</p>
+                <ImageCaption caption={block.image.caption} />
               )}
-            </div>
+            </figure>
           )}
         </div>
       </Grid>

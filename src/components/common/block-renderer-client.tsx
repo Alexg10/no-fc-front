@@ -1,7 +1,8 @@
 "use client";
 
-import { getStrapiImageUrl } from "@/lib/strapi";
 import { createHeadingElement } from "@/lib/heading-utils";
+import { getStrapiImageUrl } from "@/lib/strapi";
+import { cn } from "@/lib/utils";
 import {
   BlocksRenderer,
   type BlocksContent,
@@ -17,7 +18,7 @@ export function BlockRendererClient({ content, className }: BlockRendererClientP
   if (!content) return null;
 
   return (
-    <div className={className}>
+    <div className={cn(className, "block-renderer")}>
       <BlocksRenderer
       content={content}
       blocks={{
@@ -37,7 +38,7 @@ export function BlockRendererClient({ content, className }: BlockRendererClientP
           );
         },
         paragraph: ({ children }) => (
-          <p>
+          <p className="mb-2 text-l-polymath">
             {children}
           </p>
         ),
@@ -57,8 +58,11 @@ export function BlockRendererClient({ content, className }: BlockRendererClientP
         },
         list: ({ children, format }) => {
           const ListTag = format === "ordered" ? "ol" : "ul";
+          const listClasses = format === "ordered"
+            ? "mb-4 ml-6 list-decimal space-y-2"
+            : "mb-4 ml-6 list-disc space-y-2";
           return (
-            <ListTag className="mb-4 ml-6 list-disc space-y-2">
+            <ListTag className={listClasses}>
               {children}
             </ListTag>
           );

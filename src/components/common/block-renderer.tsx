@@ -4,6 +4,7 @@ import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-blo
 import { CarouselBlock } from "@/components/dynamic-blocks/carousel-block";
 import { CenteredTextBlock } from "@/components/dynamic-blocks/centered-text-block";
 import { HomeProductsBlock } from "@/components/dynamic-blocks/home-products-block";
+import { ImageColsBlock } from "@/components/dynamic-blocks/image-cols-block";
 import { ImagesBlock } from "@/components/dynamic-blocks/images-block";
 import { ProductBlock } from "@/components/dynamic-blocks/product-block";
 import { Content } from "@/components/dynamic-blocks/simple-page/content";
@@ -43,6 +44,8 @@ export async function BlockRenderer({ block, locale, mainColor }: BlockRendererP
       return <TitleContentBlock block={block} />;
     case "article.images":
       return <ImagesBlock block={block} />;
+    case "article.image-cols":
+      return <ImageColsBlock block={block} />;
     case "article.product":
       return <ProductBlock block={block} locale={locale} />;
     default:

@@ -11,7 +11,9 @@
       "Bash(pnpm build:*)",
       "Bash(git checkout:*)",
       "Bash(pnpm type-check:*)",
-      "Bash(pnpm lint:*)"
+      "Bash(pnpm lint:*)",
+      "Skill(block)",
+      "Skill(block:*)"
     ],
     "deny": [],
     "ask": []
