@@ -3,6 +3,7 @@ import Grid from "@/components/common/grid";
 import { ImageCaption } from "@/components/ui/image-caption";
 import { Title } from "@/components/ui/title";
 import { getStrapiImageUrl } from "@/lib/strapi";
+import { cn } from "@/lib/utils";
 import type { StrapiArticleTitleContent } from "@/types/strapi";
 import type { BlocksContent } from "@strapi/blocks-react-renderer";
 import Image from "next/image";
@@ -16,13 +17,13 @@ export function TitleContentBlock({ block }: TitleContentBlockProps) {
   return (
     <section className="py-20 pb-16">
       <Grid>
-        <div className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-10">
-          {block.title && (
+        {block.title && (
+          <div className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-10">
             <Title>{block.title}</Title>
-          )}
-        </div>
-        <div className="col-span-full lg:col-start-4 lg:col-end-10 flex flex-col gap-20">
-          <div className={block.twoColumns ? "text-2-cols" : ""}>
+          </div>
+        )}
+        <div className={cn("col-span-full  flex flex-col gap-20", block.twoColumns ? "lg:col-start-2 lg:col-end-12" : "lg:col-start-4 lg:col-end-10")}>
+          <div className={block.twoColumns ? "md:text-2-cols" : ""}>
             {block.content && (
               <div>
                 <BlockRendererClient content={block.content as BlocksContent} className="text-l-polymath" />

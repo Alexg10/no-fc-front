@@ -210,6 +210,10 @@
   @apply font-obviously-narrow lg:text-[16px] font-medium leading-[0.85] tracking-[-1%];
 }
 
+@utility text-2-cols {
+  column-count: 2;
+  column-gap: 40px;
+}
 
 .full-width {
   width: 100vw;
@@ -220,10 +224,7 @@
   margin-right: -50vw;
 }
 
-.text-2-cols {
-  column-count: 2;
-  column-gap: 40px;
-}
+
 
 /* List styles for BlockRenderer */
 .block-renderer ol {

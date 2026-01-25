@@ -25,13 +25,12 @@ export function BlockRendererClient({ content, className }: BlockRendererClientP
         image: ({ image }) => {
           const imageUrl = getStrapiImageUrl(image.url);
           return (
-            <div className="relative my-8 w-full">
+            <div className="relative my-6 w-full">
               <Image
                 src={imageUrl}
                 width={image.width || 800}
                 height={image.height || 600}
                 alt={image.alternativeText || ""}
-                className="rounded-lg"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
               />
             </div>

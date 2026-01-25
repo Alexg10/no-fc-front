@@ -24,12 +24,12 @@ export function ImageColsBlock({ block }: ImageColsBlockProps) {
               : "lg:col-start-5 lg:col-end-11"
           )}>
             {block.content && (
-              <BlockRendererClient content={block.content} />
+              <BlockRendererClient content={block.content} className="[&>h3]:first:mt-0" />
             )}
           </div>
           {block.image && (
             <figure className={cn(
-              "flex justify-center flex-col",
+              "flex justify-start flex-col",
               block.imageRight
                 ? "lg:col-start-8 lg:col-end-11"
                 : "lg:col-start-1 lg:col-end-4 row-span-full"
