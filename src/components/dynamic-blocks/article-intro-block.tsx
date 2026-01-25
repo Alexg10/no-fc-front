@@ -24,7 +24,7 @@ export function ArticleIntroBlock({
       />
       <Grid>
         <div className="col-span-full lg:col-start-3 lg:col-end-11">
-          <BlockRendererClient content={block.description as BlocksContent} />
+          <BlockRendererClient content={block.description as BlocksContent} className="[&>p]:heading-s-polymath-display" />
         </div>
       </Grid>
     </div>
