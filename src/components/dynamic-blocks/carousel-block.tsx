@@ -1,10 +1,10 @@
 "use client";
 
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import type { StrapiArticleCarousel } from "@/types/strapi";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useBreakpoints } from "@/hooks/useBreakpoints";
 
 import Image from "next/image";
 
@@ -15,7 +15,7 @@ interface CarouselBlockProps {
 function getRotationForImage(imageId: number) {
   const seed = Math.abs(Math.sin(imageId) * 10000);
   const random = seed - Math.floor(seed);
-  return Math.round((random * 4 - 2) * 100) / 100; 
+  return Math.round((random * 4 - 2) * 100) / 100;
 }
 
 export function CarouselBlock({ block }: CarouselBlockProps) {
@@ -116,32 +116,37 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
           />
         </div>
       )}
-      <div className="absolute top-[-27px] left-0 w-full h-[50px] bg-center bg-repeat"
-      style={{ backgroundImage: `url("/images/article/carousel_ripped_top.png")`, 
-        backgroundSize: "auto 100%",
-      }}
+      <div
+        className="absolute top-[-55px] left-0 w-full h-[100px] bg-repeat"
+        style={{
+          backgroundImage: `url("/images/article/carousel_ripped_top.webp")`,
+          backgroundSize: "auto 100%",
+        }}
       />
       {block.backgroundImage && (
         <div className="absolute inset-0">
           <Image
             src={getStrapiImageUrl(block.backgroundImage.url)}
-            alt={block.backgroundImage.alternativeText || "Carousel background image"}
+            alt={
+              block.backgroundImage.alternativeText ||
+              "Carousel background image"
+            }
             fill
             className="object-cover"
           />
         </div>
       )}
-      <div
-        className="scroll-smooth overflow-hidden"
-        ref={containerRef}
-      >
+      <div className="scroll-smooth overflow-hidden" ref={containerRef}>
         <div className="flex -ml-4 ">
           {images.map((image, index) => (
             <div
               key={image.id}
               className="flex-[0_0_50%] pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] overflow-hidden"
             >
-              <div className="relative aspect-3/4 w-full overflow-hidden" style={{ transform: `rotate(${imageRotations[index]}deg)` }}>
+              <div
+                className="relative aspect-3/4 w-full overflow-hidden"
+                style={{ transform: `rotate(${imageRotations[index]}deg)` }}
+              >
                 <Image
                   src={getStrapiImageUrl(image.url)}
                   alt={image.alternativeText || "Carousel image"}
@@ -149,22 +154,25 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
                   className="object-cover"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
-                style={{
-                  backgroundImage: `url("/images/article/carousel_texture_image.png")`,
-                  backgroundSize: "auto 100%",
-                  transform: index % 2 === 1 ? "rotate(180deg)" : undefined,
-                }}
+                <div
+                  className="absolute inset-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
+                  style={{
+                    backgroundImage: `url("/images/article/carousel_texture_image.png")`,
+                    backgroundSize: "auto 100%",
+                    transform: index % 2 === 1 ? "rotate(180deg)" : undefined,
+                  }}
                 />
               </div>
             </div>
           ))}
         </div>
       </div>
-      <div className="absolute bottom-[-27px] left-0 w-full h-[50px] bg-center bg-repeat"
-      style={{ backgroundImage: `url("/images/article/carousel_ripped_bottom.png")`, 
-        backgroundSize: "auto 100%",
-      }}
+      <div
+        className="absolute bottom-[-52px] left-0 w-full h-[100px] bg-center bg-repeat"
+        style={{
+          backgroundImage: `url("/images/article/carousel_ripped_top.webp")`,
+          backgroundSize: "auto 100%",
+        }}
       />
     </section>
   );
