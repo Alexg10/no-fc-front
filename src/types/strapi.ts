@@ -152,6 +152,12 @@ export interface StrapiArticleImageCols {
   content?: BlocksContent;
 }
 
+export interface StrapiArticleImageStack {
+  __component: "article.image-stack";
+  id: number;
+  images?: StrapiImage[];
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -165,7 +171,8 @@ export type StrapiBlock =
   | StrapiArticlesProduct
   | StrapiCommonVideoFullWidth
   | StrapiSimplePageFaqs
-  | StrapiArticleImageCols;
+  | StrapiArticleImageCols
+  | StrapiArticleImageStack;
 
 export interface StrapiProduct {
   id: number;
