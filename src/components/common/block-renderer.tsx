@@ -19,10 +19,14 @@ import { ColorList } from "@/types/strapi/article";
 interface BlockRendererProps {
   block: StrapiBlock;
   locale?: string;
-  mainColor: ColorList
+  mainColor: ColorList;
 }
 
-export async function BlockRenderer({ block, locale, mainColor }: BlockRendererProps) {
+export async function BlockRenderer({
+  block,
+  locale,
+  mainColor,
+}: BlockRendererProps) {
   switch (block.__component) {
     case "common.centered-text":
       return <CenteredTextBlock block={block} />;
@@ -37,7 +41,7 @@ export async function BlockRenderer({ block, locale, mainColor }: BlockRendererP
     case "simple-page.faqs":
       return <FaqsBlock block={block} />;
     case "article.quote":
-      return <ArticleQuoteBlock block={block} />;
+      return <ArticleQuoteBlock block={block} mainColor={mainColor} />;
     case "article.description":
       return <ArticleIntroBlock block={block} mainColor={mainColor} />;
     case "article.carousel":

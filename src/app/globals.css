@@ -175,7 +175,7 @@
 }
 
 @utility text-xl-polymath-display {
-  @apply font-polymath-display text-[24px] lg:text-[24px] font-medium leading-[0.85] tracking-[-1%];
+  @apply font-polymath-display text-[24px] lg:text-[24px] font-medium leading-[120%] tracking-[-1px];
 }
 
 @utility text-l-polymath {
@@ -216,6 +216,10 @@
 @utility text-2-cols {
   column-count: 2;
   column-gap: 40px;
+}
+
+.quote-indent {
+  text-indent: 54px;
 }
 
 .full-width {
