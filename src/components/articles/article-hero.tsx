@@ -16,7 +16,7 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
   return (
     <div className="relative h-full">
       {article.cover && (
-        <div className="relative h-[120vh] w-full overflow-hidden">
+        <div className="relative h-[125vh] w-full overflow-hidden">
           <Image
             src={getStrapiImageUrl(article.cover.url)}
             alt={article.cover.alternativeText || article.title}
@@ -27,7 +27,7 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
           <div className="absolute inset-0 bg-black/20" />
         </div>
       )}
-      <div className="text-white absolute bottom-[34vh] lg:bottom-[50%] translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
+      <div className="text-white absolute bottom-[34vh] lg:bottom-[62%] translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
         <Grid>
           <div className="col-span-full md:col-start-2 md:col-end-6 lg:col-start-3 lg:col-end-10 text-center flex flex-col justify-center items-center gap-4">
             <IssueNumberBadge
@@ -41,7 +41,7 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
             </h1>
             <BlockRendererClient
               content={article.shortDescription}
-              className="text-white text-l-polymath"
+              className="text-white text-l-polymath lg:mt-6"
             />
           </div>
         </Grid>

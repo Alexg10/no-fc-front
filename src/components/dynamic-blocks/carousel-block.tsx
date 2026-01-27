@@ -94,7 +94,7 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
   return (
     <section
       ref={sectionRef}
-      className={`py-9 mb-15 lg:mb-20 relative lg:py-18 w-full full-width lg:cursor-none ${block.backgroundColor ? ` bg-${block.backgroundColor}` : ""}`}
+      className={`py-9 mb-15 relative lg:py-28 w-full full-width lg:mb-40 lg:cursor-none ${block.backgroundColor ? ` bg-${block.backgroundColor}` : ""}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
@@ -141,7 +141,7 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
           {images.map((image, index) => (
             <div
               key={image.id}
-              className="flex-[0_0_55%] pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] overflow-hidden"
+              className="flex-[0_0_55%] pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_35%] overflow-hidden"
             >
               <div
                 className="relative aspect-3/4 w-full overflow-hidden"

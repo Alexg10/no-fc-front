@@ -61,9 +61,9 @@ export function BlockRendererClient({
             const listClasses =
               format === "ordered"
                 ? "mb-4 ml-6 list-decimal space-y-2"
-                : "mb-4 ml-6 !list-none space-y-2 [&>li]:before:content-[''] [&>li]:before:absolute [&>li]:before:-left-[14px] [&>li]:before:top-3 [&>li]:before:size-[3px] [&>li]:before:rounded-full [&>li]:before:bg-current";
+                : "mb-4 ml-6 !list-none space-y-2 [&>li]:before:content-[''] text-[18px] [&>li]:before:absolute [&>li]:before:-left-[14px] [&>li]:before:top-3 [&>li]:before:size-[3px] [&>li]:before:rounded-full [&>li]:before:bg-current";
             return (
-              <ListTag className={cn("relative", listClasses)}>
+              <ListTag className={cn("relative [&>li]:relative", listClasses)}>
                 {children}
               </ListTag>
             );

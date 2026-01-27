@@ -11,7 +11,7 @@ interface ImageColsBlockProps {
 
 export function ImageColsBlock({ block }: ImageColsBlockProps) {
   return (
-    <section className="pb-19">
+    <section className="pb-19 lg:pb-20">
       <Grid>
         <div
           className={cn(

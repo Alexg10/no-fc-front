@@ -12,14 +12,14 @@ export function CreditsBlock({ block }: CreditsBlockProps) {
   const { credit } = block;
   if (!credit) return null;
   return (
-    <section className="pt-0 pb-10 lg:pb-18">
+    <section className="pt-0 pb-10 lg:pb-20">
       <Grid>
         <div className="col-span-full md:col-start-2 md:col-end-6 lg:col-start-5 lg:col-end-9">
           {credit && (
-            <div className="text-sm flex flex-col gap-8 text-center">
+            <div className="text-sm flex flex-col gap-8 text-center lg:gap-11">
               {credit.map((item) => (
                 <div key={item.id} className="flex flex-col gap-4">
-                  <div className="text-xl-obviously text-[20px]">
+                  <div className="text-xl-obviously text-[20px] lg:text-[24px]">
                     {item.title}
                   </div>
                   <BlockRendererClient

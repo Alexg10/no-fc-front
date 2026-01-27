@@ -17,7 +17,7 @@ export function ArticleIntroBlock({
   return (
     <div
       className={cn(
-        "py-16 pb-14 mb-25 relative lg:py-42 heading-s-polymath-display",
+        "py-16 pb-14 mb-25 relative lg:py-32 heading-s-polymath-display lg:mb-31",
         getColorClass(mainColor, "bg"),
       )}
     >
