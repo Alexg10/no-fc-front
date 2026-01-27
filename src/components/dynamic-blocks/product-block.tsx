@@ -44,18 +44,20 @@ export async function ProductBlock({ block, locale = "" }: ProductBlockProps) {
           <div className="flex flex-col w-full max-w-[350px] mx-auto">
             <Link
               href={productLink}
-              className="relative w-full aspect-4/5 overflow-hidden transition-shadow flex flex-col"
+              className="relative w-full overflow-hidden flex flex-col"
             >
               {imageUrl && (
-                <Image
-                  src={imageUrl}
-                  alt={imageAlt}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 500px"
-                />
+                <div className="relative w-full aspect-4/5 overflow-hidden ">
+                  <Image
+                    src={imageUrl}
+                    alt={imageAlt}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 500px"
+                  />
+                </div>
               )}
-              <div className="bg-white flex p-4 pb-14 lg:pb-17 justify-between border-t-2 border-black">
+              <div className="bg-white flex p-4 pt-6 pb-10 lg:pb-17 justify-between border-t-2 border-black">
                 <h2 className="text-polymath-display max-w-2/3">
                   {product.title}
                 </h2>

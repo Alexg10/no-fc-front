@@ -141,7 +141,7 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
           {images.map((image, index) => (
             <div
               key={image.id}
-              className="flex-[0_0_50%] pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] overflow-hidden"
+              className="flex-[0_0_55%] pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] overflow-hidden"
             >
               <div
                 className="relative aspect-3/4 w-full overflow-hidden"

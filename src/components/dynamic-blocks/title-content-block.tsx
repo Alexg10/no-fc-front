@@ -14,16 +14,16 @@ interface TitleContentBlockProps {
 
 export function TitleContentBlock({ block }: TitleContentBlockProps) {
   return (
-    <section className="py-20 pb-16">
+    <section className="pb-19">
       <Grid className="lg:gap-y-18">
         {block.title && (
           <div className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-10">
-            <Title>{block.title}</Title>
+            <Title className="mb-2">{block.title}</Title>
           </div>
         )}
         <div
           className={cn(
-            "col-span-full  flex flex-col gap-20",
+            "col-span-full  flex flex-col gap-14",
             block.twoColumns
               ? "lg:col-start-2 lg:col-end-12"
               : "lg:col-start-4 lg:col-end-10",
@@ -40,7 +40,7 @@ export function TitleContentBlock({ block }: TitleContentBlockProps) {
             )}
           </div>
           {block.image && (
-            <figure className="max-w-[476px] mx-auto">
+            <figure className="max-w-[280px] lg:max-w-[476px] mx-auto">
               <Image
                 src={getStrapiImageUrl(block.image?.url)}
                 alt={block.title || "Block image"}
