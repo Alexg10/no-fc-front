@@ -13,20 +13,29 @@ interface TitleContentBlockProps {
 }
 
 export function TitleContentBlock({ block }: TitleContentBlockProps) {
-
   return (
     <section className="py-20 pb-16">
-      <Grid>
+      <Grid className="lg:gap-y-18">
         {block.title && (
           <div className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-10">
             <Title>{block.title}</Title>
           </div>
         )}
-        <div className={cn("col-span-full  flex flex-col gap-20", block.twoColumns ? "lg:col-start-2 lg:col-end-12" : "lg:col-start-4 lg:col-end-10")}>
+        <div
+          className={cn(
+            "col-span-full  flex flex-col gap-20",
+            block.twoColumns
+              ? "lg:col-start-2 lg:col-end-12"
+              : "lg:col-start-4 lg:col-end-10",
+          )}
+        >
           <div className={block.twoColumns ? "md:text-2-cols" : ""}>
             {block.content && (
               <div>
-                <BlockRendererClient content={block.content as BlocksContent} className="text-l-polymath" />
+                <BlockRendererClient
+                  content={block.content as BlocksContent}
+                  className="text-l-polymath"
+                />
               </div>
             )}
           </div>

@@ -114,6 +114,7 @@ export interface StrapiArticlesProduct {
   __component: "article.product";
   id: number;
   product?: StrapiProduct;
+  backgroundImage?: StrapiImage;
 }
 
 export interface StrapiCommonVideoFullWidth {
