@@ -13,7 +13,9 @@
       "Bash(pnpm type-check:*)",
       "Bash(pnpm lint:*)",
       "Skill(block)",
-      "Skill(block:*)"
+      "Skill(block:*)",
+      "Bash(pnpm eslint:*)",
+      "Bash(tsc:*)"
     ],
     "deny": [],
     "ask": []

@@ -159,6 +159,16 @@ export interface StrapiArticleImageStack {
   images?: StrapiImage[];
 }
 
+export interface StrapiArticleCredits {
+  __component: "article.credits";
+  id: number;
+  credit?: Array<{
+    id: number;
+    title: string;
+    content: BlocksContent;
+  }>;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -173,7 +183,8 @@ export type StrapiBlock =
   | StrapiCommonVideoFullWidth
   | StrapiSimplePageFaqs
   | StrapiArticleImageCols
-  | StrapiArticleImageStack;
+  | StrapiArticleImageStack
+  | StrapiArticleCredits;
 
 export interface StrapiProduct {
   id: number;
