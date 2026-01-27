@@ -15,18 +15,40 @@ export function ArticleIntroBlock({
   mainColor,
 }: ArticleIntroBlockProps) {
   return (
-    <div className={cn("py-20 relative lg:py-42 heading-s-polymath-display", getColorClass(mainColor, 'bg'))}>
-      <div className="absolute inset-0 bg-cover bg-center mix-blend-darken opacity-90 pointer-events-none"
-      style={{
-        backgroundImage: `url(/images/article/intro_noise.webp)`
-      }}
-      
+    <div
+      className={cn(
+        "py-20 relative lg:py-42 heading-s-polymath-display",
+        getColorClass(mainColor, "bg"),
+      )}
+    >
+      <div
+        className="absolute top-[-55px] left-0 w-full h-[100px] bg-repeat"
+        style={{
+          backgroundImage: `url("/images/article/carousel_ripped_top.webp")`,
+          backgroundSize: "auto 100%",
+        }}
+      />
+      <div
+        className="absolute inset-0 bg-cover bg-center mix-blend-darken opacity-90 pointer-events-none"
+        style={{
+          backgroundImage: `url(/images/article/intro_noise.webp)`,
+        }}
       />
       <Grid>
         <div className="col-span-full lg:col-start-3 lg:col-end-11">
-          <BlockRendererClient content={block.description as BlocksContent} className="[&>p]:heading-s-polymath-display" />
+          <BlockRendererClient
+            content={block.description as BlocksContent}
+            className="[&>p]:heading-s-polymath-display"
+          />
         </div>
       </Grid>
+      <div
+        className="absolute bottom-[-52px] left-0 w-full h-[100px] bg-repeat"
+        style={{
+          backgroundImage: `url("/images/article/carousel_ripped_top.webp")`,
+          backgroundSize: "auto 100%",
+        }}
+      />
     </div>
   );
 }
