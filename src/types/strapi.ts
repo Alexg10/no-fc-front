@@ -169,6 +169,17 @@ export interface StrapiArticleCredits {
   }>;
 }
 
+export interface StrapiArticleCustomContainer {
+  __component: "article.custom-container";
+  id: number;
+  whiteText?: boolean;
+  backgroundColor?: "white" | "black" | "pink" | "lime" | "blue";
+  backgroundImage?: StrapiImage;
+  title?: string;
+  content?: BlocksContent;
+  image?: StrapiImage;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -184,7 +195,8 @@ export type StrapiBlock =
   | StrapiSimplePageFaqs
   | StrapiArticleImageCols
   | StrapiArticleImageStack
-  | StrapiArticleCredits;
+  | StrapiArticleCredits
+  | StrapiArticleCustomContainer;
 
 export interface StrapiProduct {
   id: number;

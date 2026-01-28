@@ -4,6 +4,7 @@ import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-blo
 import { CarouselBlock } from "@/components/dynamic-blocks/carousel-block";
 import { CenteredTextBlock } from "@/components/dynamic-blocks/centered-text-block";
 import { CreditsBlock } from "@/components/dynamic-blocks/credits-block";
+import { CustomContainerBlock } from "@/components/dynamic-blocks/custom-container-block";
 import { HomeProductsBlock } from "@/components/dynamic-blocks/home-products-block";
 import { ImageColsBlock } from "@/components/dynamic-blocks/image-cols-block";
 import { ImageStackBlock } from "@/components/dynamic-blocks/image-stack-block";
@@ -58,6 +59,8 @@ export async function BlockRenderer({
       return <ProductBlock block={block} locale={locale} />;
     case "article.credits":
       return <CreditsBlock block={block} />;
+    case "article.custom-container":
+      return <CustomContainerBlock block={block} />;
     default:
       console.warn(`Unknown block type: ${(block as StrapiBlock).__component}`);
       return null;

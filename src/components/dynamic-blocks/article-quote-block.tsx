@@ -26,17 +26,17 @@ export function ArticleQuoteBlock({
             <div className="mb-4">
               <BlockRendererClient
                 content={block.quote as BlocksContent}
-                className="text-xl-polymath-display [&>p]:text-xl-polymath [&>p]:text-[32px] [&>p]:leading-[120%] quote-indent"
+                className="text-xl-polymath-display [&>p]:text-xl-polymath [&>p]:text-[24px] [&>p]:lg:text-[32px] [&>p]:leading-[120%] quote-indent"
               />
             </div>
 
             {block.name && (
               <div className="mt-8 flex gap-1">
-                <p className="text-polymath-display lg:text-[18px]">
+                <p className="text-polymath-display text-[16px] lg:text-[18px]">
                   {block.name}
                 </p>
                 {block.description && (
-                  <p className="text-polymath lg:text-[18px]">
+                  <p className="text-polymath text-[16px] lg:text-[18px]">
                     {block.description}
                   </p>
                 )}
