@@ -15,7 +15,9 @@
       "Skill(block)",
       "Skill(block:*)",
       "Bash(pnpm eslint:*)",
-      "Bash(tsc:*)"
+      "Bash(tsc:*)",
+      "Bash(pnpm install:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

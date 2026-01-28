@@ -202,7 +202,7 @@
 }
 
 @utility heading-s-obviously {
-  @apply font-obviously-narrow uppercase lg:text-[40px] font-medium leading-[0.85] tracking-[-1%];
+  @apply font-obviously-narrow uppercase text-[24px] lg:text-[40px] font-medium leading-[0.85] tracking-[-1%];
 }
 
 @utility text-xl-obviously {

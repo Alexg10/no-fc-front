@@ -4,6 +4,7 @@ import Grid from "@/components/common/grid";
 import { getPreviousTwoArticles } from "@/services/strapi/articleService";
 import { StrapiHomepageNewestArticles } from "@/types/strapi";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 async function NewestArticles({
   block,
@@ -13,7 +14,10 @@ async function NewestArticles({
   locale?: string;
 }) {
   const title = block.title;
-  const articles = await getPreviousTwoArticles();
+  const [articles, t] = await Promise.all([
+    getPreviousTwoArticles(),
+    getTranslations({ locale: locale || "fr", namespace: "article" }),
+  ]);
 
   return (
     <Grid>
@@ -23,7 +27,12 @@ async function NewestArticles({
       </div>
       <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-6">
         {articles.map((article) => (
-          <ArticleCard key={article.id} article={article} locale={locale} />
+          <ArticleCard
+            key={article.id}
+            article={article}
+            locale={locale}
+            issueLabel={t("issue")}
+          />
         ))}
       </div>
     </Grid>
