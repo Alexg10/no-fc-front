@@ -23,13 +23,15 @@ export async function ArticleSeeOthers({
   }
 
   return (
-    <section className="bg-off-white py-12 lg:py-28">
+    <section className="bg-off-white py-12 lg:py-28 lg:pb-20">
       <Grid className="gap-y-10 lg:gap-y-12">
         <div className="col-span-full flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <Title level={2} className="text-left lg:text-[64px]">
             {t("culturalTake")}
           </Title>
-          <ButtonLink href={`${locale ? `/${locale}` : ""}/articles`}>{t("seeMore")}</ButtonLink>
+          <ButtonLink href={`${locale ? `/${locale}` : ""}/articles`}>
+            {t("seeMore")}
+          </ButtonLink>
         </div>
 
         <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
