@@ -15,4 +15,4 @@ export interface StrapiArticle {
   issueNumber: string;
 }
 
-export type ColorList = 'blue' | 'lime' | 'pink';
+export type ColorList = "blue" | "lime" | "pink" | "black" | "white" | "grey";
