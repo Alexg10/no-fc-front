@@ -12,17 +12,11 @@ export function FooterBottom({
 }) {
   const t = useTranslations("footer");
   return (
-    <div className="py-6 flex justify-between items-center gap-6">
-      <div className="flex items-center gap-4">
-        <LogoIcons />
-        <p className="text-sm text-gray-500 flex flex-col">
-          <span>
-            &copy; {new Date().getFullYear()} {t("copyright")}
-          </span>
-          <span className="text-gray-500">{t("allRightsReserved")}</span>
-        </p>
+    <div className="relative py-6 flex flex-col md:flex-row gap-4 md:items-center md:gap-6">
+      <div className="flex gap-4 flex-col mb-6 md:mb-0">
+        <LogoIcons className="size-10 md:size-18" />
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 md:order-3 md:flex-row md:absolute md:right-0 md:gap-6">
         {footerBottomLinks?.map((footerBottomLink) => (
           <Link
             href={footerBottomLink.link}
@@ -32,6 +26,12 @@ export function FooterBottom({
             {footerBottomLink.label}
           </Link>
         ))}
+      </div>
+      <div className="flex md:flex-col gap-1 md:order-2 md:gap-0 text-[16px]">
+        <span>
+          &copy; {new Date().getFullYear()} {t("copyright")}
+        </span>
+        <span className="">{t("allRightsReserved")}</span>
       </div>
     </div>
   );
