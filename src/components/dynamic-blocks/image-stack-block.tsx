@@ -82,7 +82,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                       className="absolute inset-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
                       style={{
                         backgroundImage: `url("/images/article/carousel_texture_image.png")`,
-                        backgroundSize: "100% 100%",
+                        backgroundSize: "calc(100% + 1px) calc(100% + 1px)",
                       }}
                     />
                     <Image

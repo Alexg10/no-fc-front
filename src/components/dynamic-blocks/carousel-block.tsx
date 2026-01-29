@@ -158,7 +158,7 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
                   className="absolute inset-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
                   style={{
                     backgroundImage: `url("/images/article/carousel_texture_image.png")`,
-                    backgroundSize: "auto 100%",
+                    backgroundSize: "calc(100% + 1px) calc(100% + 1px)",
                     transform: index % 2 === 1 ? "rotate(180deg)" : undefined,
                   }}
                 />
