@@ -11,7 +11,7 @@ export async function Footer() {
   const general = await getGeneral();
 
   return (
-    <footer className="border-t border-black bg-off-white py-4 lg:pt-10">
+    <footer className="border-t border-black bg-off-white py-4 pb-0 lg:pt-10">
       <Grid>
         <div className="col-span-full">
           <FooterTop
