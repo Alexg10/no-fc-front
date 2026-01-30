@@ -211,6 +211,19 @@ case "{namespace}.{block-name}":
   return <{BlockName}Block block={block} />;
 ```
 
+### Article service (si namespace = article): `src/services/strapi/articleService.ts` (modifié)
+
+Pour les blocks **article** uniquement : ajouter une entrée dans le `on` de `getArticleBySlug` pour que le block soit peuplé en profondeur :
+
+```typescript
+// Dans populate.blocks.on :
+"article.{block-name}": {
+  populate: "*",  // ou populate spécifique (ex: { column: { populate: ["image"] } })
+},
+```
+
+Référence : voir les blocks existants (quote, description, carousel, columns-blocks, title-content, images, etc.) dans `getArticleBySlug`.
+
 ## 🔍 Comportements par défaut
 
 | Option   | Défaut        | Notes                           |
@@ -228,6 +241,7 @@ case "{namespace}.{block-name}":
 - ✔️ Vérifie si le fichier composant existe déjà
 - ✔️ Valide que au moins un type de champ est fourni (fields, richtext, ou image)
 - ✔️ Vérifie que le block n'est pas déjà enregistré dans block-renderer.tsx
+- ✔️ **Si namespace = article** : ajoute l'entrée dans `getArticleBySlug` → `populate.blocks.on["article.{block-name}"]` dans `src/services/strapi/articleService.ts`
 
 ## 🚨 Cas d'erreur
 

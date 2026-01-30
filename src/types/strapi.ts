@@ -180,6 +180,25 @@ export interface StrapiArticleCustomContainer {
   image?: StrapiImage;
 }
 
+export interface StrapiArticleColumnsBlockItem {
+  id: number;
+  heading?: string;
+  image?: StrapiImage;
+  content?: BlocksContent;
+}
+
+export interface StrapiArticleColumnsColumnItem {
+  id: number;
+  columnBlockItem?: StrapiArticleColumnsBlockItem[];
+}
+
+export interface StrapiArticleColumns {
+  __component: "article.columns-blocks";
+  id: number;
+  intro?: BlocksContent;
+  column?: StrapiArticleColumnsColumnItem[];
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -196,7 +215,8 @@ export type StrapiBlock =
   | StrapiArticleImageCols
   | StrapiArticleImageStack
   | StrapiArticleCredits
-  | StrapiArticleCustomContainer;
+  | StrapiArticleCustomContainer
+  | StrapiArticleColumns;
 
 export interface StrapiProduct {
   id: number;

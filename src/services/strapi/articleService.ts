@@ -19,7 +19,7 @@ export async function getArticles(): Promise<StrapiArticle[]> {
 }
 
 export async function getArticleBySlug(
-  slug: string
+  slug: string,
 ): Promise<StrapiArticle | null> {
   const query = qs.stringify({
     filters: {
@@ -33,6 +33,49 @@ export async function getArticleBySlug(
       },
       blocks: {
         populate: "*",
+        on: {
+          "article.columns-blocks": {
+            populate: {
+              column: {
+                populate: {
+                  columnBlockItem: {
+                    populate: "*",
+                  },
+                },
+              },
+            },
+          },
+          "article.quote": {
+            populate: "*",
+          },
+          "article.description": {
+            populate: "*",
+          },
+          "article.carousel": {
+            populate: "*",
+          },
+          "article.title-content": {
+            populate: "*",
+          },
+          "article.images": {
+            populate: "*",
+          },
+          "article.image-cols": {
+            populate: "*",
+          },
+          "article.image-stack": {
+            populate: "*",
+          },
+          "article.product": {
+            populate: "*",
+          },
+          "article.credits": {
+            populate: "*",
+          },
+          "article.custom-container": {
+            populate: "*",
+          },
+        },
       },
     },
   });
@@ -82,7 +125,7 @@ export async function getPreviousTwoArticles(): Promise<StrapiArticle[]> {
 
 export async function getOtherArticles(
   excludeSlug: string,
-  limit: number = 2
+  limit: number = 2,
 ): Promise<StrapiArticle[]> {
   const query = qs.stringify({
     filters: {

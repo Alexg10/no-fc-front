@@ -3,6 +3,7 @@ import { ArticleIntroBlock } from "@/components/dynamic-blocks/article-intro-blo
 import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-block";
 import { CarouselBlock } from "@/components/dynamic-blocks/carousel-block";
 import { CenteredTextBlock } from "@/components/dynamic-blocks/centered-text-block";
+import { ColumnsBlock } from "@/components/dynamic-blocks/columns-block";
 import { CreditsBlock } from "@/components/dynamic-blocks/credits-block";
 import { CustomContainerBlock } from "@/components/dynamic-blocks/custom-container-block";
 import { HomeProductsBlock } from "@/components/dynamic-blocks/home-products-block";
@@ -47,6 +48,8 @@ export async function BlockRenderer({
       return <ArticleIntroBlock block={block} mainColor={mainColor} />;
     case "article.carousel":
       return <CarouselBlock block={block} />;
+    case "article.columns-blocks":
+      return <ColumnsBlock block={block} />;
     case "article.title-content":
       return <TitleContentBlock block={block} />;
     case "article.images":
