@@ -69,11 +69,10 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                     "relative cursor-grab active:cursor-grabbing transition-shadow hover:shadow-lg",
                     images.length === 2
                       ? "first:-rotate-6 last:rotate-[4deg] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[30px]"
-                      : "max-w-1/2 lg:max-w-[474px] first:-rotate-6 nth-2:lg:translate-y-[90px] nth-2:z-10 nth-2:lg:translate-x-[-90px] last:lg:rotate-[-4deg] last:lg:rotate-[4deg] nth-2:lg:rotate-[-6deg] nth-2:rotate-[7deg] nth-3:rotate-[4deg] nth-3:lg:translate-x-[250px] nth-3:lg:translate-y-[-330px] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[-20px] last:lg:translate-y-[30px] last:z-10 last:lg:translate-y-[-300px]",
+                      : "max-w-1/2 lg:max-w-[474px] first:-rotate-6 nth-2:lg:translate-y-[90px] nth-2:z-10 nth-2:lg:translate-x-[-140px] last:lg:rotate-[-4deg] last:lg:rotate-[4deg] nth-2:lg:rotate-[-6deg] nth-2:rotate-[7deg] nth-3:rotate-[4deg] nth-3:lg:translate-x-[150px] nth-3:lg:translate-y-[-180px] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[-20px] last:lg:translate-y-[30px] last:z-10 last:lg:translate-y-[-200px]",
                   )}
                   style={{
                     transform: `translate(${offset.x}px, ${offset.y}px)`,
-                    zIndex: 50,
                   }}
                   onMouseDown={(e) => handleMouseDown(e, image.id)}
                 >
@@ -82,7 +81,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                       className="absolute inset-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
                       style={{
                         backgroundImage: `url("/images/article/carousel_texture_image.png")`,
-                        backgroundSize: "calc(100% + 1px) calc(100% + 1px)",
+                        backgroundSize: "100% 100%",
                       }}
                     />
                     <Image

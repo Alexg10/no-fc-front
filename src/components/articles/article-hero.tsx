@@ -1,3 +1,4 @@
+"use client";
 import { IssueNumberBadge } from "@/components/articles/issue-number-badge";
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import Grid from "@/components/common/grid";
@@ -6,6 +7,14 @@ import { cn, getColorClass } from "@/lib/utils";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import { useRef } from "react";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
 interface ArticleHeroProps {
   article: StrapiArticle;
   mainColor: ColorList;
@@ -13,10 +22,33 @@ interface ArticleHeroProps {
 
 export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
   const t = useTranslations("article");
+  const heroRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  useGSAP(
+    () => {
+      if (!heroRef.current || !containerRef.current) return;
+
+      const containerHeight = containerRef.current.offsetHeight;
+      const titleHeight = heroRef.current.offsetHeight;
+      const endValue = containerHeight - titleHeight - 100;
+
+      gsap.to(heroRef.current, {
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: `+=${endValue}`,
+          pin: true,
+          pinSpacing: false,
+          scrub: 1,
+        },
+      });
+    },
+    { scope: containerRef },
+  );
   return (
-    <div className="relative h-full">
+    <div className="relative h-[125vh]" ref={containerRef}>
       {article.cover && (
-        <div className="relative h-[125vh] w-full overflow-hidden">
+        <div className="h-[125vh] w-full overflow-hidden absolute top-0 left-0">
           <Image
             src={getStrapiImageUrl(article.cover.url)}
             alt={article.cover.alternativeText || article.title}
@@ -27,9 +59,12 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
           <div className="absolute inset-0 bg-black/20" />
         </div>
       )}
-      <div className="text-white absolute bottom-[34vh] lg:bottom-[62%] translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
+      <div
+        className="text-white relative pt-[25vh] z-20  w-full will-change-transform"
+        ref={heroRef}
+      >
         <Grid>
-          <div className="col-span-full md:col-start-2 md:col-end-6 lg:col-start-3 lg:col-end-10 text-center flex flex-col justify-center items-center gap-4">
+          <div className="col-span-full  md:col-start-2 md:col-end-6 lg:col-start-3 lg:col-end-10 text-center h-fit flex flex-col justify-center items-center gap-4">
             <IssueNumberBadge
               issueNumber={article.issueNumber}
               issueLabel={t("issue")}
@@ -41,7 +76,10 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
             </h1>
             <BlockRendererClient
               content={article.shortDescription}
-              className="text-white text-l-polymath lg:mt-6"
+              className={cn(
+                "text-l-polymath lg:mt-6",
+                getColorClass(mainColor),
+              )}
             />
           </div>
         </Grid>
