@@ -81,7 +81,7 @@ export function BlockRendererClient({
           link: ({ children, url }) => (
             <a
               href={url}
-              className="underline hover:opacity-75"
+              className="underline"
               target={url.startsWith("http") ? "_blank" : "_self"}
               rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
             >

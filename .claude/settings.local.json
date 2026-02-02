@@ -17,7 +17,8 @@
       "Bash(pnpm eslint:*)",
       "Bash(tsc:*)",
       "Bash(pnpm install:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []
