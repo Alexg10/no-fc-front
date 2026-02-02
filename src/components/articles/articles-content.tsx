@@ -1,4 +1,5 @@
 import { ArticleCard } from "@/components/articles/article-card";
+import { ArticlesParallax } from "@/components/articles/articles-parallax";
 import { getArticles } from "@/services/strapi/articleService";
 
 interface ArticlesContentProps {
@@ -19,15 +20,21 @@ export async function ArticlesContent({ locale }: ArticlesContentProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
-      {articles.map((article) => (
-        <ArticleCard
-          key={article.id}
-          article={article}
-          issueLabel="Issue"
-          locale={locale}
-        />
-      ))}
-    </div>
+    <ArticlesParallax>
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        {articles.map((article) => (
+          <div
+            key={article.id}
+            className="parallax-col"
+          >
+            <ArticleCard
+              article={article}
+              issueLabel="Issue"
+              locale={locale}
+            />
+          </div>
+        ))}
+      </div>
+    </ArticlesParallax>
   );
 }
