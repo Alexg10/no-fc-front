@@ -1,4 +1,6 @@
 import { ArticleHero } from "@/components/articles/article-hero";
+import { ArticleMainContent } from "@/components/articles/article-main-content";
+import { ArticlePageWrapper } from "@/components/articles/article-page-wrapper";
 import { ArticleSeeOthers } from "@/components/articles/article-see-others";
 import { BlockRenderer } from "@/components/common/block-renderer";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
@@ -18,31 +20,35 @@ export default async function ArticlePage({
   }
 
   const mainColor = article?.mainColor;
+  const issueNumber = article?.issueNumber;
 
   return (
-    <article className="min-h-[120dvh] bg-off-white overflow-hidden">
-      <ArticleHero article={article} mainColor={mainColor} />
-      <main>
-        {article.blocks && article.blocks.length > 0 && (
-          <div>
-            {article.blocks.map((block, index) => (
-              <Suspense
-                key={`${block.__component}-${index}`}
-                fallback={<BlockSkeleton />}
-              >
-                <BlockRenderer
-                  block={block}
-                  locale={locale}
-                  mainColor={mainColor}
-                />
-              </Suspense>
-            ))}
-          </div>
-        )}
-        <Suspense fallback={<BlockSkeleton />}>
-          <ArticleSeeOthers currentSlug={slug} locale={locale} />
-        </Suspense>
-      </main>
-    </article>
+    <ArticlePageWrapper>
+      <article className="min-h-[120dvh] bg-off-white overflow-hidden article-content-wrapper">
+        <ArticleHero article={article} mainColor={mainColor} />
+        <ArticleMainContent>
+          {article.blocks && article.blocks.length > 0 && (
+            <div>
+              {article.blocks.map((block, index) => (
+                <Suspense
+                  key={`${block.__component}-${index}`}
+                  fallback={<BlockSkeleton />}
+                >
+                  <BlockRenderer
+                    block={block}
+                    locale={locale}
+                    mainColor={mainColor}
+                    issueNumber={issueNumber}
+                  />
+                </Suspense>
+              ))}
+            </div>
+          )}
+        </ArticleMainContent>
+      </article>
+      <Suspense fallback={<BlockSkeleton />}>
+        <ArticleSeeOthers currentSlug={slug} locale={locale} />
+      </Suspense>
+    </ArticlePageWrapper>
   );
 }
