@@ -80,7 +80,6 @@ export function ArticleSummary({
           end: `+=${mainRef.current.offsetHeight}`,
           pin: true,
           pinSpacing: false,
-          markers: true,
         },
       });
     },
