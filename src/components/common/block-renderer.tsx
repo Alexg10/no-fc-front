@@ -22,11 +22,13 @@ interface BlockRendererProps {
   block: StrapiBlock;
   locale?: string;
   mainColor: ColorList;
+  issueNumber: string;
 }
 
 export async function BlockRenderer({
   block,
   locale,
+  issueNumber,
   mainColor,
 }: BlockRendererProps) {
   switch (block.__component) {
@@ -45,7 +47,13 @@ export async function BlockRenderer({
     case "article.quote":
       return <ArticleQuoteBlock block={block} mainColor={mainColor} />;
     case "article.description":
-      return <ArticleIntroBlock block={block} mainColor={mainColor} />;
+      return (
+        <ArticleIntroBlock
+          block={block}
+          mainColor={mainColor}
+          issueNumber={issueNumber}
+        />
+      );
     case "article.carousel":
       return <CarouselBlock block={block} />;
     case "article.columns-blocks":

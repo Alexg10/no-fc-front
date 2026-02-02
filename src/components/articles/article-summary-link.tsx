@@ -64,10 +64,10 @@ export function ArticleSummaryLink() {
             key={heading.id}
             onClick={() => scrollToHeading(heading.id)}
             className={cn(
-              "text-left text-sm opacity-40 hover:opacity-100 text-black cursor-pointer",
+              "text-left text-[14px] leading-[140%]hover:opacity-100 text-black cursor-pointer",
               isCurrentSection === heading.id
-                ? "opacity-100 font-bold"
-                : "opacity-40",
+                ? "opacity-100"
+                : "opacity-40 text-polymath  ",
             )}
           >
             {heading.text}

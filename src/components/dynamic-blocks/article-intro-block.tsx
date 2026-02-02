@@ -1,18 +1,21 @@
+import { ArticleSummary } from "@/components/articles/article-summary";
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
+import Grid from "@/components/common/grid";
 import { cn, getColorClass } from "@/lib/utils";
 import type { StrapiArticleIntro } from "@/types/strapi";
 import { ColorList } from "@/types/strapi/article";
 import type { BlocksContent } from "@strapi/blocks-react-renderer";
-import Grid from "../common/grid";
 
 interface ArticleIntroBlockProps {
   block: StrapiArticleIntro;
   mainColor: ColorList;
+  issueNumber: string;
 }
 
 export function ArticleIntroBlock({
   block,
   mainColor,
+  issueNumber,
 }: ArticleIntroBlockProps) {
   return (
     <div
@@ -50,6 +53,7 @@ export function ArticleIntroBlock({
           backgroundSize: "auto 100%",
         }}
       />
+      <ArticleSummary mainColor={mainColor} issueNumber={issueNumber} />
     </div>
   );
 }
