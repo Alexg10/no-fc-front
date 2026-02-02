@@ -47,10 +47,10 @@ export function ArticleCard({ article, issueLabel, locale }: ArticleCardProps) {
       <div className="flex flex-col gap-3">
         <h3 className="heading-s-obviously">{article.title}</h3>
         {article.shortDescription && (
-          <div className="line-clamp-2">
+          <div className="line-clamp-2 text-ellipsis overflow-hidden">
             <BlockRendererClient
               content={article.shortDescription}
-              className="text-l-polymath text-black [&>p]:mb-0 [&>*>strong]:font-normal"
+              className="text-l-polymath text-black [&>p]:mb-0 [&>*>strong]:font-normal "
             />
           </div>
         )}

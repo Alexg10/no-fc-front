@@ -70,7 +70,7 @@ export default async function CollectionPage({
 
   return (
     <>
-      <PageHeader title={`Collection ${handle}`} marqueeLabel="Shop" />
+      <PageHeader title={`Collection ${handle}`} />
       <main className="container mx-auto px-4 py-8">
         <Suspense fallback={<ProductsPageLoading />}>
           <CollectionContent

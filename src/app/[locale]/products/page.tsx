@@ -59,7 +59,7 @@ export default async function ProductsPage({
 
   return (
     <>
-      <PageHeader title="Not Merch. Culture." marqueeLabel="Shop" />
+      <PageHeader title="Not Merch. Culture." />
       <main className="space-y-12">
         <Suspense fallback={<CollectionsListLoading />}>
           <CollectionsSection collections={productsPageData?.collections} />
