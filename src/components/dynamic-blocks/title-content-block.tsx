@@ -17,7 +17,7 @@ export function TitleContentBlock({ block }: TitleContentBlockProps) {
     <section className="pb-19">
       <Grid className="lg:gap-y-15">
         {block.title && (
-          <div className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-10">
+          <div className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-10 balance">
             <Title className="mb-2">{block.title}</Title>
           </div>
         )}

@@ -35,7 +35,9 @@ export function CustomContainerBlock({ block }: CustomContainerBlockProps) {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `url(${getStrapiImageUrl(block.backgroundImage.url)})`,
+            backgroundImage: `url(${getStrapiImageUrl(
+              block.backgroundImage.url,
+            )})`,
             backgroundSize: "100% auto",
             backgroundPosition: "center",
             backgroundRepeat: "repeat",

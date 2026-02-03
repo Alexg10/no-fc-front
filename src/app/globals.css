@@ -231,6 +231,10 @@
   margin-right: -50vw;
 }
 
+.balance {
+  text-wrap: balance;
+}
+
 
 
 /* List styles for BlockRenderer */
