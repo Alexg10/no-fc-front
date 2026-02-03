@@ -14,6 +14,22 @@ import { ArticleSummaryLink } from "./article-summary-link";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const PIN_END_OFFSET = 250;
+
+function getPinEndValue(
+  main: HTMLElement | null,
+  summary: HTMLElement | null,
+): string {
+  if (!main || !summary) return "+=0";
+  const mainHeight = main.offsetHeight;
+  const summaryOffsetFromMain =
+    summary.getBoundingClientRect().top - main.getBoundingClientRect().top;
+  return `+=${Math.max(
+    0,
+    mainHeight - summaryOffsetFromMain - PIN_END_OFFSET,
+  )}`;
+}
+
 export function ArticleSummary({
   issueNumber,
   mainColor,
@@ -50,13 +66,14 @@ export function ArticleSummary({
   };
 
   useEffect(() => {
-    if (!mainRef.current || !progressBarRef.current) return;
+    const mainEl = mainRef.current;
+    if (!mainEl || !progressBarRef.current) return;
 
     gsap.to(progressBarRef.current, {
       scrollTrigger: {
-        trigger: mainRef.current,
+        trigger: mainEl,
         start: "top 75%",
-        end: "bottom 25%",
+        end: "bottom 50%",
         scrub: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
@@ -67,6 +84,18 @@ export function ArticleSummary({
       },
       ease: "power2.inOut",
     });
+
+    const resizeObserver = new ResizeObserver(() => {
+      ScrollTrigger.refresh();
+    });
+    resizeObserver.observe(mainEl);
+
+    return () => {
+      resizeObserver.disconnect();
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.trigger === mainEl) st.kill();
+      });
+    };
   }, [mainRef]);
 
   useGSAP(
@@ -77,9 +106,10 @@ export function ArticleSummary({
         scrollTrigger: {
           trigger: summaryRef.current,
           start: "top center",
-          end: `+=${mainRef.current.offsetHeight}`,
+          end: () => getPinEndValue(mainRef.current, summaryRef.current),
           pin: true,
           pinSpacing: false,
+          invalidateOnRefresh: true,
         },
       });
     },

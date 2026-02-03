@@ -58,9 +58,9 @@ export async function ProductBlock({ block, locale = "" }: ProductBlockProps) {
                 </div>
               )}
               <div className="bg-white flex p-4 pt-6 pb-10 lg:pb-17 justify-between border-t-2 border-black">
-                <h2 className="text-polymath-display max-w-2/3">
+                <h3 className="text-polymath-display max-w-2/3">
                   {product.title}
-                </h2>
+                </h3>
                 <div className="text-polymath">
                   {product.price.toFixed(2)} €
                 </div>

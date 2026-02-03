@@ -68,6 +68,7 @@ export function CustomContainerBlock({ block }: CustomContainerBlockProps) {
                   height={186}
                   className="w-full h-auto"
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  loading="lazy"
                 />
               </div>
               <Image

@@ -8,10 +8,11 @@ import { ColorList, StrapiArticle } from "@/types/strapi/article";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
+import { BREAKPOINTS } from "@/hooks/useBreakpoints";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -24,27 +25,43 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
   const t = useTranslations("article");
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
   useGSAP(
     () => {
-      if (!heroRef.current || !containerRef.current) return;
+      const hero = heroRef.current;
+      const container = containerRef.current;
+      if (!hero || !container) return;
 
-      const containerHeight = containerRef.current.offsetHeight;
-      const titleHeight = heroRef.current.offsetHeight;
-      const endValue = containerHeight - titleHeight - 100;
-
-      gsap.to(heroRef.current, {
+      gsap.to(hero, {
         scrollTrigger: {
-          trigger: heroRef.current,
+          trigger: hero,
           start: "top top",
-          end: `+=${endValue}`,
+          end: () => {
+            if (!container || !hero) return "+=0";
+            const isUnderTablet =
+              typeof window !== "undefined" &&
+              window.innerWidth < BREAKPOINTS.TABLET;
+            const offset = isUnderTablet ? 40 : 100;
+            return `+=${container.offsetHeight - hero.offsetHeight - offset}`;
+          },
           pin: true,
           pinSpacing: false,
           scrub: 1,
+          invalidateOnRefresh: true,
         },
       });
     },
     { scope: containerRef },
   );
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => ScrollTrigger.refresh());
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, []);
   return (
     <div className="relative h-[125vh]" ref={containerRef}>
       {article.cover && (
