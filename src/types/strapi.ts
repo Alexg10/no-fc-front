@@ -180,6 +180,12 @@ export interface StrapiArticleCustomContainer {
   image?: StrapiImage;
 }
 
+export interface StrapiArticleLargeImage {
+  __component: "article.large-image";
+  id: number;
+  image?: StrapiImage;
+}
+
 export interface StrapiArticleColumnsBlockItem {
   id: number;
   heading?: string;
@@ -216,7 +222,8 @@ export type StrapiBlock =
   | StrapiArticleImageStack
   | StrapiArticleCredits
   | StrapiArticleCustomContainer
-  | StrapiArticleColumns;
+  | StrapiArticleColumns
+  | StrapiArticleLargeImage;
 
 export interface StrapiProduct {
   id: number;

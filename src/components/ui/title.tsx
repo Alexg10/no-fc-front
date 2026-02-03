@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { createHeadingElement } from "@/lib/heading-utils";
+import { cn } from "@/lib/utils";
 
 interface TitleProps {
   children: React.ReactNode;
@@ -21,7 +21,10 @@ function parseBreaks(text: React.ReactNode): React.ReactNode {
 
 export function Title({ children, className, level = 2 }: TitleProps) {
   return createHeadingElement(level, {
-    className: cn("heading-l-obviously text-center uppercase", className),
+    className: cn(
+      "heading-l-obviously text-center uppercase balance",
+      className,
+    ),
     children: parseBreaks(children),
   });
 }

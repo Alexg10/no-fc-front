@@ -75,6 +75,9 @@ export async function getArticleBySlug(
           "article.custom-container": {
             populate: "*",
           },
+          "article.large-image": {
+            populate: "*",
+          },
         },
       },
     },
