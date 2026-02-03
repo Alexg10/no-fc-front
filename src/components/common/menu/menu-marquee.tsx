@@ -1,3 +1,4 @@
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { Link } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import { StrapiMarquee } from "@/types/strapi";
@@ -10,6 +11,7 @@ export function MenuMarquee({
   marquee: StrapiMarquee;
   isOpen: boolean;
 }) {
+  const isUnderDesktop = useBreakpoints().isUnderDesktop;
   const content = (
     <>
       {marquee.link ? (
@@ -26,7 +28,7 @@ export function MenuMarquee({
     <div
       className={cn(
         "bg-lime text-black text-nowrap overflow-hidden transition-opacity ease-in-out",
-        isOpen
+        isOpen && isUnderDesktop
           ? "opacity-0 pointer-events-none duration-300 "
           : "opacity-100 delay-[350ms] duration-500",
       )}
