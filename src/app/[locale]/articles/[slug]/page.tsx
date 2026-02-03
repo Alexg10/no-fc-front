@@ -35,6 +35,7 @@ export default async function ArticlePage({
                   fallback={<BlockSkeleton />}
                 >
                   <BlockRenderer
+                    article={article}
                     block={block}
                     locale={locale}
                     mainColor={mainColor}

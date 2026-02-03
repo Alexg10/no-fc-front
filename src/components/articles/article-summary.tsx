@@ -4,7 +4,7 @@ import { ShareIcon } from "@/components/icons/share-icon";
 import { SummaryMenuIcon } from "@/components/icons/summary-menu-icon";
 import { useArticleRef } from "@/contexts/article-context";
 import { cn, getColorClass } from "@/lib/utils";
-import { ColorList } from "@/types/strapi/article";
+import { ColorList, StrapiArticle } from "@/types/strapi/article";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -31,9 +31,11 @@ function getPinEndValue(
 }
 
 export function ArticleSummary({
+  article,
   issueNumber,
   mainColor,
 }: {
+  article?: StrapiArticle | null;
   issueNumber: string;
   mainColor: ColorList;
 }) {
@@ -148,7 +150,7 @@ export function ArticleSummary({
               <span
                 className={cn(
                   "block translate-y-[2px] relative z-10 text-nowrap",
-                  mainColor === "black" ? "text-white" : "",
+                  mainColor === "black" ? "text-white" : "text-white",
                   mainColor === "black" || mainColor === "white"
                     ? "mix-blend-difference"
                     : "",
@@ -173,7 +175,11 @@ export function ArticleSummary({
                 <button className="cursor-pointer" onClick={toggleSocials}>
                   <ShareIcon />
                 </button>
-                <ArticleSocialLinks className="transition-all duration-300 ease-in-out" />
+                <ArticleSocialLinks
+                  className="transition-all duration-300 ease-in-out"
+                  articleTitle={article?.title}
+                  articleDescription={article?.shortDescription}
+                />
               </div>
             </div>
           </div>

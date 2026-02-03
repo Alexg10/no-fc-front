@@ -5,6 +5,7 @@ export function NoFcSloganIcon({ className }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      suppressHydrationWarning
     >
       <mask
         id="path-1-outside-1_3052_1191"

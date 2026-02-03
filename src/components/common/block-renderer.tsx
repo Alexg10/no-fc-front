@@ -17,19 +17,21 @@ import { FaqsBlock } from "@/components/dynamic-blocks/simple-page/faqs-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
 import { VideoFullWidthBlock } from "@/components/dynamic-blocks/video-full-width-block";
 import type { StrapiBlock } from "@/types/strapi";
-import { ColorList } from "@/types/strapi/article";
+import { ColorList, StrapiArticle } from "@/types/strapi/article";
 
 interface BlockRendererProps {
   block: StrapiBlock;
   locale?: string;
   mainColor: ColorList;
   issueNumber: string;
+  article?: StrapiArticle | null;
 }
 
 export async function BlockRenderer({
   block,
   locale,
   issueNumber,
+  article,
   mainColor,
 }: BlockRendererProps) {
   switch (block.__component) {
@@ -50,6 +52,7 @@ export async function BlockRenderer({
     case "article.description":
       return (
         <ArticleIntroBlock
+          article={article}
           block={block}
           mainColor={mainColor}
           issueNumber={issueNumber}
