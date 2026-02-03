@@ -1,5 +1,6 @@
-import { HeroArticle } from "@/components/common/homepage/hero-article";
+import { ArticleHero } from "@/components/articles/article-hero";
 import { HomeBlocks } from "@/components/common/homepage/home-blocks";
+import { getLastArticle } from "@/services/strapi/articleService";
 import { getHomepage } from "@/services/strapi/homepageService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -53,15 +54,29 @@ export async function generateMetadata({
   };
 }
 
-export default async function Home({
-  params,
-}: HomePageProps) {
+export default async function Home({ params }: HomePageProps) {
   const { locale } = await params;
   const homepage = await getHomepage();
 
+  let displayArticle = homepage?.heroArticle?.article;
+
+  if (!displayArticle) {
+    const lastArticle = await getLastArticle();
+    if (lastArticle) {
+      displayArticle = lastArticle;
+    }
+  }
+
+  if (!displayArticle) {
+    return null;
+  }
+
   return (
     <main className="min-h-screen">
-      <HeroArticle article={homepage?.heroArticle?.article} />
+      <ArticleHero
+        article={displayArticle}
+        mainColor={displayArticle.mainColor}
+      />
 
       <Suspense fallback={<BlockSkeleton />}>
         {homepage?.blocks && (
