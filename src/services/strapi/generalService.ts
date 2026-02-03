@@ -1,5 +1,5 @@
 import { strapiFetch } from "@/lib/strapi";
-import { StrapiLink } from "@/types/strapi";
+import { StrapiLink, StrapiMarquee } from "@/types/strapi";
 import qs from "qs";
 
 export async function getGeneral(): Promise<StrapiGeneral | null> {
@@ -7,6 +7,9 @@ export async function getGeneral(): Promise<StrapiGeneral | null> {
     populate: {
       socials: {
         fields: ["label", "link", "target"],
+      },
+      marquee: {
+        fields: ["label", "link"],
       },
     },
   });
@@ -21,4 +24,5 @@ export async function getGeneral(): Promise<StrapiGeneral | null> {
 export interface StrapiGeneral {
   id: number;
   socials: Array<StrapiLink>;
+  marquee: StrapiMarquee;
 }

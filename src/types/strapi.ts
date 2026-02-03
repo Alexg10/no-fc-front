@@ -21,6 +21,12 @@ export interface StrapiLink {
   target?: string;
 }
 
+export interface StrapiMarquee {
+  id: number;
+  label: string;
+  link: string;
+}
+
 export interface StrapiProduct {
   id: number;
   handle: string;
