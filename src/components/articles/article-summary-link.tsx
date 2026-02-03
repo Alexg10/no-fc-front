@@ -57,7 +57,7 @@ export function ArticleSummaryLink() {
   };
 
   return (
-    <div className="flex flex-col gap-2 pb-4 max-h-[15vh] overflow-y-auto">
+    <div className="flex flex-col gap-2 pb-4 max-h-[25vh] overflow-y-auto">
       {headings.length > 0 ? (
         headings.map((heading) => (
           <button

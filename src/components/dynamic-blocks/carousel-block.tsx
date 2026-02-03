@@ -4,7 +4,7 @@ import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import type { StrapiArticleCarousel } from "@/types/strapi";
 import useEmblaCarousel from "embla-carousel-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Image from "next/image";
 
@@ -22,9 +22,14 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
   const { isDesktop } = useBreakpoints();
   const images = useMemo(() => block.images || [], [block.images]);
 
-  const imageRotations = useMemo(() => {
-    return images.map((image) => getRotationForImage(image.id));
-  }, [images]);
+  const loopSlides = useMemo(
+    () => (images.length < 6 ? [...images, ...images] : images),
+    [images],
+  );
+  const loopRotations = useMemo(
+    () => loopSlides.map((image) => getRotationForImage(image.id)),
+    [loopSlides],
+  );
 
   const [containerRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -37,16 +42,18 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
   const [isInSection, setIsInSection] = useState(false);
   const mousePos = useRef({ x: 0, y: 0 });
   const animationFrameId = useRef<number | null>(null);
+  const lerpCursorRef = useRef<() => void>(() => {});
 
-  const lerpCursor = () => {
+  const lerpCursor = useCallback(() => {
     setCursorPos((prev) => ({
       x: prev.x + (mousePos.current.x - prev.x) * 0.15,
       y: prev.y + (mousePos.current.y - prev.y) * 0.15,
     }));
-    animationFrameId.current = requestAnimationFrame(lerpCursor);
-  };
+    animationFrameId.current = requestAnimationFrame(lerpCursorRef.current);
+  }, []);
 
   useEffect(() => {
+    lerpCursorRef.current = lerpCursor;
     if (isDesktop && isInSection) {
       if (!animationFrameId.current) {
         animationFrameId.current = requestAnimationFrame(lerpCursor);
@@ -94,7 +101,9 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
   return (
     <section
       ref={sectionRef}
-      className={`py-9 mb-15 relative lg:py-28 w-full full-width lg:mb-40 lg:cursor-none ${block.backgroundColor ? ` bg-${block.backgroundColor}` : ""}`}
+      className={`py-9 mb-15 relative lg:py-28 w-full full-width lg:mb-40 lg:cursor-none ${
+        block.backgroundColor ? ` bg-${block.backgroundColor}` : ""
+      }`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
@@ -138,14 +147,14 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
       )}
       <div className="scroll-smooth overflow-hidden" ref={containerRef}>
         <div className="flex -ml-4 ">
-          {images.map((image, index) => (
+          {loopSlides.map((image, index) => (
             <div
-              key={image.id}
+              key={`${image.id}-${index}`}
               className="flex-[0_0_55%] pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_35%] overflow-hidden"
             >
               <div
                 className="relative aspect-3/4 w-full overflow-hidden"
-                style={{ transform: `rotate(${imageRotations[index]}deg)` }}
+                style={{ transform: `rotate(${loopRotations[index]}deg)` }}
               >
                 <Image
                   src={getStrapiImageUrl(image.url)}
