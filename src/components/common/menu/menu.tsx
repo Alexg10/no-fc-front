@@ -32,14 +32,14 @@ export function Menu({
         >
           <div className="p-6 pt-30 gap-2 flex flex-col">
             <NavigationMenuContainer menu={menu as StrapiMenu} />
-            <div className="flex">
+            <div className="flex border-t border-black pt-4">
               <LanguageSwitcher />
             </div>
           </div>
         </div>
       )}
       <div className="absolute top-0 flex left-0 flex-col h-full gap-4 z-[51]">
-        <div className="flex flex-col gap-4 max-w-[103px] lg:max-w-[148px]">
+        <div className="flex flex-col gap-4 max-w-[108px] lg:max-w-[148px]">
           <div className="relative bg-white p-2 lg:p-3 ">
             <div
               className={cn(
@@ -98,7 +98,9 @@ export function Menu({
               </div>
             )}
           </div>
-          {marquee && marquee.label && <MenuMarquee marquee={marquee} />}
+          {marquee && marquee.label && (
+            <MenuMarquee marquee={marquee} isOpen={isOpen} />
+          )}
         </div>
       </div>
     </>

@@ -1,8 +1,15 @@
 import { Link } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
 import { StrapiMarquee } from "@/types/strapi";
 import Marquee from "react-fast-marquee";
 
-export function MenuMarquee({ marquee }: { marquee: StrapiMarquee }) {
+export function MenuMarquee({
+  marquee,
+  isOpen,
+}: {
+  marquee: StrapiMarquee;
+  isOpen: boolean;
+}) {
   const content = (
     <>
       {marquee.link ? (
@@ -16,7 +23,14 @@ export function MenuMarquee({ marquee }: { marquee: StrapiMarquee }) {
   );
 
   return (
-    <div className="bg-lime text-black text-nowrap overflow-hidden">
+    <div
+      className={cn(
+        "bg-lime text-black text-nowrap overflow-hidden transition-opacity ease-in-out",
+        isOpen
+          ? "opacity-0 pointer-events-none duration-300 "
+          : "opacity-100 delay-[350ms] duration-500",
+      )}
+    >
       <Marquee
         autoFill={false}
         speed={30}
