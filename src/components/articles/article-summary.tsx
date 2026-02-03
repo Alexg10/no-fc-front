@@ -108,15 +108,20 @@ export function ArticleSummary({
               <div
                 ref={progressBarRef}
                 className={cn(
-                  "absolute top-0 w-0 left-0 h-full mix-blend-difference",
+                  "absolute top-0 w-0 left-0 h-full ",
                   getColorClass(mainColor, "bg"),
+                  mainColor === "black" || mainColor === "white"
+                    ? "mix-blend-difference"
+                    : "",
                 )}
               />
               <span
                 className={cn(
-                  "block translate-y-[2px] mix-blend-difference relative z-10 text-nowrap",
-                  getColorClass(mainColor, "text"),
+                  "block translate-y-[2px] relative z-10 text-nowrap",
                   mainColor === "black" ? "text-white" : "",
+                  mainColor === "black" || mainColor === "white"
+                    ? "mix-blend-difference"
+                    : "",
                 )}
               >
                 ISSUE N°{issueNumber}
