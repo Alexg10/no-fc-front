@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 
 interface DragContextType {
   isDragging: boolean;
@@ -12,8 +12,17 @@ const DragContext = createContext<DragContextType | undefined>(undefined);
 export function DragProvider({ children }: { children: React.ReactNode }) {
   const [isDragging, setIsDragging] = useState(false);
 
+  const setIsDraggingCallback = useCallback((isDragging: boolean) => {
+    setIsDragging(isDragging);
+  }, []);
+
+  const value = useMemo(
+    () => ({ isDragging, setIsDragging: setIsDraggingCallback }),
+    [isDragging, setIsDraggingCallback]
+  );
+
   return (
-    <DragContext.Provider value={{ isDragging, setIsDragging }}>
+    <DragContext.Provider value={value}>
       {children}
     </DragContext.Provider>
   );

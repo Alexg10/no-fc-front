@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { useDrag } from "@/contexts/drag-context";
 import { StrapiContact } from "@/services/strapi/contactService";
 import { ContactForm } from "./contact-form";
@@ -8,7 +9,9 @@ interface ContactMainProps {
   contact: StrapiContact;
 }
 
-export function ContactMain({ contact }: ContactMainProps) {
+export const ContactMain = memo(function ContactMain({
+  contact,
+}: ContactMainProps) {
   const { isDragging } = useDrag();
 
   return (
@@ -20,4 +23,4 @@ export function ContactMain({ contact }: ContactMainProps) {
       <ContactForm contact={contact} />
     </main>
   );
-}
+});

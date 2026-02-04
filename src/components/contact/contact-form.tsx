@@ -9,6 +9,8 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
+import { useCallback } from "react";
+
 interface FormData {
   name: string;
   email: string;
@@ -17,56 +19,56 @@ interface FormData {
   privacy: boolean;
 }
 
+const INITIAL_FORM_DATA: FormData = {
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
+  privacy: false,
+};
+
 export function ContactForm({ contact }: { contact: StrapiContact }) {
   const t = useTranslations("contact");
   const { isDragging } = useDrag();
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-    privacy: false,
-  });
+  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    },
+    []
+  );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("loading");
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setStatus("loading");
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setStatus("success");
-        setFormData({
-          name: "",
-          email: "",
-          subject: "",
-          message: "",
-          privacy: false,
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         });
-      } else {
+
+        const data = await res.json();
+
+        if (data.success) {
+          setStatus("success");
+          setFormData(INITIAL_FORM_DATA);
+        } else {
+          setStatus("error");
+        }
+      } catch {
         setStatus("error");
       }
-    } catch {
-      setStatus("error");
-    }
-  };
+    },
+    [formData]
+  );
 
   const inputClassName =
     "w-full p-3 border border-black/10 disabled:opacity-50 focus:outline-none focus:border-black transition-all duration-300";

@@ -1,10 +1,9 @@
 "use client";
 
-import { getStrapiImageUrl } from "@/lib/strapi";
-import type { StrapiImage } from "@/types/strapi";
 import { useDrag } from "@/contexts/drag-context";
-import Image from "next/image";
-import { useState } from "react";
+import type { StrapiImage } from "@/types/strapi";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { ImageItem } from "./image-item";
 
 interface ContactBackgroundProps {
   images: StrapiImage[];
@@ -32,7 +31,9 @@ function generateRandomImages(images: StrapiImage[]) {
   return positions;
 }
 
-export function ContactBackground({ images }: ContactBackgroundProps) {
+export const ContactBackground = memo(function ContactBackground({
+  images,
+}: ContactBackgroundProps) {
   const { setIsDragging } = useDrag();
   // Generate positions once and keep them stable
   const [randomPositions] = useState(() => generateRandomImages(images));
@@ -42,19 +43,30 @@ export function ContactBackground({ images }: ContactBackgroundProps) {
   const [draggedImageId, setDraggedImageId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
-  const handleMouseDown = (e: React.MouseEvent, imageId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-    const offset = offsets[imageId] || { x: 0, y: 0 };
-    setDraggedImageId(imageId);
-    setDragOffset({
-      x: e.clientX - offset.x,
-      y: e.clientY - offset.y,
-    });
-  };
+  const stateRef = useRef({ draggedImageId, dragOffset, offsets });
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  // Update ref after render - keeps ref fresh for event handlers without dependencies
+  useEffect(() => {
+    stateRef.current = { draggedImageId, dragOffset, offsets };
+  });
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent, imageId: string) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(true);
+      const offset = stateRef.current.offsets[imageId] || { x: 0, y: 0 };
+      setDraggedImageId(imageId);
+      setDragOffset({
+        x: e.clientX - offset.x,
+        y: e.clientY - offset.y,
+      });
+    },
+    [setIsDragging]
+  );
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    const { draggedImageId, dragOffset } = stateRef.current;
     if (draggedImageId === null) return;
 
     const newX = e.clientX - dragOffset.x;
@@ -64,12 +76,12 @@ export function ContactBackground({ images }: ContactBackgroundProps) {
       ...prev,
       [draggedImageId]: { x: newX, y: newY },
     }));
-  };
+  }, []);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     setDraggedImageId(null);
     setIsDragging(false);
-  };
+  }, [setIsDragging]);
 
   return (
     <div
@@ -81,33 +93,19 @@ export function ContactBackground({ images }: ContactBackgroundProps) {
     >
       {randomPositions.map((item) => {
         const offset = offsets[item.id] || { x: 0, y: 0 };
-
         return (
-          <div
+          <ImageItem
             key={item.id}
-            className="absolute cursor-grab active:cursor-grabbing pointer-events-auto"
-            style={{
-              left: `${item.x}%`,
-              top: `${item.y}%`,
-              transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) rotate(${item.rotation}deg)`,
-            }}
-            onMouseDown={(e) => handleMouseDown(e, item.id)}
-          >
-            <Image
-              src={getStrapiImageUrl(item.image.url)}
-              alt={item.image.alternativeText || ""}
-              width={item.image.width}
-              height={item.image.height}
-              className="pointer-events-none"
-              style={{
-                maxWidth: "400px",
-                height: "auto",
-              }}
-              draggable={false}
-            />
-          </div>
+            id={item.id}
+            image={item.image}
+            x={item.x}
+            y={item.y}
+            rotation={item.rotation}
+            offset={offset}
+            onMouseDown={handleMouseDown}
+          />
         );
       })}
     </div>
   );
-}
+});
