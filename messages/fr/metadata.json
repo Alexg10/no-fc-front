@@ -25,5 +25,9 @@
   "articles": {
     "title": "Articles",
     "description": "Découvrez nos articles et insights"
+  },
+  "contact": {
+    "title": "Contact | NOFC",
+    "description": "Contactez-nous pour toute question. Nous sommes là pour vous aider."
   }
 }
