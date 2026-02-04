@@ -18,7 +18,11 @@
       "Bash(tsc:*)",
       "Bash(pnpm install:*)",
       "Bash(npx tsc:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []

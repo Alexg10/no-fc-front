@@ -15,6 +15,11 @@
   "newsletterDescription": "For those who see beauty in the game.",
   "newsletterPlaceholder": "Enter your email",
   "newsletterButton": "Subscribe",
+  "newsletterSuccess": "Thank you, you are now subscribed!",
+  "newsletterAlreadySubscribed": "You are already subscribed.",
+  "newsletterError": "An error occurred. Please try again.",
+  "newsletterLoading": "Subscribing...",
+  "newsletterInvalidEmail": "Please enter a valid email.",
   "newsletterAgreement": "By joining, you agree to our <termsLink>Terms of Use</termsLink> and <privacyLink>Privacy Policy</privacyLink>.",
   "termsOfUse": "Terms of Use",
   "privacyPolicy": "Privacy Policy"
