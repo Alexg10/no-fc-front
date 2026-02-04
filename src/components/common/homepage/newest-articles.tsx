@@ -1,9 +1,9 @@
 import { ArticleCard } from "@/components/articles/article-card";
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import Grid from "@/components/common/grid";
+import { ButtonLink } from "@/components/ui/button-link";
 import { getPreviousTwoArticles } from "@/services/strapi/articleService";
 import { StrapiHomepageNewestArticles } from "@/types/strapi";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 async function NewestArticles({
@@ -20,12 +20,17 @@ async function NewestArticles({
   ]);
 
   return (
-    <Grid>
-      <div className="col-span-full">
-        {title && <BlockRendererClient content={title} />}
-        <Link href={`/${locale}/articles`}>View all articles</Link>
+    <Grid className="gap-y-10">
+      <div className="col-span-full flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        {title && (
+          <BlockRendererClient
+            content={title}
+            className="heading-m-obviously! [&>p]:heading-m-obviously!"
+          />
+        )}
+        <ButtonLink href={`/${locale}/articles`}>See more</ButtonLink>
       </div>
-      <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-10">
         {articles.map((article) => (
           <ArticleCard
             key={article.id}

@@ -1,9 +1,11 @@
 "use client";
 
+import { PlayIcon } from "@/components/icons/play-icon";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import type { StrapiCommonVideoFullWidth } from "@/types/strapi";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import Marquee from "react-fast-marquee";
 
 interface VideoFullWidthBlockProps {
   block: StrapiCommonVideoFullWidth;
@@ -36,16 +38,39 @@ function getEmbedUrl(url: string): string {
 
 export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-
+  const [marqueePlaying, setMarqueePlaying] = useState(false);
   const handlePlayClick = () => {
     setIsPlaying(true);
   };
 
   const embedUrl = getEmbedUrl(block.url || "");
 
+  const marqueeContent = useMemo(
+    () => (
+      <Marquee
+        className="text-white text-nowrap gap-4"
+        play={marqueePlaying}
+      >
+        <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px]">
+          <div className="">Play video</div>
+          <PlayIcon />
+          <div className="">Play video</div>
+          <PlayIcon />
+          <div className="">Play video</div>
+          <PlayIcon />
+        </div>
+      </Marquee>
+    ),
+    [marqueePlaying],
+  );
+
   return (
     <section className="relative w-full p-4">
-      <div className="relative w-full aspect-video bg-black overflow-hidden">
+      <div
+        className="relative w-full aspect-video bg-black overflow-hidden"
+        onMouseEnter={() => setMarqueePlaying(true)}
+        onMouseLeave={() => setMarqueePlaying(false)}
+      >
         {embedUrl && isPlaying && (
           <iframe
             src={embedUrl}
@@ -74,10 +99,12 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
         {!isPlaying && (
           <button
             onClick={handlePlayClick}
-            className="bg-black/70 hover:bg-black/80 p-4 flex absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center text-2xl font-bold transition-opacity duration-300 rounded"
+            className="bg-black hover:bg-black/80 p-2 flex absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center text-2xl font-bold transition-opacity duration-300 max-w-[185px]"
             aria-label={block.playerText || "Play video"}
           >
-            {block.playerText}
+            <div className="flex items-center justify-center gap-4 border border-white w-full py-2">
+              {marqueeContent}
+            </div>
           </button>
         )}
       </div>

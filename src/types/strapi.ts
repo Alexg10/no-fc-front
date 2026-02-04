@@ -57,9 +57,10 @@ export interface StrapiHomepageSection {
 export interface StrapiCenteredText {
   __component: "common.centered-text";
   id: number;
-  title?: string;
+  title?: BlocksContent;
   content?: BlocksContent | string;
   text?: string;
+  button?: StrapiLink;
 }
 
 export interface StrapiHomeProducts {

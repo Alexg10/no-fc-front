@@ -1,0 +1,16 @@
+export function PlayIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="16"
+      viewBox="0 0 14 16"
+      fill="none"
+    >
+      <path
+        d="M13.5 7.79443L-7.34099e-07 15.5887L-5.27059e-08 0.00020445L13.5 7.79443Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
