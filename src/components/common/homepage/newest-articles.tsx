@@ -28,7 +28,7 @@ async function NewestArticles({
             className="heading-m-obviously! [&>p]:heading-m-obviously!"
           />
         )}
-        <ButtonLink href={`/${locale}/articles`}>See more</ButtonLink>
+        <ButtonLink href={`/${locale}/articles`}>{t("seeMore")}</ButtonLink>
       </div>
       <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-10">
         {articles.map((article) => (

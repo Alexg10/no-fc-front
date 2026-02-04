@@ -1,6 +1,7 @@
 import Grid from "@/components/common/grid";
 import { ContactBackground } from "@/components/contact/contact-background";
 import { ContactMain } from "@/components/contact/contact-main";
+import { ScrollToTopOnMount } from "@/components/contact/scroll-to-top-on-mount";
 import { DragProvider } from "@/contexts/drag-context";
 import { getContact } from "@/services/strapi/contactService";
 import type { Metadata } from "next";
@@ -45,6 +46,7 @@ export default async function ContactPage() {
 
   return (
     <DragProvider>
+      <ScrollToTopOnMount />
       <div className="bg-black relative min-h-[150dvh]">
         <ContactBackground images={backgroundImages} />
         <Grid>
