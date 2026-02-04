@@ -17,7 +17,6 @@ export async function getGeneral(): Promise<StrapiGeneral | null> {
     next: { revalidate: 86400 },
   });
 
-  console.log(result);
   return result.data?.data as StrapiGeneral;
 }
 

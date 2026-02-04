@@ -3,9 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Title } from "@/components/ui/title";
+import { StrapiContact } from "@/services/strapi/contactService";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import { BlockRendererClient } from "@/components/common/block-renderer-client";
 interface FormData {
   name: string;
   email: string;
@@ -14,7 +16,7 @@ interface FormData {
   privacy: boolean;
 }
 
-export function ContactForm() {
+export function ContactForm({ contact }: { contact: StrapiContact }) {
   const t = useTranslations("contact");
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -74,17 +76,17 @@ export function ContactForm() {
           <p className="text-green-700">{t("success")}</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-6 border border-black p-4 ">
+        <div className="flex flex-col gap-6 border border-black p-4 py-6">
           <Title
             level={2}
             className="heading-m-obviously text-left lg:text-[40px]"
           >
-            {t("title")}
+            {contact.title}
           </Title>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-            quos.
-          </p>
+          <BlockRendererClient
+            content={contact.description}
+            className="text-l-polymath [&>p]:text-polymath max-w-[80%]"
+          />
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <input
@@ -145,7 +147,7 @@ export function ContactForm() {
             {status === "error" && (
               <p className="text-sm text-red-600">{t("error")}</p>
             )}
-            <div className="flex items-center gap-2">
+            <div className="flex items-start gap-2">
               <Checkbox
                 id="privacy"
                 name="privacy"
@@ -159,7 +161,12 @@ export function ContactForm() {
                 disabled={status === "loading"}
                 required
               />
-              <label htmlFor="privacy">{t("form.privacyPolicy")}</label>
+              <label htmlFor="privacy">
+                <BlockRendererClient
+                  content={contact.privacy}
+                  className="text-[12px] -translate-y-[1px] [&>p]:text-[12px] max-w-[60%]"
+                />
+              </label>
             </div>
 
             <Button
