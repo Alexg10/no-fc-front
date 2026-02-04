@@ -198,7 +198,7 @@
 }
 
 @utility heading-m-obviously {
-  @apply font-obviously-narrow uppercase lg:text-[64px] font-medium leading-[0.85] tracking-[-1%];
+  @apply font-obviously-narrow uppercase text-[40px] lg:text-[64px] font-medium leading-[0.85] tracking-[-1%];
 }
 
 @utility heading-s-obviously {

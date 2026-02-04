@@ -12,6 +12,7 @@ import { ImageStackBlock } from "@/components/dynamic-blocks/image-stack-block";
 import { ImagesBlock } from "@/components/dynamic-blocks/images-block";
 import { LargeImageBlock } from "@/components/dynamic-blocks/large-image-block";
 import { ProductBlock } from "@/components/dynamic-blocks/product-block";
+import { SectionPushBlock } from "@/components/dynamic-blocks/section-push-block";
 import { Content } from "@/components/dynamic-blocks/simple-page/content";
 import { FaqsBlock } from "@/components/dynamic-blocks/simple-page/faqs-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
@@ -22,8 +23,8 @@ import { ColorList, StrapiArticle } from "@/types/strapi/article";
 interface BlockRendererProps {
   block: StrapiBlock;
   locale?: string;
-  mainColor: ColorList;
-  issueNumber: string;
+  mainColor?: ColorList;
+  issueNumber?: string;
   article?: StrapiArticle | null;
 }
 
@@ -37,6 +38,8 @@ export async function BlockRenderer({
   switch (block.__component) {
     case "common.centered-text":
       return <CenteredTextBlock block={block} />;
+    case "common.section-push":
+      return <SectionPushBlock block={block} />;
     case "common.video-full-width":
       return <VideoFullWidthBlock block={block} />;
     case "homepage.home-products":
@@ -48,16 +51,16 @@ export async function BlockRenderer({
     case "simple-page.faqs":
       return <FaqsBlock block={block} />;
     case "article.quote":
-      return <ArticleQuoteBlock block={block} mainColor={mainColor} />;
+      return mainColor ? <ArticleQuoteBlock block={block} mainColor={mainColor} /> : null;
     case "article.description":
-      return (
+      return mainColor && issueNumber ? (
         <ArticleIntroBlock
           article={article}
           block={block}
           mainColor={mainColor}
           issueNumber={issueNumber}
         />
-      );
+      ) : null;
     case "article.carousel":
       return <CarouselBlock block={block} />;
     case "article.columns-blocks":

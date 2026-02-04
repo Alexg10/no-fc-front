@@ -13,8 +13,9 @@ export function HomeBlocks({ blocks, locale }: HomeBlocksProps) {
     return null;
   }
 
+  // Block spacing is managed at the block level (e.g., SectionPushBlock has py-4 lg:py-6)
   return (
-    <div className="space-y-12">
+    <div>
       {blocks.map((block, index) => (
         <Suspense key={block.id || index} fallback={<BlockSkeleton />}>
           <BlockRenderer block={block} locale={locale} />

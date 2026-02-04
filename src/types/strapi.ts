@@ -211,6 +211,16 @@ export interface StrapiArticleColumns {
   column?: StrapiArticleColumnsColumnItem[];
 }
 
+export interface StrapiCommonSectionPush {
+  __component: "common.section-push";
+  id: number;
+  title?: string;
+  description?: BlocksContent;
+  button?: StrapiLink;
+  cover?: StrapiImage;
+  whiteText?: boolean;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -229,7 +239,8 @@ export type StrapiBlock =
   | StrapiArticleCredits
   | StrapiArticleCustomContainer
   | StrapiArticleColumns
-  | StrapiArticleLargeImage;
+  | StrapiArticleLargeImage
+  | StrapiCommonSectionPush;
 
 export interface StrapiProduct {
   id: number;
