@@ -9,7 +9,9 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
+import { NoFcFullIcon } from "@/components/icons/nofc-full-icon";
 import { useCallback } from "react";
+import { ButtonLink } from "../ui/button-link";
 
 interface FormData {
   name: string;
@@ -71,13 +73,32 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
   );
 
   const inputClassName =
-    "w-full p-3 border border-black/10 disabled:opacity-50 focus:outline-none focus:border-black transition-all duration-300";
+    "w-full p-4 border border-black/10 disabled:opacity-50 focus:outline-none focus:border-black transition-all duration-300";
 
   return (
-    <div className={`w-full bg-white p-4 max-w-[600px] mx-auto ${isDragging ? "pointer-events-none" : ""}`}>
+    <div
+      className={`w-full bg-white p-4 max-w-[600px] mx-auto ${
+        isDragging ? "pointer-events-none" : ""
+      }`}
+    >
       {status === "success" ? (
-        <div className="p-6 bg-green-50 border border-green-200">
-          <p className="text-green-700">{t("success")}</p>
+        <div className="p-6 py-10 md:py-20 lg:py-40 border border-black flex justify-center items-center flex-col gap-10">
+          <NoFcFullIcon />
+          <div className="flex flex-col gap-6 text-center justify-center items-center">
+            <Title
+              level={2}
+              className="heading-m-obviously text-center lg:text-[40px]"
+            >
+              {contact.thankYouTitle}
+            </Title>
+            <BlockRendererClient
+              content={contact.thankYouDescription}
+              className="text-l-polymath [&>p]:text-polymath"
+            />
+          </div>
+          <ButtonLink href="/" hasIcon={false}>
+            {t("backToHome")}
+          </ButtonLink>
         </div>
       ) : (
         <div className="flex flex-col gap-6 border border-black p-4 py-6">
@@ -91,7 +112,7 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
             content={contact.description}
             className="text-l-polymath [&>p]:text-polymath max-w-[80%]"
           />
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <input
                 type="text"
@@ -151,7 +172,7 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
             {status === "error" && (
               <p className="text-sm text-red-600">{t("error")}</p>
             )}
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-3">
               <Checkbox
                 id="privacy"
                 name="privacy"
@@ -162,6 +183,7 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
                     privacy: checked === true ? true : false,
                   }))
                 }
+                className="border-black rounded-none size-3 [&>span]:size-2 [&>*>svg]:scale-80 [&>*>svg]:translate-x-[1px]"
                 disabled={status === "loading"}
                 required
               />
@@ -179,7 +201,7 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
               disabled={status === "loading"}
               className="self-start w-full"
             >
-              <div className="flex items-center gap-2 border border-white p-2 px-6 w-full">
+              <div className="flex items-center gap-2 border border-white p-[14] px-6 w-full">
                 <div className="-translate-y-px w-full">
                   {status === "loading" ? t("form.sending") : t("form.submit")}
                 </div>

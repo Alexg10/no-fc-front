@@ -14,5 +14,6 @@
     "sending": "Sending..."
   },
   "success": "Message sent successfully! We'll get back to you soon.",
-  "error": "An error occurred. Please try again."
+  "error": "An error occurred. Please try again.",
+  "backToHome": "Back to home"
 }

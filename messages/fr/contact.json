@@ -14,5 +14,6 @@
     "sending": "Envoi en cours..."
   },
   "success": "Message envoyé avec succès ! Nous vous répondrons rapidement.",
-  "error": "Une erreur est survenue. Veuillez réessayer."
+  "error": "Une erreur est survenue. Veuillez réessayer.",
+  "backToHome": "Retour à l'accueil"
 }

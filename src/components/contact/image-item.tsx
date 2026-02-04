@@ -5,6 +5,7 @@ import type { StrapiImage } from "@/types/strapi";
 import Image from "next/image";
 import { memo } from "react";
 
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 interface ImageItemProps {
   id: string;
   image: StrapiImage;
@@ -24,6 +25,7 @@ export const ImageItem = memo(function ImageItem({
   offset,
   onMouseDown,
 }: ImageItemProps) {
+  const isUnderDesktop = useBreakpoints().isUnderDesktop;
   return (
     <div
       className="absolute cursor-grab active:cursor-grabbing pointer-events-auto"
@@ -41,7 +43,7 @@ export const ImageItem = memo(function ImageItem({
         height={image.height}
         className="pointer-events-none"
         style={{
-          maxWidth: "400px",
+          maxWidth: isUnderDesktop ? "200px" : "300px",
           height: "auto",
         }}
         draggable={false}
