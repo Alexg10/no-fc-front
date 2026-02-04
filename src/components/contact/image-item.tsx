@@ -43,7 +43,7 @@ export const ImageItem = memo(function ImageItem({
         height={image.height}
         className="pointer-events-none"
         style={{
-          maxWidth: isUnderDesktop ? "200px" : "300px",
+          maxWidth: isUnderDesktop ? "200px" : "400px",
           height: "auto",
         }}
         draggable={false}
