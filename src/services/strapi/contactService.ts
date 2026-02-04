@@ -22,5 +22,5 @@ export interface StrapiContact {
   title: string;
   description: BlocksContent;
   privacy: BlocksContent;
-  backgroundImage: StrapiImage[];
+  backgroundImages: StrapiImage[];
 }

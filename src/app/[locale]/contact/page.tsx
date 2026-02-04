@@ -36,7 +36,6 @@ export async function generateMetadata({
 
 export default async function ContactPage() {
   const contact = await getContact();
-  console.log(contact);
 
   if (!contact) {
     notFound();
