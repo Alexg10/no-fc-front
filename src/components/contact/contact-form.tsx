@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Title } from "@/components/ui/title";
+import { useDrag } from "@/contexts/drag-context";
 import { StrapiContact } from "@/services/strapi/contactService";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -18,6 +19,7 @@ interface FormData {
 
 export function ContactForm({ contact }: { contact: StrapiContact }) {
   const t = useTranslations("contact");
+  const { isDragging } = useDrag();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -70,7 +72,7 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
     "w-full p-3 border border-black/10 disabled:opacity-50 focus:outline-none focus:border-black transition-all duration-300";
 
   return (
-    <div className="w-full bg-white p-4 max-w-[600px] mx-auto">
+    <div className={`w-full bg-white p-4 max-w-[600px] mx-auto ${isDragging ? "pointer-events-none" : ""}`}>
       {status === "success" ? (
         <div className="p-6 bg-green-50 border border-green-200">
           <p className="text-green-700">{t("success")}</p>
