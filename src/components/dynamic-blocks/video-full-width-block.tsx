@@ -47,10 +47,7 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
 
   const marqueeContent = useMemo(
     () => (
-      <Marquee
-        className="text-white text-nowrap gap-4"
-        play={marqueePlaying}
-      >
+      <Marquee className="text-white text-nowrap gap-4" play={marqueePlaying}>
         <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px]">
           <div className="">Play video</div>
           <PlayIcon />
@@ -99,7 +96,7 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
         {!isPlaying && (
           <button
             onClick={handlePlayClick}
-            className="bg-black hover:bg-black/80 p-2 flex absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center text-2xl font-bold transition-opacity duration-300 max-w-[185px]"
+            className="bg-black cursor-pointer hover:bg-black/80 p-2 flex absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center text-2xl font-bold transition-opacity duration-300 max-w-[185px]"
             aria-label={block.playerText || "Play video"}
           >
             <div className="flex items-center justify-center gap-4 border border-white w-full py-2">
