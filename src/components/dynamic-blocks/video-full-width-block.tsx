@@ -1,7 +1,9 @@
 "use client";
 
+import Grid from "@/components/common/grid/grid";
 import { PlayIcon } from "@/components/icons/play-icon";
 import { getStrapiImageUrl } from "@/lib/strapi";
+import { cn } from "@/lib/utils";
 import type { StrapiCommonVideoFullWidth } from "@/types/strapi";
 import Image from "next/image";
 import { useMemo, useState } from "react";
@@ -40,6 +42,9 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [marqueePlaying, setMarqueePlaying] = useState(false);
   const handlePlayClick = () => {
+    if (!embedUrl) {
+      return;
+    }
     setIsPlaying(true);
   };
 
@@ -58,53 +63,61 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
         </div>
       </Marquee>
     ),
-    [marqueePlaying],
+    [marqueePlaying]
   );
 
   return (
     <section className="relative w-full p-4">
-      <div
-        className="relative w-full aspect-video bg-black overflow-hidden"
-        onMouseEnter={() => setMarqueePlaying(true)}
-        onMouseLeave={() => setMarqueePlaying(false)}
-      >
-        {embedUrl && isPlaying && (
-          <iframe
-            src={embedUrl}
-            title={block.playerText || "Video player"}
-            className="absolute inset-0 w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        )}
-
-        {!isPlaying && block.cover && (
-          <button
-            onClick={handlePlayClick}
-            className="absolute inset-0 z-10 w-full h-full cursor-pointer group"
-            aria-label={block.playerText || "Play video"}
-          >
-            <Image
-              src={getStrapiImageUrl(block.cover.url)}
-              alt={block.cover.alternativeText || "Video cover"}
-              fill
-              className="object-cover transition-opacity duration-300 group-hover:opacity-80"
+      <Grid>
+        <div
+          className="relative col-span-full w-full aspect-video bg-black overflow-hidden"
+          onMouseEnter={() => setMarqueePlaying(true)}
+          onMouseLeave={() => setMarqueePlaying(false)}
+        >
+          {embedUrl && isPlaying && (
+            <iframe
+              src={embedUrl}
+              title={block.playerText || "Video player"}
+              className="absolute inset-0 w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
             />
-          </button>
-        )}
+          )}
 
-        {!isPlaying && (
-          <button
-            onClick={handlePlayClick}
-            className="bg-black cursor-pointer hover:bg-black/80 p-2 flex absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center text-2xl font-bold transition-opacity duration-300 max-w-[185px]"
-            aria-label={block.playerText || "Play video"}
-          >
-            <div className="flex items-center justify-center gap-4 border border-white w-full py-2">
-              {marqueeContent}
-            </div>
-          </button>
-        )}
-      </div>
+          {!isPlaying && block.cover && (
+            <button
+              onClick={handlePlayClick}
+              className={cn(
+                "absolute inset-0 z-10 w-full h-full group",
+                embedUrl ? "cursor-pointer" : "cursor-default"
+              )}
+              aria-label={block.playerText || "Play video"}
+            >
+              <Image
+                src={getStrapiImageUrl(block.cover.url)}
+                alt={block.cover.alternativeText || "Video cover"}
+                fill
+                className={cn(
+                  "object-cover transition-opacity duration-300 ",
+                  embedUrl && "group-hover:opacity-80"
+                )}
+              />
+            </button>
+          )}
+
+          {!isPlaying && embedUrl && (
+            <button
+              onClick={handlePlayClick}
+              className="bg-black cursor-pointer p-2 flex absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center text-2xl font-bold duration-300 max-w-[185px]"
+              aria-label={block.playerText || "Play video"}
+            >
+              <div className="flex items-center justify-center gap-4 border border-white w-full py-2">
+                {marqueeContent}
+              </div>
+            </button>
+          )}
+        </div>
+      </Grid>
     </section>
   );
 }
