@@ -1,0 +1,18 @@
+{
+  "title": "Contact",
+  "subtitle": "Une question ? Écrivez-nous",
+  "form": {
+    "name": "Nom",
+    "namePlaceholder": "Votre nom",
+    "email": "Email",
+    "emailPlaceholder": "votre@email.com",
+    "subject": "Sujet",
+    "subjectPlaceholder": "Sujet de votre message",
+    "message": "Message",
+    "messagePlaceholder": "Votre message...",
+    "submit": "Envoyer votre message",
+    "sending": "Envoi en cours..."
+  },
+  "success": "Message envoyé avec succès ! Nous vous répondrons rapidement.",
+  "error": "Une erreur est survenue. Veuillez réessayer."
+}
