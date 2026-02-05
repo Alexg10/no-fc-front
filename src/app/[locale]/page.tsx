@@ -26,7 +26,7 @@ export async function generateMetadata({
 }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  const homepage = await getHomepage();
+  const homepage = await getHomepage(locale);
 
   if (homepage?.seo) {
     return {
@@ -58,12 +58,12 @@ export async function generateMetadata({
 
 export default async function Home({ params }: HomePageProps) {
   const { locale } = await params;
-  const homepage = await getHomepage();
+  const homepage = await getHomepage(locale);
 
   let displayArticle = homepage?.heroArticle?.article;
 
   if (!displayArticle) {
-    const lastArticle = await getLastArticle();
+    const lastArticle = await getLastArticle(locale);
     if (lastArticle) {
       displayArticle = lastArticle;
     }

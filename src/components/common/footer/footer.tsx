@@ -6,9 +6,11 @@ import { FooterBottom } from "./footer-bottom";
 import { FooterNoFc } from "./footer-nofc";
 import { FooterTop } from "./footer-top";
 
-export async function Footer() {
-  const footer = await getFooter();
-  const general = await getGeneral();
+export async function Footer({ locale }: { locale: string }) {
+  const [footer, general] = await Promise.all([
+    getFooter(locale),
+    getGeneral(locale),
+  ]);
 
   return (
     <footer className="border-t border-black bg-off-white py-4 pb-0 lg:pt-10">

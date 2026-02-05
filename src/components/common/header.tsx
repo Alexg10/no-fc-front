@@ -6,9 +6,11 @@ import { StrapiMenu } from "@/types/strapi/menu";
 import { Menu } from "./menu/menu";
 import { ShoppingCartContainer } from "./menu/navigation/cart/shopping-cart-container";
 
-export async function Header() {
-  const menu = await getMenu();
-  const general = await getGeneral();
+export async function Header({ locale }: { locale: string }) {
+  const [menu, general] = await Promise.all([
+    getMenu(locale),
+    getGeneral(locale),
+  ]);
 
   return (
     <header className="fixed flex justify-center top-0 z-50 w-full">

@@ -27,9 +27,9 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <CartProvider>
-        <Header />
+        <Header locale={locale} />
         <main className="flex-1">{children}</main>
-        <Footer />
+        <Footer locale={locale} />
         <CartSheet />
       </CartProvider>
     </NextIntlClientProvider>

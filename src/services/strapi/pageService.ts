@@ -4,7 +4,7 @@ import qs from "qs";
 
 export async function getPageBySlug(
   slug: string,
-  locale: string = "fr"
+  locale: string = "en"
 ): Promise<StrapiPage | null> {
   try {
     const query = qs.stringify({
@@ -36,8 +36,8 @@ export async function getPageBySlug(
 
     const pageData = result.data as StrapiPageResponse | null;
     if (!pageData?.data?.[0]) {
-      if (locale !== "fr") {
-        return getPageBySlug(slug, "fr");
+      if (locale !== "en") {
+        return getPageBySlug(slug, "en");
       }
       return null;
     }

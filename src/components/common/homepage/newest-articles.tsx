@@ -15,7 +15,7 @@ async function NewestArticles({
 }) {
   const title = block.title;
   const [articles, t] = await Promise.all([
-    getPreviousTwoArticles(),
+    getPreviousTwoArticles(locale || "fr"),
     getTranslations({ locale: locale || "fr", namespace: "article" }),
   ]);
 

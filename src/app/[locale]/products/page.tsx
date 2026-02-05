@@ -55,7 +55,7 @@ export default async function ProductsPage({
 }: ProductsPageProps) {
   const { locale } = await params;
   const paramsSearch = await searchParams;
-  const productsPageData = await getProductsPage();
+  const productsPageData = await getProductsPage(locale);
 
   return (
     <>

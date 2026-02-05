@@ -7,7 +7,7 @@ interface ArticlesContentProps {
 }
 
 export async function ArticlesContent({ locale }: ArticlesContentProps) {
-  const articles = await getArticles();
+  const articles = await getArticles(locale);
 
   if (!articles.length) {
     return (
@@ -23,15 +23,8 @@ export async function ArticlesContent({ locale }: ArticlesContentProps) {
     <ArticlesParallax>
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {articles.map((article) => (
-          <div
-            key={article.id}
-            className="parallax-col"
-          >
-            <ArticleCard
-              article={article}
-              issueLabel="Issue"
-              locale={locale}
-            />
+          <div key={article.id} className="parallax-col">
+            <ArticleCard article={article} issueLabel="Issue" locale={locale} />
           </div>
         ))}
       </div>

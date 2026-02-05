@@ -14,7 +14,7 @@ export async function ArticleSeeOthers({
   locale,
 }: ArticleSeeOthersProps) {
   const [articles, t] = await Promise.all([
-    getOtherArticles(currentSlug, 2),
+    getOtherArticles(currentSlug, 2, locale),
     getTranslations({ locale, namespace: "article" }),
   ]);
 

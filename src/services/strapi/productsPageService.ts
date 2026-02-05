@@ -1,8 +1,10 @@
-import { strapiFetch } from "@/lib/strapi";
+import { strapiFetchWithFallback } from "@/lib/strapi";
 import { StrapiProductsPage } from "@/types/strapi/products-page";
 import qs from "qs";
 
-export async function getProductsPage(): Promise<StrapiProductsPage | null> {
+export async function getProductsPage(
+  locale?: string
+): Promise<StrapiProductsPage | null> {
   const query = qs.stringify({
     populate: {
       hero: {
@@ -18,13 +20,9 @@ export async function getProductsPage(): Promise<StrapiProductsPage | null> {
     },
   });
 
-  const result = await strapiFetch(`/products-page?${query}`, {
+  const result = await strapiFetchWithFallback(`/products-page?${query}`, locale, {
     next: { revalidate: 3600 },
   });
 
-  if (!result.data?.data) {
-    return null;
-  }
-
-  return result.data.data as unknown as StrapiProductsPage;
+  return (result.data?.data as unknown as StrapiProductsPage) ?? null;
 }

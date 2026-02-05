@@ -71,6 +71,34 @@ export async function strapiFetch(
 }
 
 /**
+ * Récupère une ressource Strapi avec fallback automatique vers EN
+ * @param endpoint - L'endpoint Strapi (ex: "/articles?...")
+ * @param locale - La locale pour récupérer la version traduite (optionnelle)
+ * @param options - Options de fetch additionnelles (revalidate, headers, etc.)
+ * @returns Le résultat du fetch
+ */
+export async function strapiFetchWithFallback(
+  endpoint: string,
+  locale?: string,
+  options?: StrapiFetchOptions
+): Promise<StrapiFetchResult> {
+  const result = await strapiFetch(endpoint, {
+    locale,
+    ...options,
+  });
+
+  // Si 404 et pas EN, fallback vers EN
+  if (result.status === 404 && locale && locale !== "en") {
+    return strapiFetch(endpoint, {
+      locale: "en",
+      ...options,
+    });
+  }
+
+  return result;
+}
+
+/**
  * Récupère un produit Strapi par son handle (correspond au handle Shopify)
  * @param handle - Le handle du produit (slug Shopify)
  * @param locale - La locale pour récupérer la version traduite (optionnelle, auto-détectée si omise)
@@ -104,8 +132,8 @@ export async function getProductByHandle(
     let result = await strapiFetch(`/products${queryString}`, {
       ...(locale && { locale }),
     });
-    if (result.status === 404 && locale !== "fr") {
-      result = await strapiFetch(`/products${queryString}`, { locale: "fr" });
+    if (result.status === 404 && locale !== "en") {
+      result = await strapiFetch(`/products${queryString}`, { locale: "en" });
     }
     if (result.status === 404) {
       result = await strapiFetch(`/products${queryString}`);

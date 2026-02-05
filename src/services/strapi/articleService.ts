@@ -1,8 +1,8 @@
-import { strapiFetch } from "@/lib/strapi";
+import { strapiFetchWithFallback } from "@/lib/strapi";
 import { StrapiArticle } from "@/types/strapi/article";
 import qs from "qs";
 
-export async function getArticles(): Promise<StrapiArticle[]> {
+export async function getArticles(locale?: string): Promise<StrapiArticle[]> {
   const query = qs.stringify({
     sort: ["publishedAt:desc"],
     populate: {
@@ -11,7 +11,7 @@ export async function getArticles(): Promise<StrapiArticle[]> {
       },
     },
   });
-  const result = await strapiFetch(`/articles?${query}`, {
+  const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
     next: { revalidate: 3600 },
   });
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];
@@ -20,6 +20,7 @@ export async function getArticles(): Promise<StrapiArticle[]> {
 
 export async function getArticleBySlug(
   slug: string,
+  locale?: string
 ): Promise<StrapiArticle | null> {
   const query = qs.stringify({
     filters: {
@@ -82,12 +83,14 @@ export async function getArticleBySlug(
       },
     },
   });
-  const result = await strapiFetch(`/articles?${query}`);
+  const result = await strapiFetchWithFallback(`/articles?${query}`, locale);
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];
-  return articles[0] as unknown as StrapiArticle;
+  return (articles[0] as unknown as StrapiArticle) ?? null;
 }
 
-export async function getLastArticle(): Promise<StrapiArticle | null> {
+export async function getLastArticle(
+  locale?: string
+): Promise<StrapiArticle | null> {
   const query = qs.stringify({
     sort: ["publishedAt:desc"],
     pagination: {
@@ -99,14 +102,16 @@ export async function getLastArticle(): Promise<StrapiArticle | null> {
       },
     },
   });
-  const result = await strapiFetch(`/articles?${query}`, {
+  const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
     next: { revalidate: 3600 },
   });
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];
   return articles[0] ? (articles[0] as unknown as StrapiArticle) : null;
 }
 
-export async function getPreviousTwoArticles(): Promise<StrapiArticle[]> {
+export async function getPreviousTwoArticles(
+  locale?: string
+): Promise<StrapiArticle[]> {
   const query = qs.stringify({
     sort: ["publishedAt:desc"],
     pagination: {
@@ -119,7 +124,7 @@ export async function getPreviousTwoArticles(): Promise<StrapiArticle[]> {
       },
     },
   });
-  const result = await strapiFetch(`/articles?${query}`, {
+  const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
     next: { revalidate: 3600 },
   });
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];
@@ -129,6 +134,7 @@ export async function getPreviousTwoArticles(): Promise<StrapiArticle[]> {
 export async function getOtherArticles(
   excludeSlug: string,
   limit: number = 2,
+  locale?: string
 ): Promise<StrapiArticle[]> {
   const query = qs.stringify({
     filters: {
@@ -146,7 +152,7 @@ export async function getOtherArticles(
       },
     },
   });
-  const result = await strapiFetch(`/articles?${query}`, {
+  const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
     next: { revalidate: 3600 },
   });
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];

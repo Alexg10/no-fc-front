@@ -13,7 +13,7 @@ export default async function ArticlePage({
   params: Promise<{ slug: string; locale: string }>;
 }) {
   const { slug, locale } = await params;
-  const article = await getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug, locale);
 
   if (!article) {
     return null;

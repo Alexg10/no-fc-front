@@ -35,8 +35,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function ContactPage() {
-  const contact = await getContact();
+export default async function ContactPage({ params }: ContactPageProps) {
+  const { locale } = await params;
+  const contact = await getContact(locale);
 
   if (!contact) {
     notFound();

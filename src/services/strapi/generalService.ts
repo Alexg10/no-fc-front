@@ -1,8 +1,10 @@
-import { strapiFetch } from "@/lib/strapi";
+import { strapiFetchWithFallback } from "@/lib/strapi";
 import { StrapiLink, StrapiMarquee } from "@/types/strapi";
 import qs from "qs";
 
-export async function getGeneral(): Promise<StrapiGeneral | null> {
+export async function getGeneral(
+  locale?: string
+): Promise<StrapiGeneral | null> {
   const query = qs.stringify({
     populate: {
       socials: {
@@ -13,7 +15,7 @@ export async function getGeneral(): Promise<StrapiGeneral | null> {
       },
     },
   });
-  const result = await strapiFetch(`/general?${query}`, {
+  const result = await strapiFetchWithFallback(`/general?${query}`, locale, {
     next: { revalidate: 86400 },
   });
 

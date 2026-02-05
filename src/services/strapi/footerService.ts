@@ -1,8 +1,8 @@
-import { strapiFetch } from "@/lib/strapi";
+import { strapiFetchWithFallback } from "@/lib/strapi";
 import { StrapiFooter } from "@/types/strapi/footer";
 import qs from "qs";
 
-export async function getFooter(): Promise<StrapiFooter | null> {
+export async function getFooter(locale?: string): Promise<StrapiFooter | null> {
   const query = qs.stringify({
     populate: {
       topLinks: {
@@ -14,8 +14,9 @@ export async function getFooter(): Promise<StrapiFooter | null> {
     },
   });
 
-  const result = await strapiFetch(`/footer?${query}`, {
+  const result = await strapiFetchWithFallback(`/footer?${query}`, locale, {
     next: { revalidate: 86400 },
   });
+
   return result.data?.data as StrapiFooter;
 }
