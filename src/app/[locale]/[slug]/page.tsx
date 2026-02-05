@@ -1,6 +1,6 @@
 import { BlockRenderer } from "@/components/common/block-renderer";
-import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import Grid from "@/components/common/grid";
+import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { getPageBySlug } from "@/services/strapi/pageService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -45,19 +45,42 @@ export default async function Page({ params }: PageProps) {
   if (!page) {
     notFound();
   }
+  console.log(page);
 
   return (
-    <section className="min-h-screen">
-      <header className="bg-black text-white">
+    <section className="min-h-screen bg-off-white">
+      <header className="bg-black text-white pt-48 pb-6 overflow-hidden lg:min-h-[300px] lg:relative">
         <Grid>
-          <div className="col-span-full">
-            <h1 className="mb-8 text-4xl font-bold">{page.title}</h1>
+          <div className="col-span-full lg:col-start-4 lg:col-end-10 overflow-hidden ">
+            <div className="lg:absolute lg:-top-12 lg:flex lg:flex-col">
+              <h1 className="heading-l-obviously leading-[95%]">
+                {page.title}
+              </h1>
+              <span className="hidden lg:flex heading-l-obviously leading-[95%]">
+                {page.title}
+              </span>
+              <span className="hidden lg:flex heading-l-obviously leading-[95%]">
+                {page.title}
+              </span>
+              <span className="hidden lg:flex heading-l-obviously leading-[95%]">
+                {page.title}
+              </span>
+              <span className="hidden lg:flex heading-l-obviously leading-[95%]">
+                {page.title}
+              </span>
+              <span className="hidden lg:flex heading-l-obviously leading-[95%]">
+                {page.title}
+              </span>
+              <span className="hidden lg:flex heading-l-obviously leading-[95%]">
+                {page.title}
+              </span>
+            </div>
           </div>
         </Grid>
       </header>
 
       <Grid>
-        <main className="col-span-full">
+        <main className="col-span-full pt-10 pb-16 lg:col-start-4 lg:col-end-10 lg:pb-30">
           {page.blocks && page.blocks.length > 0 && (
             <div>
               {page.blocks.map((block, index) => (

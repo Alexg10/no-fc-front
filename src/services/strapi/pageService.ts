@@ -24,6 +24,11 @@ export async function getPageBySlug(
                 },
               },
             },
+            "simple-page.content": {
+              populate: {
+                populate: "*",
+              },
+            },
           },
         },
       },

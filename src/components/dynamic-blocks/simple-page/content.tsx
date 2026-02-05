@@ -11,7 +11,10 @@ export function Content({ block }: ContentProps) {
 
   return (
     <div>
-      <BlockRendererClient content={content as BlocksContent} />
+      <BlockRendererClient
+        content={content as BlocksContent}
+        className="text-l-polymath [&>h2]:first:mt-0!"
+      />
     </div>
   );
 }

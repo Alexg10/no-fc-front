@@ -44,12 +44,12 @@ export function BlockRendererClient({
           ),
           heading: ({ children, level }) => {
             const classes = {
-              1: "text-4xl font-bold mb-6 mt-8",
-              2: "text-3xl font-bold mb-5 mt-7",
+              1: "text-4xl font-bold mb-6 mt-8 font-polymath-display",
+              2: "text-3xl font-bold mb-5 mt-7 font-polymath-display",
               3: "text-xl-polymath-display font-bold mb-6 mt-6",
-              4: "text-xl font-semibold mb-3 mt-5",
-              5: "text-lg font-medium mb-2 mt-4",
-              6: "text-base font-medium mb-2 mt-3",
+              4: "text-xl font-semibold mb-3 mt-5 font-polymath-display",
+              5: "text-lg font-medium mb-2 mt-4 font-polymath-display",
+              6: "text-base font-medium mb-2 mt-3 font-polymath-display",
             };
             return createHeadingElement(level as 1 | 2 | 3 | 4 | 5 | 6, {
               className: classes[level as keyof typeof classes],
