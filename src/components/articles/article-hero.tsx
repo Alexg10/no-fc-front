@@ -3,6 +3,7 @@ import { IssueNumberBadge } from "@/components/articles/issue-number-badge";
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import Grid from "@/components/common/grid";
 import { getStrapiImageUrl } from "@/lib/strapi";
+import { Link } from "@/lib/navigation";
 import { cn, getColorClass } from "@/lib/utils";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
 import { useTranslations } from "next-intl";
@@ -19,9 +20,10 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 interface ArticleHeroProps {
   article: StrapiArticle;
   mainColor: ColorList;
+  isLink?: boolean;
 }
 
-export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
+export function ArticleHero({ article, mainColor, isLink = false }: ArticleHeroProps) {
   const t = useTranslations("article");
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -62,7 +64,9 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
   }, []);
-  return (
+  const articleHref = article.slug ? `/articles/${article.slug}` : "#";
+
+  const heroContent = (
     <div className="relative h-[125vh]" ref={containerRef}>
       {article.cover && (
         <div className="h-[125vh] w-full overflow-hidden absolute top-0 left-0">
@@ -103,4 +107,14 @@ export function ArticleHero({ article, mainColor }: ArticleHeroProps) {
       </div>
     </div>
   );
+
+  if (isLink) {
+    return (
+      <Link href={articleHref} className="block">
+        {heroContent}
+      </Link>
+    );
+  }
+
+  return heroContent;
 }

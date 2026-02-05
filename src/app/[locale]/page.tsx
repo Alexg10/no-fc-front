@@ -78,6 +78,7 @@ export default async function Home({ params }: HomePageProps) {
       <ArticleHero
         article={displayArticle}
         mainColor={displayArticle.mainColor}
+        isLink={true}
       />
 
       <Suspense fallback={<BlockSkeleton />}>
