@@ -18,7 +18,7 @@ const PIN_END_OFFSET = 250;
 
 function getPinEndValue(
   main: HTMLElement | null,
-  summary: HTMLElement | null,
+  summary: HTMLElement | null
 ): string {
   if (!main || !summary) return "+=0";
   const mainHeight = main.offsetHeight;
@@ -26,7 +26,7 @@ function getPinEndValue(
     summary.getBoundingClientRect().top - main.getBoundingClientRect().top;
   return `+=${Math.max(
     0,
-    mainHeight - summaryOffsetFromMain - PIN_END_OFFSET,
+    mainHeight - summaryOffsetFromMain - PIN_END_OFFSET
   )}`;
 }
 
@@ -115,7 +115,7 @@ export function ArticleSummary({
         },
       });
     },
-    { scope: summaryRef },
+    { scope: summaryRef }
   );
 
   return (
@@ -128,7 +128,7 @@ export function ArticleSummary({
           <div
             className={cn(
               "top-full bg-white right-0 w-full grid transition-all duration-300 ease-in-out",
-              isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] ",
+              isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] "
             )}
           >
             <div className="overflow-hidden max-w-[203px] text-polymath">
@@ -144,16 +144,16 @@ export function ArticleSummary({
                   getColorClass(mainColor, "bg"),
                   mainColor === "black" || mainColor === "white"
                     ? "mix-blend-difference"
-                    : "",
+                    : ""
                 )}
               />
               <span
                 className={cn(
                   "block translate-y-[2px] relative z-10 text-nowrap",
-                  mainColor === "black" ? "text-white" : "text-white",
+                  mainColor === "black" ? "text-white" : "text-black",
                   mainColor === "black" || mainColor === "white"
-                    ? "mix-blend-difference"
-                    : "",
+                    ? "mix-blend-difference text-white"
+                    : ""
                 )}
               >
                 ISSUE N°{issueNumber}
@@ -169,7 +169,7 @@ export function ArticleSummary({
               <div
                 className={cn(
                   "border-black p-4 border-2 flex items-center overflow-hidden transition-all duration-300 ease-in-out",
-                  socialsIsOpen ? "w-[190px]" : "w-[58px]",
+                  socialsIsOpen ? "w-[190px]" : "w-[58px]"
                 )}
               >
                 <button className="cursor-pointer" onClick={toggleSocials}>
