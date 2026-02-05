@@ -31,7 +31,10 @@ export function Menu({
           )}
         >
           <div className="p-6 pt-30 gap-2 flex flex-col">
-            <NavigationMenuContainer menu={menu as StrapiMenu} />
+            <NavigationMenuContainer
+              menu={menu as StrapiMenu}
+              onLinkClick={() => setIsOpen(false)}
+            />
             <div className="flex border-t border-black pt-4">
               <LanguageSwitcher />
             </div>
@@ -89,7 +92,10 @@ export function Menu({
               >
                 <div className="overflow-hidden">
                   <div className="p-2 pt-6 gap-2 flex flex-col pb-0">
-                    <NavigationMenuContainer menu={menu as StrapiMenu} />
+                    <NavigationMenuContainer
+                      menu={menu as StrapiMenu}
+                      onLinkClick={() => setIsOpen(false)}
+                    />
                     <div className="flex border-t border-black pt-4">
                       <LanguageSwitcher />
                     </div>
