@@ -19,6 +19,7 @@ interface FormData {
   subject: string;
   message: string;
   privacy: boolean;
+  website?: string; // Honeypot field for spam detection
 }
 
 const INITIAL_FORM_DATA: FormData = {
@@ -27,6 +28,7 @@ const INITIAL_FORM_DATA: FormData = {
   subject: "",
   message: "",
   privacy: false,
+  website: "",
 };
 
 export function ContactForm({ contact }: { contact: StrapiContact }) {
@@ -113,6 +115,23 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
             className="text-l-polymath [&>p]:text-polymath max-w-[80%]"
           />
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* Honeypot field - hidden from users, catches bots */}
+            <input
+              type="text"
+              name="website"
+              value={formData.website || ""}
+              onChange={handleChange}
+              tabIndex={-1}
+              autoComplete="off"
+              style={{
+                position: "absolute",
+                left: "-9999px",
+                opacity: 0,
+                pointerEvents: "none",
+              }}
+              aria-hidden="true"
+            />
+
             <div className="flex flex-col gap-2">
               <input
                 type="text"

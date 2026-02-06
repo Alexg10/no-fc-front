@@ -23,6 +23,13 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    // Honeypot spam detection - silently reject if filled
+    const website = body.website?.trim();
+    if (website) {
+      // Return success to not reveal to attacker that honeypot exists
+      return NextResponse.json({ success: true }, { status: 200 });
+    }
+
     // Extract and trim fields
     const name = body.name?.trim();
     const email = body.email?.trim();
