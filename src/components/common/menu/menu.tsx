@@ -27,10 +27,16 @@ export function Menu({
           className={cn(
             "fixed top-0 left-0 flex-col h-fit w-full z-50 bg-white",
             isOpen ? "translate-y-0" : "-translate-y-full",
-            "transition-all duration-500 ease-in-out",
+            "transition-all duration-500 ease-in-out"
           )}
         >
           <div className="p-6 pt-30 gap-2 flex flex-col">
+            {menu.links && menu.links.length > 0 && (
+              <NavigationMenuContainer
+                menu={menu as StrapiMenu}
+                onLinkClick={() => setIsOpen(false)}
+              />
+            )}
             <NavigationMenuContainer
               menu={menu as StrapiMenu}
               onLinkClick={() => setIsOpen(false)}
@@ -47,7 +53,7 @@ export function Menu({
             <div
               className={cn(
                 "border-2 relative border-black flex items-center w-fit",
-                "[&:after]:content-[''] [&:after]:w-[2px] [&:after]:h-full [&:after]:bg-black [&:after]:absolute [&:after]:top-0 [&:after]:right-1/2 [&:after]:translate-x-1/2",
+                "[&:after]:content-[''] [&:after]:w-[2px] [&:after]:h-full [&:after]:bg-black [&:after]:absolute [&:after]:top-0 [&:after]:right-1/2 [&:after]:translate-x-1/2"
               )}
             >
               <Link
@@ -87,15 +93,17 @@ export function Menu({
               <div
                 className={cn(
                   "hidden top-full right-0 w-full lg:grid transition-all duration-300 ease-in-out",
-                  isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] ",
+                  isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] "
                 )}
               >
                 <div className="overflow-hidden">
                   <div className="p-2 pt-6 gap-2 flex flex-col pb-0">
-                    <NavigationMenuContainer
-                      menu={menu as StrapiMenu}
-                      onLinkClick={() => setIsOpen(false)}
-                    />
+                    {menu.links && menu.links.length > 0 && (
+                      <NavigationMenuContainer
+                        menu={menu as StrapiMenu}
+                        onLinkClick={() => setIsOpen(false)}
+                      />
+                    )}
                     <div className="flex border-t border-black pt-4">
                       <LanguageSwitcher />
                     </div>
