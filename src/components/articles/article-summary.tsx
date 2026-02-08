@@ -5,7 +5,6 @@ import { SummaryMenuIcon } from "@/components/icons/summary-menu-icon";
 import { useArticleRef } from "@/contexts/article-context";
 import { cn, getColorClass } from "@/lib/utils";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
@@ -100,23 +99,40 @@ export function ArticleSummary({
     };
   }, [mainRef]);
 
-  useGSAP(
-    () => {
-      if (!summaryRef.current || !mainRef.current) return;
+  useEffect(() => {
+    const summaryEl = summaryRef.current;
+    const mainEl = mainRef.current;
+    if (!summaryEl || !mainEl) return;
 
-      gsap.to(summaryRef.current, {
+    const timeoutId = setTimeout(() => {
+      gsap.to(summaryEl, {
         scrollTrigger: {
-          trigger: summaryRef.current,
+          trigger: summaryEl,
           start: "top center",
-          end: () => getPinEndValue(mainRef.current, summaryRef.current),
+          end: () => getPinEndValue(mainEl, summaryEl),
           pin: true,
           pinSpacing: false,
           invalidateOnRefresh: true,
         },
       });
-    },
-    { scope: summaryRef }
-  );
+
+      ScrollTrigger.refresh();
+    }, 0);
+
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", handleResize);
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.trigger === summaryEl) st.kill();
+      });
+    };
+  }, [mainRef, summaryRef]);
 
   return (
     <div className="max-w-[1424px] mx-auto w-full px-4">

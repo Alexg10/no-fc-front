@@ -2,8 +2,8 @@
 import { IssueNumberBadge } from "@/components/articles/issue-number-badge";
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import Grid from "@/components/common/grid";
-import { getStrapiImageUrl } from "@/lib/strapi";
 import { Link } from "@/lib/navigation";
+import { getStrapiImageUrl } from "@/lib/strapi";
 import { cn, getColorClass } from "@/lib/utils";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
 import { useTranslations } from "next-intl";
@@ -23,7 +23,11 @@ interface ArticleHeroProps {
   isLink?: boolean;
 }
 
-export function ArticleHero({ article, mainColor, isLink = false }: ArticleHeroProps) {
+export function ArticleHero({
+  article,
+  mainColor,
+  isLink = false,
+}: ArticleHeroProps) {
   const t = useTranslations("article");
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,7 +57,7 @@ export function ArticleHero({ article, mainColor, isLink = false }: ArticleHeroP
         },
       });
     },
-    { scope: containerRef },
+    { scope: containerRef }
   );
 
   useEffect(() => {
@@ -91,7 +95,10 @@ export function ArticleHero({ article, mainColor, isLink = false }: ArticleHeroP
               issueLabel={t("issue")}
             />
             <h1
-              className={cn("heading-xl-obviously", getColorClass(mainColor))}
+              className={cn(
+                "heading-xl-obviously leading-[85%]",
+                getColorClass(mainColor)
+              )}
             >
               {article.title}
             </h1>
@@ -99,7 +106,7 @@ export function ArticleHero({ article, mainColor, isLink = false }: ArticleHeroP
               content={article.shortDescription}
               className={cn(
                 "text-l-polymath lg:mt-6",
-                getColorClass(mainColor),
+                getColorClass(mainColor)
               )}
             />
           </div>
