@@ -175,7 +175,7 @@
 }
 
 @utility text-xl-polymath-display {
-  @apply font-polymath-display text-[24px] lg:text-[24px] font-medium leading-[120%] tracking-[-1px];
+  @apply font-polymath-display text-[24px] lg:text-[24px] font-medium leading-[120%] ;
 }
 
 @utility text-l-polymath {
@@ -190,23 +190,23 @@
 }
 
 @utility heading-xl-obviously {
-  @apply font-obviously-narrow text-[64px] uppercase lg:text-[120px] font-medium leading-[120%] tracking-[-1%];
+  @apply font-obviously-narrow text-[64px] uppercase lg:text-[120px] font-medium leading-[82%] tracking-[-1%];
 }
 
 @utility heading-l-obviously {
-  @apply text-[40px] font-obviously-narrow uppercase lg:text-[80px] font-medium leading-[120%] tracking-[-1px];
+  @apply text-[40px] font-obviously-narrow uppercase lg:text-[80px] font-medium leading-[82%] tracking-[-1px];
 }
 
 @utility heading-m-obviously {
-  @apply font-obviously-narrow uppercase text-[40px] lg:text-[64px] font-medium leading-[120%] tracking-[-1%];
+  @apply font-obviously-narrow uppercase text-[40px] lg:text-[64px] font-medium leading-[82%] tracking-[-1%];
 }
 
 @utility heading-s-obviously {
-  @apply font-obviously-narrow uppercase text-[24px] lg:text-[40px] font-medium leading-[120%] tracking-[-1%];
+  @apply font-obviously-narrow uppercase text-[24px] lg:text-[40px] font-medium leading-[82%] tracking-[-1%];
 }
 
 @utility text-xl-obviously {
-  @apply font-obviously-narrow uppercase text-[16px] lg:text-[24px] font-medium leading-[120%] tracking-[-1%];
+  @apply font-obviously-narrow uppercase text-[16px] lg:text-[24px] font-medium leading-[82%] tracking-[-1%];
 }
 
 @utility text-obviously {
