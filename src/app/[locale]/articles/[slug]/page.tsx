@@ -1,54 +1,55 @@
+import { ArticleHero } from "@/components/articles/article-hero";
+import { ArticleMainContent } from "@/components/articles/article-main-content";
+import { ArticlePageWrapper } from "@/components/articles/article-page-wrapper";
+import { ArticleSeeOthers } from "@/components/articles/article-see-others";
 import { BlockRenderer } from "@/components/common/block-renderer";
-import Grid from "@/components/common/grid";
-import { getStrapiImageUrl } from "@/lib/strapi";
+import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { getArticleBySlug } from "@/services/strapi/articleService";
-import Image from "next/image";
+import { Suspense } from "react";
 
 export default async function ArticlePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }) {
-  const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const { slug, locale } = await params;
+  const article = await getArticleBySlug(slug, locale);
 
   if (!article) {
     return null;
   }
 
+  const mainColor = article?.mainColor;
+  const issueNumber = article?.issueNumber;
+
   return (
-    <main className="min-h-screen">
-      {article.cover && (
-        <div className="relative h-[90vh] w-full overflow-hidden">
-          <Image
-            src={getStrapiImageUrl(article.cover.url)}
-            alt={article.cover.alternativeText || article.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
-      <section className="bg-black text-white">
-        <Grid>
-          <div className="col-span-full">
-            <h1 className="text-4xl font-bold">{article.title}</h1>
-          </div>
-        </Grid>
-      </section>
-      <Grid>
-        <article className="col-span-full space-y-8">
+    <ArticlePageWrapper>
+      <article className="min-h-[120dvh] bg-off-white overflow-hidden article-content-wrapper">
+        <ArticleHero article={article} mainColor={mainColor} />
+        <ArticleMainContent>
           {article.blocks && article.blocks.length > 0 && (
             <div>
               {article.blocks.map((block, index) => (
-                <div key={`${block.__component}-${index}`}>
-                  <BlockRenderer block={block} />
-                </div>
+                <Suspense
+                  key={`${block.__component}-${index}`}
+                  fallback={<BlockSkeleton />}
+                >
+                  <BlockRenderer
+                    article={article}
+                    block={block}
+                    locale={locale}
+                    mainColor={mainColor}
+                    issueNumber={issueNumber}
+                  />
+                </Suspense>
               ))}
             </div>
           )}
-        </article>
-      </Grid>
-    </main>
+        </ArticleMainContent>
+      </article>
+      <Suspense fallback={<BlockSkeleton />}>
+        <ArticleSeeOthers currentSlug={slug} locale={locale} />
+      </Suspense>
+    </ArticlePageWrapper>
   );
 }

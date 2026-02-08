@@ -1,14 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { CollectionFilter } from "@/components/products/_components/collection-filter";
 import { SortControl } from "@/components/products/_components/sort-control";
-import { PriceRangeFilter } from "@/components/products/_components/price-range-filter";
-import { AvailabilityFilter } from "@/components/products/_components/availability-filter";
-import { ShopifyCollection } from "@/lib/shopify";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "@/lib/navigation";
-import { useTranslations } from "next-intl";
+import { ShopifyCollection } from "@/lib/shopify";
 import { Filter, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -151,16 +149,9 @@ export function ProductsFilters({
           onChange={setCollection}
         />
         <SortControl value={sortKey} onChange={setSortKey} />
-        <PriceRangeFilter
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          onMinChange={setMinPrice}
-          onMaxChange={setMaxPrice}
-        />
       </div>
 
       <div className="flex items-center justify-between pt-2">
-        <AvailabilityFilter checked={availableOnly} onChange={setAvailableOnly} />
         <Button onClick={updateURL} className="w-auto">
           {t("applyFilters")}
         </Button>

@@ -3,7 +3,7 @@ import { createStorefrontApiClient } from "@shopify/storefront-api-client";
 // Initialisation du client Shopify
 const client = createStorefrontApiClient({
   storeDomain: process.env.SHOPIFY_STORE_DOMAIN!,
-  apiVersion: "2025-01",
+  apiVersion: "2026-01",
   publicAccessToken: process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
 });
 
@@ -86,6 +86,21 @@ export interface ShopifyCollectionsResponse {
   edges: ShopifyCollectionEdge[];
 }
 
+export interface ShopifyProductImages {
+  id: string;
+  handle: string;
+  images: {
+    edges: Array<{
+      node: {
+        url: string;
+        altText: string | null;
+        width: number;
+        height: number;
+      };
+    }>;
+  };
+}
+
 // Requête GraphQL pour récupérer un produit par handle
 const GET_PRODUCT_BY_HANDLE = `
   query getProduct($handle: String!) {
@@ -131,6 +146,26 @@ const GET_PRODUCT_BY_HANDLE = `
         maxVariantPrice {
           amount
           currencyCode
+        }
+      }
+    }
+  }
+`;
+
+// Type minimal pour les images du produit depuis Shopify
+const GET_PRODUCT_IMAGES = `
+  query getProductImages($handle: String!) {
+    product(handle: $handle) {
+      id
+      handle
+      images(first: 10) {
+        edges {
+          node {
+            url
+            altText
+            width
+            height
+          }
         }
       }
     }
@@ -302,6 +337,30 @@ export async function getProductByHandle(
     return null;
   } catch (error) {
     console.error("Error fetching product:", error);
+    throw error;
+  }
+}
+
+/**
+ * Récupère uniquement les images d'un produit par son handle (requête optimisée)
+ * @param handle - Le handle du produit (slug)
+ * @returns Les images du produit ou null si non trouvé
+ */
+export async function getProductImages(
+  handle: string
+): Promise<ShopifyProductImages | null> {
+  try {
+    const response = await client.request(GET_PRODUCT_IMAGES, {
+      variables: { handle },
+    });
+
+    if (response.data?.product) {
+      return response.data.product as ShopifyProductImages;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching product images:", error);
     throw error;
   }
 }

@@ -1,4 +1,5 @@
 import { CollectionContent } from "@/components/collection-content";
+import { PageHeader } from "@/components/common/page-header";
 import { ProductsPageLoading } from "@/components/skeleton/products-page-loading";
 import { getCollections } from "@/lib/shopify";
 import type { Metadata } from "next";
@@ -68,14 +69,17 @@ export default async function CollectionPage({
   const paramsSearch = await searchParams;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Suspense fallback={<ProductsPageLoading />}>
-        <CollectionContent
-          locale={locale}
-          handle={handle}
-          searchParams={paramsSearch}
-        />
-      </Suspense>
-    </div>
+    <>
+      <PageHeader title={`Collection ${handle}`} />
+      <main className="container mx-auto px-4 py-8">
+        <Suspense fallback={<ProductsPageLoading />}>
+          <CollectionContent
+            locale={locale}
+            handle={handle}
+            searchParams={paramsSearch}
+          />
+        </Suspense>
+      </main>
+    </>
   );
 }

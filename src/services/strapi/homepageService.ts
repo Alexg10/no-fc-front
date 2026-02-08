@@ -1,8 +1,10 @@
-import { strapiFetch } from "@/lib/strapi";
+import { strapiFetchWithFallback } from "@/lib/strapi";
 import { StrapiHomepage } from "@/types/strapi/homepage";
 import qs from "qs";
 
-export async function getHomepage(): Promise<StrapiHomepage | null> {
+export async function getHomepage(
+  locale?: string
+): Promise<StrapiHomepage | null> {
   const query = qs.stringify(
     {
       populate: {
@@ -24,6 +26,9 @@ export async function getHomepage(): Promise<StrapiHomepage | null> {
     { encodeValuesOnly: true }
   );
 
-  const result = await strapiFetch(`/homepage?${query}`);
+  const result = await strapiFetchWithFallback(`/homepage?${query}`, locale, {
+    next: { revalidate: 3600 },
+  });
+
   return result.data?.data as StrapiHomepage;
 }

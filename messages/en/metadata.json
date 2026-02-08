@@ -21,6 +21,14 @@
       "title": "Page not found",
       "description": "The page you are looking for does not exist."
     }
+  },
+  "articles": {
+    "title": "Articles",
+    "description": "Explore our latest articles and insights"
+  },
+  "contact": {
+    "title": "Contact | NOFC",
+    "description": "Contact us for any questions. We're here to help."
   }
 }
 

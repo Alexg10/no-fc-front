@@ -1,21 +1,28 @@
 import Grid from "@/components/common/grid";
 import { getFooter } from "@/services/strapi/footerService";
+import { getGeneral } from "@/services/strapi/generalService";
 import { StrapiLink } from "@/types/strapi";
 import { FooterBottom } from "./footer-bottom";
 import { FooterNoFc } from "./footer-nofc";
 import { FooterTop } from "./footer-top";
 
-export async function Footer() {
-  const footer = await getFooter();
+export async function Footer({ locale }: { locale: string }) {
+  const [footer, general] = await Promise.all([
+    getFooter(locale),
+    getGeneral(locale),
+  ]);
 
   return (
-    <footer className="border-t border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+    <footer className="border-t border-black bg-off-white py-4 pb-0 lg:pt-10">
       <Grid>
         <div className="col-span-full">
-          <FooterTop footerTopLinks={footer?.topLinks as StrapiLink[]} />
+          <FooterTop
+            footerTopLinks={footer?.topLinks as StrapiLink[]}
+            socialLinks={general?.socials as StrapiLink[]}
+          />
         </div>
       </Grid>
-      <hr />
+      <hr className="border-black" />
       <Grid>
         <div className="col-span-full">
           <FooterBottom

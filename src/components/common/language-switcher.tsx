@@ -13,8 +13,8 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 
 const localeNames: Record<string, string> = {
-  fr: "Français",
-  en: "English",
+  fr: "Fr",
+  en: "En",
 };
 
 export function LanguageSwitcher() {
@@ -42,17 +42,19 @@ export function LanguageSwitcher() {
       onValueChange={handleLocaleChange}
       disabled={isPending}
     >
-      <SelectTrigger className="w-[140px]">
+      <SelectTrigger className="w-auto uppercase text-[16px] lg:w-full border-none p-0 shadow-none [&_svg]:opacity-100 h-fit!">
         <SelectValue>
           {localeNames[currentLocale] || currentLocale.toUpperCase()}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {routing.locales.map((loc) => (
-          <SelectItem key={loc} value={loc}>
-            {localeNames[loc] || loc.toUpperCase()}
-          </SelectItem>
-        ))}
+        {routing.locales.map((loc) => {
+          return (
+            <SelectItem key={loc} value={loc}>
+              {loc.toUpperCase()}
+            </SelectItem>
+          );
+        })}
       </SelectContent>
     </Select>
   );

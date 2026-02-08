@@ -1,9 +1,12 @@
-import { HeroArticle } from "@/components/common/homepage/hero-article";
+import { ArticleHero } from "@/components/articles/article-hero";
 import { HomeBlocks } from "@/components/common/homepage/home-blocks";
+import { LogoIcons } from "@/components/icons/logo-icons";
+import { getLastArticle } from "@/services/strapi/articleService";
 import { getHomepage } from "@/services/strapi/homepageService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import Marquee from "react-fast-marquee";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -23,7 +26,7 @@ export async function generateMetadata({
 }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  const homepage = await getHomepage();
+  const homepage = await getHomepage(locale);
 
   if (homepage?.seo) {
     return {
@@ -53,18 +56,47 @@ export async function generateMetadata({
   };
 }
 
-export default async function Home() {
-  const homepage = await getHomepage();
+export default async function Home({ params }: HomePageProps) {
+  const { locale } = await params;
+  const homepage = await getHomepage(locale);
+
+  let displayArticle = homepage?.heroArticle?.article;
+
+  if (!displayArticle) {
+    const lastArticle = await getLastArticle(locale);
+    if (lastArticle) {
+      displayArticle = lastArticle;
+    }
+  }
+
+  if (!displayArticle) {
+    return null;
+  }
 
   return (
-    <main className="min-h-screen">
-      {homepage?.heroArticle?.article && (
-        <HeroArticle article={homepage?.heroArticle?.article} />
-      )}
+    <main className="min-h-screen bg-off-white">
+      <ArticleHero
+        article={displayArticle}
+        mainColor={displayArticle.mainColor}
+        isLink={true}
+      />
 
       <Suspense fallback={<BlockSkeleton />}>
-        {homepage?.blocks && <HomeBlocks blocks={homepage?.blocks} />}
+        {homepage?.blocks && (
+          <HomeBlocks blocks={homepage?.blocks} locale={locale} />
+        )}
       </Suspense>
+      <Marquee
+        autoFill={true}
+        className="bg-black text-white text-nowrap gap-4"
+      >
+        <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px] ">
+          <div className="">Free shipping on all eligible orders</div>
+          <LogoIcons className="w-6" />
+          <div className="">Refund guaranteed within 15 days</div>
+          <LogoIcons className="w-6" />
+        </div>
+      </Marquee>
     </main>
   );
 }
