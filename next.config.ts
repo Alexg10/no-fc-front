@@ -1,5 +1,5 @@
-import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
@@ -28,6 +28,16 @@ const remotePatterns: Array<{
     hostname: "127.0.0.1",
     port: "1337",
     pathname: "/uploads/**",
+  },
+  {
+    protocol: "https",
+    hostname: "sacred-dream-4825ee1b28.strapiapp.com",
+    pathname: "/uploads/**",
+  },
+  {
+    protocol: "https",
+    hostname: "sacred-dream-4825ee1b28.media.strapiapp.com",
+    pathname: "/**",
   },
 ];
 
