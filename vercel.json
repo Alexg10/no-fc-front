@@ -1,0 +1,11 @@
+{
+  "buildCommand": "pnpm build",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
+  "protectedRoutes": [
+    {
+      "path": "/.*",
+      "allowedTokens": ["@basic_auth_password"]
+    }
+  ]
+}
