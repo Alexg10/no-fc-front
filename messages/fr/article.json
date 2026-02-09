@@ -2,5 +2,8 @@
   "issue": "Issue",
   "culturalTake": "Une approche culturelle du football.",
   "seeMore": "Voir plus",
-  "checkOutThisArticle": "Découvrez cet article:"
+  "checkOutThisArticle": "Découvrez cet article:",
+  "articlesListPage": {
+    "title": "Une perspective culturelle sur le football."
+  }
 }
