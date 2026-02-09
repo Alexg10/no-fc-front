@@ -24,7 +24,8 @@
       "Bash(lsof:*)",
       "Bash(git restore:*)",
       "Bash(pnpm check:*)",
-      "Bash(pnpm tsc:*)"
+      "Bash(pnpm tsc:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []
