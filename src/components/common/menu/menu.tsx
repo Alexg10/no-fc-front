@@ -11,7 +11,7 @@ import { StrapiMenu } from "@/types/strapi/menu";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LottiePlayer from "react-lottie-player";
 import Tagline from "../../../../public/lotties/tagline.json";
 import { BurgerIcon } from "./burger-icon";
@@ -26,13 +26,19 @@ export function Menu({
   menu: StrapiMenu;
   marquee: StrapiMarquee;
 }) {
-  const isUnderDesktop = useBreakpoints().isUnderDesktop;
-  const [isOpen, setIsOpen] = useState(isUnderDesktop ? false : true);
+  const { isUnderDesktop } = useBreakpoints();
+  const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [isTaglinePlaying, setIsTaglinePlaying] = useState(false);
   const [isTaglineIsReversed, setIsTaglineIsReversed] = useState(false);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [isInScrollZone, setIsInScrollZone] = useState(true);
   const burgerTimeline = useRef<GSAPTimeline>(null);
+
+  useEffect(() => {
+    if (isUnderDesktop) {
+      queueMicrotask(() => setIsMenuVisible(false));
+    }
+  }, [isUnderDesktop]);
 
   useGSAP(() => {
     burgerTimeline.current = gsap
@@ -51,7 +57,7 @@ export function Menu({
       start: "top center",
       end: "+=125%",
       onLeave: () => {
-        setIsOpen(false);
+        setIsMenuVisible(false);
         setIsTaglineIsReversed(false);
         setIsTaglinePlaying(true);
         setIsInScrollZone(false);
@@ -59,7 +65,7 @@ export function Menu({
         burgerTimeline.current?.play();
       },
       onEnterBack: () => {
-        setIsOpen(true);
+        setIsMenuVisible(true);
         setIsInScrollZone(true);
         burgerTimeline.current?.reverse();
         setTimeout(() => {
@@ -68,14 +74,14 @@ export function Menu({
         }, 500);
       },
     });
-  });
+  }, { dependencies: [isUnderDesktop] });
   return (
     <>
       {isUnderDesktop && (
         <div
           className={cn(
             "fixed top-0 left-0 flex-col h-fit w-full z-50 bg-white",
-            isOpen ? "translate-y-0" : "-translate-y-full",
+            isMenuVisible ? "translate-y-0" : "-translate-y-full",
             "transition-all duration-500 ease-in-out",
           )}
         >
@@ -83,12 +89,12 @@ export function Menu({
             {menu.links && menu.links.length > 0 && (
               <NavigationMenuContainer
                 menu={menu as StrapiMenu}
-                onLinkClick={() => setIsOpen(false)}
+                onLinkClick={() => setIsMenuVisible(false)}
               />
             )}
             <NavigationMenuContainer
               menu={menu as StrapiMenu}
-              onLinkClick={() => setIsOpen(false)}
+              onLinkClick={() => setIsMenuVisible(false)}
             />
             <div className="flex border-t border-black pt-4">
               <LanguageSwitcher />
@@ -109,25 +115,25 @@ export function Menu({
                 href="/"
                 className="flex items-center p-2 size-11 lg:size-15"
               >
-                <LogoIcons isOpen={isOpen} />
+                <LogoIcons isOpen={isMenuVisible} />
               </Link>
               <button
-                className="flex relative items-center p-2 size-25 lg:size-15 cursor-pointer justify-center"
+                className="flex relative items-center p-2 size-11 lg:size-15 cursor-pointer justify-center"
                 onClick={() => {
-                  if (isInScrollZone) {
+                  if (isInScrollZone && !isUnderDesktop) {
                     return;
                   } else {
-                    setIsOpen(!isOpen);
+                    setIsMenuVisible(!isMenuVisible);
                     setMenuIsOpen(!menuIsOpen);
                   }
                 }}
               >
-                <div className="scale-[1.06]">
+                <div className="lg:scale-[1.06]">
                   <LottiePlayer
                     animationData={Tagline}
                     play={isTaglinePlaying}
                     direction={isTaglineIsReversed ? -1 : 1}
-                    className="size-25"
+                    className="size-16 lg:size-25"
                     loop={false}
                   />
                 </div>
@@ -138,7 +144,7 @@ export function Menu({
               <div
                 className={cn(
                   "hidden top-full right-0 w-full lg:grid transition-all duration-700 cubic-bezier(0.23, 1, 0.36, 1)",
-                  isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] ",
+                  isMenuVisible ? "grid-rows-[1fr] " : "grid-rows-[0fr] ",
                 )}
               >
                 <div className="overflow-hidden">
@@ -146,7 +152,7 @@ export function Menu({
                     {menu.links && menu.links.length > 0 && (
                       <NavigationMenuContainer
                         menu={menu as StrapiMenu}
-                        onLinkClick={() => setIsOpen(false)}
+                        onLinkClick={() => setIsMenuVisible(false)}
                       />
                     )}
                     <div className="flex border-t border-black pt-4">
@@ -158,7 +164,7 @@ export function Menu({
             )}
           </div>
           {marquee && marquee.label && (
-            <MenuMarquee marquee={marquee} isOpen={isOpen} />
+            <MenuMarquee marquee={marquee} isOpen={isMenuVisible} />
           )}
         </div>
       </div>
