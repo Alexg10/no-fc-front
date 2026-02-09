@@ -126,10 +126,10 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
         </div>
       )}
       <div
-        className="absolute top-[-55px] left-0 w-full h-[100px] bg-repeat"
+        className="absolute top-[-40px] left-0 w-full h-[100px] bg-no-repeat"
         style={{
-          backgroundImage: `url("/images/article/carousel_ripped_top.webp")`,
-          backgroundSize: "auto 100%",
+          backgroundImage: `url("/images/article/article_ripped.webp")`,
+          backgroundSize: "auto 65%",
         }}
       />
       {block.backgroundImage && (
@@ -177,10 +177,10 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
         </div>
       </div>
       <div
-        className="absolute bottom-[-52px] left-0 w-full h-[100px] bg-center bg-repeat"
+        className="absolute bottom-[-55px] left-0 w-full h-[100px] bg-no-repeat"
         style={{
-          backgroundImage: `url("/images/article/carousel_ripped_top.webp")`,
-          backgroundSize: "auto 100%",
+          backgroundImage: `url("/images/article/article_ripped.webp")`,
+          backgroundSize: "auto 65%",
         }}
       />
     </section>

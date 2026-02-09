@@ -28,10 +28,10 @@ export function ArticleIntroBlock({
       )}
     >
       <div
-        className="absolute top-[-55px] left-0 w-full h-[100px] bg-repeat"
+        className="absolute top-[-50px] left-0 w-full h-[100px] bg-no-repeat"
         style={{
-          backgroundImage: `url("/images/article/carousel_ripped_top.webp")`,
-          backgroundSize: "auto 100%",
+          backgroundImage: `url("/images/article/article_ripped.webp")`,
+          backgroundSize: "auto 70%",
         }}
       />
       <div
@@ -49,10 +49,10 @@ export function ArticleIntroBlock({
         </div>
       </Grid>
       <div
-        className="absolute bottom-[-52px] left-0 w-full h-[100px] bg-repeat"
+        className="absolute bottom-[-52px] left-0 w-full h-[100px] bg-no-repeat"
         style={{
-          backgroundImage: `url("/images/article/carousel_ripped_top.webp")`,
-          backgroundSize: "auto 100%",
+          backgroundImage: `url("/images/article/article_ripped.webp")`,
+          backgroundSize: "auto 70%",
         }}
       />
       <ArticleSummary

@@ -8,8 +8,16 @@ import { Link } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import { StrapiMarquee } from "@/types/strapi";
 import { StrapiMenu } from "@/types/strapi/menu";
-import { useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import { useEffect, useRef, useState } from "react";
+import LottiePlayer from "react-lottie-player";
+import Tagline from "../../../../public/lotties/tagline.json";
+import { BurgerIcon } from "./burger-icon";
 import { MenuMarquee } from "./menu-marquee";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function Menu({
   menu,
@@ -18,28 +26,75 @@ export function Menu({
   menu: StrapiMenu;
   marquee: StrapiMarquee;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const isUnderDesktop = useBreakpoints().isUnderDesktop;
+  const { isUnderDesktop } = useBreakpoints();
+  const [isMenuVisible, setIsMenuVisible] = useState(true);
+  const [isTaglinePlaying, setIsTaglinePlaying] = useState(false);
+  const [isTaglineIsReversed, setIsTaglineIsReversed] = useState(false);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const [isInScrollZone, setIsInScrollZone] = useState(true);
+  const burgerTimeline = useRef<GSAPTimeline>(null);
+
+  useEffect(() => {
+    if (isUnderDesktop) {
+      queueMicrotask(() => setIsMenuVisible(false));
+    }
+  }, [isUnderDesktop]);
+
+  useGSAP(() => {
+    burgerTimeline.current = gsap
+      .timeline({
+        paused: true,
+      })
+      .to(".burger-line", {
+        y: 0,
+        duration: 0.4,
+        ease: "power2.inOut",
+        stagger: 0.1,
+      });
+
+    ScrollTrigger.create({
+      trigger: "body",
+      start: "top center",
+      end: "+=125%",
+      onLeave: () => {
+        setIsMenuVisible(false);
+        setIsTaglineIsReversed(false);
+        setIsTaglinePlaying(true);
+        setIsInScrollZone(false);
+        setMenuIsOpen(false);
+        burgerTimeline.current?.play();
+      },
+      onEnterBack: () => {
+        setIsMenuVisible(true);
+        setIsInScrollZone(true);
+        burgerTimeline.current?.reverse();
+        setTimeout(() => {
+          setIsTaglineIsReversed(true);
+          setIsTaglinePlaying(true);
+        }, 500);
+      },
+    });
+  }, { dependencies: [isUnderDesktop] });
   return (
     <>
       {isUnderDesktop && (
         <div
           className={cn(
             "fixed top-0 left-0 flex-col h-fit w-full z-50 bg-white",
-            isOpen ? "translate-y-0" : "-translate-y-full",
-            "transition-all duration-500 ease-in-out"
+            isMenuVisible ? "translate-y-0" : "-translate-y-full",
+            "transition-all duration-500 ease-in-out",
           )}
         >
           <div className="p-6 pt-30 gap-2 flex flex-col">
             {menu.links && menu.links.length > 0 && (
               <NavigationMenuContainer
                 menu={menu as StrapiMenu}
-                onLinkClick={() => setIsOpen(false)}
+                onLinkClick={() => setIsMenuVisible(false)}
               />
             )}
             <NavigationMenuContainer
               menu={menu as StrapiMenu}
-              onLinkClick={() => setIsOpen(false)}
+              onLinkClick={() => setIsMenuVisible(false)}
             />
             <div className="flex border-t border-black pt-4">
               <LanguageSwitcher />
@@ -53,47 +108,43 @@ export function Menu({
             <div
               className={cn(
                 "border-2 relative border-black flex items-center w-fit",
-                "[&:after]:content-[''] [&:after]:w-[2px] [&:after]:h-full [&:after]:bg-black [&:after]:absolute [&:after]:top-0 [&:after]:right-1/2 [&:after]:translate-x-1/2"
+                "[&:after]:content-[''] [&:after]:w-[2px] [&:after]:h-full [&:after]:bg-black [&:after]:absolute [&:after]:top-0 [&:after]:right-1/2 [&:after]:translate-x-1/2",
               )}
             >
               <Link
                 href="/"
                 className="flex items-center p-2 size-11 lg:size-15"
               >
-                <LogoIcons />
+                <LogoIcons isOpen={isMenuVisible} />
               </Link>
               <button
-                className="flex items-center p-2 size-11 lg:size-15 cursor-pointer justify-center"
-                onClick={() => setIsOpen(!isOpen)}
+                className="flex relative items-center p-2 size-11 lg:size-15 cursor-pointer justify-center"
+                onClick={() => {
+                  if (isInScrollZone && !isUnderDesktop) {
+                    return;
+                  } else {
+                    setIsMenuVisible(!isMenuVisible);
+                    setMenuIsOpen(!menuIsOpen);
+                  }
+                }}
               >
-                <svg
-                  width="17"
-                  height="8"
-                  viewBox="0 0 17 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect width="16.353" height="1.36275" fill="black" />
-                  <rect
-                    y="2.99805"
-                    width="16.353"
-                    height="1.36275"
-                    fill="black"
+                <div className="lg:scale-[1.06]">
+                  <LottiePlayer
+                    animationData={Tagline}
+                    play={isTaglinePlaying}
+                    direction={isTaglineIsReversed ? -1 : 1}
+                    className="size-16 lg:size-25"
+                    loop={false}
                   />
-                  <rect
-                    y="5.99609"
-                    width="16.353"
-                    height="1.36275"
-                    fill="black"
-                  />
-                </svg>
+                </div>
+                <BurgerIcon isOpen={menuIsOpen} />
               </button>
             </div>
             {!isUnderDesktop && (
               <div
                 className={cn(
-                  "hidden top-full right-0 w-full lg:grid transition-all duration-300 ease-in-out",
-                  isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] "
+                  "hidden top-full right-0 w-full lg:grid transition-all duration-700 cubic-bezier(0.23, 1, 0.36, 1)",
+                  isMenuVisible ? "grid-rows-[1fr] " : "grid-rows-[0fr] ",
                 )}
               >
                 <div className="overflow-hidden">
@@ -101,7 +152,7 @@ export function Menu({
                     {menu.links && menu.links.length > 0 && (
                       <NavigationMenuContainer
                         menu={menu as StrapiMenu}
-                        onLinkClick={() => setIsOpen(false)}
+                        onLinkClick={() => setIsMenuVisible(false)}
                       />
                     )}
                     <div className="flex border-t border-black pt-4">
@@ -113,7 +164,7 @@ export function Menu({
             )}
           </div>
           {marquee && marquee.label && (
-            <MenuMarquee marquee={marquee} isOpen={isOpen} />
+            <MenuMarquee marquee={marquee} isOpen={isMenuVisible} />
           )}
         </div>
       </div>
