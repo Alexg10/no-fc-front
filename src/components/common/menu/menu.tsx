@@ -11,10 +11,12 @@ import { StrapiMenu } from "@/types/strapi/menu";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import LottiePlayer from "react-lottie-player";
 import Tagline from "../../../../public/lotties/tagline.json";
+import { BurgerIcon } from "./burger-icon";
 import { MenuMarquee } from "./menu-marquee";
+
 gsap.registerPlugin(ScrollTrigger);
 
 export function Menu({
@@ -28,35 +30,42 @@ export function Menu({
   const [isOpen, setIsOpen] = useState(isUnderDesktop ? false : true);
   const [isTaglinePlaying, setIsTaglinePlaying] = useState(false);
   const [isTaglineIsReversed, setIsTaglineIsReversed] = useState(false);
-  const [showBurgerLines, setShowBurgerLines] = useState(false);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [isInScrollZone, setIsInScrollZone] = useState(true);
+  const burgerTimeline = useRef<GSAPTimeline>(null);
 
   useGSAP(() => {
+    burgerTimeline.current = gsap
+      .timeline({
+        paused: true,
+      })
+      .to(".burger-line", {
+        y: 0,
+        duration: 0.4,
+        ease: "power2.inOut",
+        stagger: 0.1,
+      });
+
     ScrollTrigger.create({
       trigger: "body",
       start: "top center",
       end: "+=125%",
-      scrub: 1,
-      markers: true,
       onLeave: () => {
         setIsOpen(false);
         setIsTaglineIsReversed(false);
         setIsTaglinePlaying(true);
         setIsInScrollZone(false);
         setMenuIsOpen(false);
-        setTimeout(() => {
-          setShowBurgerLines(true);
-        }, 500);
+        burgerTimeline.current?.play();
       },
       onEnterBack: () => {
         setIsOpen(true);
         setIsInScrollZone(true);
-        setShowBurgerLines(false);
+        burgerTimeline.current?.reverse();
         setTimeout(() => {
           setIsTaglineIsReversed(true);
           setIsTaglinePlaying(true);
-        }, 200);
+        }, 500);
       },
     });
   });
@@ -122,56 +131,7 @@ export function Menu({
                     loop={false}
                   />
                 </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-1">
-                  <span
-                    className={cn(
-                      "w-[23px] h-[4px] overflow-hidden transition duration-500 ease-in-out",
-
-                      menuIsOpen
-                        ? "rotate-45 origin-left translate-x-1"
-                        : "rotate-0 origin-left translate-x-0",
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "w-[23px] h-[3px] bg-black transition-all duration-500 ease-in-out",
-                        showBurgerLines && !(isInScrollZone && isOpen)
-                          ? "translate-y-0 delay-0"
-                          : "translate-y-[6px] delay-200",
-                      )}
-                    />
-                  </span>
-                  <span className={"w-[23px] h-[4px] overflow-hidden"}>
-                    <div
-                      className={cn(
-                        "w-[23px] h-[3px] bg-black  transition-all duration-500 ease-in-out ",
-                        showBurgerLines
-                          ? "translate-y-0 delay-100"
-                          : "translate-y-[6px] delay-100",
-                        menuIsOpen && isOpen && showBurgerLines
-                          ? "translate-y-[6px] duration-100"
-                          : "translate-y-0 delay-200",
-                      )}
-                    />
-                  </span>
-                  <span
-                    className={cn(
-                      "w-[23px] h-[4px] overflow-hidden transition duration-500 ease-in-out",
-                      menuIsOpen
-                        ? "-rotate-45 origin-left translate-x-1"
-                        : "rotate-0 origin-left translate-x-0",
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "w-[23px] h-[3px] bg-black transition-all duration-500 ease-in-out ",
-                        showBurgerLines
-                          ? "translate-y-0 delay-200"
-                          : "translate-y-[6px] delay-0",
-                      )}
-                    />
-                  </span>
-                </div>
+                <BurgerIcon isOpen={menuIsOpen} />
               </button>
             </div>
             {!isUnderDesktop && (
