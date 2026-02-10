@@ -234,6 +234,17 @@ export interface StrapiCommonVideoPortrait {
   bottomTitle?: BlocksContent;
 }
 
+export interface StrapiCommonTextImage {
+  __component: "common.text-image";
+  id: number;
+  title?: string;
+  content?: BlocksContent;
+  labelLink?: string;
+  link?: string;
+  image?: StrapiImage;
+  imageLeft?: boolean;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -254,7 +265,8 @@ export type StrapiBlock =
   | StrapiArticleColumns
   | StrapiArticleLargeImage
   | StrapiCommonSectionPush
-  | StrapiCommonVideoPortrait;
+  | StrapiCommonVideoPortrait
+  | StrapiCommonTextImage;
 
 export interface StrapiProduct {
   id: number;

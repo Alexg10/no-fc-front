@@ -2,9 +2,11 @@
 
 import { Loader2 } from "lucide-react";
 
-import { GlobeIcon } from "@/components/icons/globe-icon";
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
+import { useState } from "react";
+import Lottie from "react-lottie-player";
+import EyeButton from "../../../public/lotties/eye-button.json";
 
 const buttonUiVariants = cva(
   "flex items-center gap-4 border border-black p-2 !text-obviously uppercase group w-fit",
@@ -39,12 +41,16 @@ export function ButtonUi({
   loading = false,
   onClick,
 }: ButtonUiProps) {
+  const [isHover, setIsHover] = useState(false);
+
   return (
     <button
       type="button"
       className={cn(buttonUiVariants({ variant, className }))}
       onClick={onClick}
       disabled={loading}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
     >
       <div
         className={cn(
@@ -54,7 +60,16 @@ export function ButtonUi({
             : "border-white text-white",
         )}
       >
-        {hasIcon && <GlobeIcon className="w-5 h-5 lg:w-6 lg:h-6" />}
+        {hasIcon && (
+          <span className="size-5 bg-black">
+            <Lottie
+              animationData={EyeButton}
+              loop
+              play={isHover}
+              className=""
+            />
+          </span>
+        )}
         <div className="-translate-y-px">{children}</div>
         {loading && (
           <Loader2 className="ml-2 size-5 animate-spin" aria-hidden="true" />
