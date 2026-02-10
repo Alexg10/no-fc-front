@@ -27,6 +27,7 @@ export function Menu({
   marquee: StrapiMarquee;
 }) {
   const { isUnderDesktop } = useBreakpoints();
+  const isUnderDesktopRef = useRef(isUnderDesktop);
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [isTaglinePlaying, setIsTaglinePlaying] = useState(false);
   const [isTaglineIsReversed, setIsTaglineIsReversed] = useState(false);
@@ -34,47 +35,59 @@ export function Menu({
   const [isInScrollZone, setIsInScrollZone] = useState(true);
   const burgerTimeline = useRef<GSAPTimeline>(null);
 
+  // Keep ref in sync with current value
+  useEffect(() => {
+    isUnderDesktopRef.current = isUnderDesktop;
+  }, [isUnderDesktop]);
+
   useEffect(() => {
     if (isUnderDesktop) {
       queueMicrotask(() => setIsMenuVisible(false));
+    } else {
+      queueMicrotask(() => setIsMenuVisible(true));
     }
   }, [isUnderDesktop]);
 
-  useGSAP(() => {
-    burgerTimeline.current = gsap
-      .timeline({
-        paused: true,
-      })
-      .to(".burger-line", {
-        y: 0,
-        duration: 0.4,
-        ease: "power2.inOut",
-        stagger: 0.1,
-      });
+  useGSAP(
+    () => {
+      burgerTimeline.current = gsap
+        .timeline({
+          paused: true,
+        })
+        .to(".burger-line", {
+          y: 0,
+          duration: 0.4,
+          ease: "power2.inOut",
+          stagger: 0.1,
+        });
 
-    ScrollTrigger.create({
-      trigger: "body",
-      start: "top center",
-      end: "+=125%",
-      onLeave: () => {
-        setIsMenuVisible(false);
-        setIsTaglineIsReversed(false);
-        setIsTaglinePlaying(true);
-        setIsInScrollZone(false);
-        setMenuIsOpen(false);
-        burgerTimeline.current?.play();
-      },
-      onEnterBack: () => {
-        setIsMenuVisible(true);
-        setIsInScrollZone(true);
-        burgerTimeline.current?.reverse();
-        setTimeout(() => {
-          setIsTaglineIsReversed(true);
+      ScrollTrigger.create({
+        trigger: "body",
+        start: "top center",
+        end: "+=125%",
+        onLeave: () => {
+          setIsMenuVisible(false);
+          setIsTaglineIsReversed(false);
           setIsTaglinePlaying(true);
-        }, 500);
-      },
-    });
-  }, { dependencies: [isUnderDesktop] });
+          setIsInScrollZone(false);
+          setMenuIsOpen(false);
+          burgerTimeline.current?.play();
+        },
+        onEnterBack: () => {
+          setIsInScrollZone(true);
+          if (!isUnderDesktopRef.current) {
+            setIsMenuVisible(true);
+            burgerTimeline.current?.reverse();
+            setTimeout(() => {
+              setIsTaglineIsReversed(true);
+              setIsTaglinePlaying(true);
+            }, 500);
+          }
+        },
+      });
+    },
+    { dependencies: [isUnderDesktop] },
+  );
   return (
     <>
       {isUnderDesktop && (
