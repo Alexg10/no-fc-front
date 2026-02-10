@@ -3,6 +3,7 @@
 import { ShareIcon } from "@/components/icons/share-icon";
 import { SummaryMenuIcon } from "@/components/icons/summary-menu-icon";
 import { useArticleRef } from "@/contexts/article-context";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { cn, getColorClass } from "@/lib/utils";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
 import gsap from "gsap";
@@ -17,7 +18,7 @@ const PIN_END_OFFSET = 250;
 
 function getPinEndValue(
   main: HTMLElement | null,
-  summary: HTMLElement | null
+  summary: HTMLElement | null,
 ): string {
   if (!main || !summary) return "+=0";
   const mainHeight = main.offsetHeight;
@@ -25,7 +26,7 @@ function getPinEndValue(
     summary.getBoundingClientRect().top - main.getBoundingClientRect().top;
   return `+=${Math.max(
     0,
-    mainHeight - summaryOffsetFromMain - PIN_END_OFFSET
+    mainHeight - summaryOffsetFromMain - PIN_END_OFFSET,
   )}`;
 }
 
@@ -44,6 +45,7 @@ export function ArticleSummary({
   const [isOpen, setIsOpen] = useState(false);
   const [socialsIsOpen, setSocialsIsOpen] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
+  const { isUnderDesktop } = useBreakpoints();
 
   const toggleSummary = () => {
     if (socialsIsOpen) {
@@ -108,7 +110,7 @@ export function ArticleSummary({
       gsap.to(summaryEl, {
         scrollTrigger: {
           trigger: summaryEl,
-          start: "top center",
+          start: isUnderDesktop ? "bottom bottom-=16px" : "center center",
           end: () => getPinEndValue(mainEl, summaryEl),
           pin: true,
           pinSpacing: false,
@@ -132,19 +134,19 @@ export function ArticleSummary({
         if (st.trigger === summaryEl) st.kill();
       });
     };
-  }, [mainRef, summaryRef]);
+  }, [mainRef, summaryRef, isUnderDesktop]);
 
   return (
     <div className="max-w-[1424px] mx-auto w-full px-4">
       <div
-        className="absolute z-40 flex flex-col items-start justify-end"
+        className="absolute z-40 flex flex-col items-start justify-end top-5"
         ref={summaryRef}
       >
-        <div className="bg-white p-4 w-full!important h-full!important">
+        <div className="bg-white p-2 lg:p-4 w-full!important h-full!important">
           <div
             className={cn(
               "top-full bg-white right-0 w-full grid transition-all duration-300 ease-in-out",
-              isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] "
+              isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] ",
             )}
           >
             <div className="overflow-hidden max-w-[203px] text-polymath">
@@ -160,7 +162,7 @@ export function ArticleSummary({
                   getColorClass(mainColor, "bg"),
                   mainColor === "black" || mainColor === "white"
                     ? "mix-blend-difference"
-                    : ""
+                    : "",
                 )}
               />
               <span
@@ -169,7 +171,7 @@ export function ArticleSummary({
                   mainColor === "black" ? "text-white" : "text-black",
                   mainColor === "black" || mainColor === "white"
                     ? "mix-blend-difference text-white"
-                    : ""
+                    : "",
                 )}
               >
                 ISSUE N°{issueNumber}
@@ -185,7 +187,7 @@ export function ArticleSummary({
               <div
                 className={cn(
                   "border-black p-4 border-2 flex items-center overflow-hidden transition-all duration-300 ease-in-out",
-                  socialsIsOpen ? "w-[190px]" : "w-[58px]"
+                  socialsIsOpen ? "w-[190px]" : "w-[58px]",
                 )}
               >
                 <button className="cursor-pointer" onClick={toggleSocials}>
