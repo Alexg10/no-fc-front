@@ -1,5 +1,8 @@
 import type { BlocksContent } from "@strapi/blocks-react-renderer";
+import type { StrapiAboutContent } from "./strapi/about";
 import { StrapiHomepageArticle } from "./strapi/homepage";
+
+export type { StrapiAboutContent };
 export interface StrapiImage {
   id: number;
   url: string;
@@ -222,6 +225,15 @@ export interface StrapiCommonSectionPush {
   whiteText?: boolean;
 }
 
+export interface StrapiCommonVideoPortrait {
+  __component: "common.video-portrait";
+  id: number;
+  title?: BlocksContent;
+  cover?: StrapiImage;
+  video?: StrapiImage;
+  bottomTitle?: BlocksContent;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -241,7 +253,8 @@ export type StrapiBlock =
   | StrapiArticleCustomContainer
   | StrapiArticleColumns
   | StrapiArticleLargeImage
-  | StrapiCommonSectionPush;
+  | StrapiCommonSectionPush
+  | StrapiCommonVideoPortrait;
 
 export interface StrapiProduct {
   id: number;

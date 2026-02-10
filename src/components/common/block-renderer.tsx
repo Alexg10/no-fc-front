@@ -17,6 +17,7 @@ import { Content } from "@/components/dynamic-blocks/simple-page/content";
 import { FaqsBlock } from "@/components/dynamic-blocks/simple-page/faqs-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
 import { VideoFullWidthBlock } from "@/components/dynamic-blocks/video-full-width-block";
+import { VideoPortraitBlock } from "@/components/dynamic-blocks/video-portrait-block";
 import type { StrapiBlock } from "@/types/strapi";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
 
@@ -42,6 +43,8 @@ export async function BlockRenderer({
       return <SectionPushBlock block={block} />;
     case "common.video-full-width":
       return <VideoFullWidthBlock block={block} />;
+    case "common.video-portrait":
+      return <VideoPortraitBlock block={block} />;
     case "homepage.home-products":
       return <HomeProductsBlock block={block} />;
     case "homepage.newest-articles":

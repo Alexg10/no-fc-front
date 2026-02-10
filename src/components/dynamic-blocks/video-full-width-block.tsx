@@ -1,13 +1,12 @@
 "use client";
 
 import Grid from "@/components/common/grid/grid";
-import { PlayIcon } from "@/components/icons/play-icon";
+import { PlayVideoButton } from "@/components/common/play-video-button";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import { cn } from "@/lib/utils";
 import type { StrapiCommonVideoFullWidth } from "@/types/strapi";
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import Marquee from "react-fast-marquee";
+import { useState } from "react";
 
 interface VideoFullWidthBlockProps {
   block: StrapiCommonVideoFullWidth;
@@ -40,7 +39,8 @@ function getEmbedUrl(url: string): string {
 
 export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [marqueePlaying, setMarqueePlaying] = useState(false);
+  const embedUrl = getEmbedUrl(block.url || "");
+  const [marqueeIsPlaying, setMarqueeIsPlaying] = useState(false);
   const handlePlayClick = () => {
     if (!embedUrl) {
       return;
@@ -48,31 +48,13 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
     setIsPlaying(true);
   };
 
-  const embedUrl = getEmbedUrl(block.url || "");
-
-  const marqueeContent = useMemo(
-    () => (
-      <Marquee className="text-white text-nowrap gap-4" play={marqueePlaying}>
-        <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px]">
-          <div className="">Play video</div>
-          <PlayIcon />
-          <div className="">Play video</div>
-          <PlayIcon />
-          <div className="">Play video</div>
-          <PlayIcon />
-        </div>
-      </Marquee>
-    ),
-    [marqueePlaying]
-  );
-
   return (
     <section className="relative w-full p-4">
       <Grid>
         <div
           className="relative col-span-full w-full aspect-video bg-black overflow-hidden"
-          onMouseEnter={() => setMarqueePlaying(true)}
-          onMouseLeave={() => setMarqueePlaying(false)}
+          onMouseEnter={() => setMarqueeIsPlaying(true)}
+          onMouseLeave={() => setMarqueeIsPlaying(false)}
         >
           {embedUrl && isPlaying && (
             <iframe
@@ -89,7 +71,7 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
               onClick={handlePlayClick}
               className={cn(
                 "absolute inset-0 z-10 w-full h-full group",
-                embedUrl ? "cursor-pointer" : "cursor-default"
+                embedUrl ? "cursor-pointer" : "cursor-default",
               )}
               aria-label={block.playerText || "Play video"}
             >
@@ -99,22 +81,18 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
                 fill
                 className={cn(
                   "object-cover transition-opacity duration-300 ",
-                  embedUrl && "group-hover:opacity-80"
+                  embedUrl && "group-hover:opacity-80",
                 )}
               />
             </button>
           )}
 
           {!isPlaying && embedUrl && (
-            <button
+            <PlayVideoButton
               onClick={handlePlayClick}
-              className="bg-black cursor-pointer p-2 flex absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center text-2xl font-bold duration-300 max-w-[185px]"
-              aria-label={block.playerText || "Play video"}
-            >
-              <div className="flex items-center justify-center gap-4 border border-white w-full py-2">
-                {marqueeContent}
-              </div>
-            </button>
+              ariaLabel={block.playerText || "Play video"}
+              marqueeIsPlaying={marqueeIsPlaying}
+            />
           )}
         </div>
       </Grid>
