@@ -1,12 +1,11 @@
 import { ArticlesContent } from "@/components/articles/articles-content";
 import Grid from "@/components/common/grid";
 import { PageHeader } from "@/components/common/page-header";
-import { LogoIcons } from "@/components/icons/logo-icons";
+import { PreFooterMarquee } from "@/components/common/pre-footer-marquee";
 import { ArticlesLoading } from "@/components/skeleton/articles-loading";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
-import Marquee from "react-fast-marquee";
 
 interface ArticlesPageProps {
   params: Promise<{ locale: string }>;
@@ -37,10 +36,10 @@ export async function generateMetadata({
 
 export default async function ArticlesPage({ params }: ArticlesPageProps) {
   const { locale } = await params;
-
+  const t = await getTranslations({ locale, namespace: "article" });
   return (
-    <div className="bg-off-white">
-      <PageHeader title="A Cultural Take on Football." marquee={"Stories"} />
+    <div className="bg-off-white overflow-hidden">
+      <PageHeader title={t("articlesListPage.title")} marquee={"Stories"} />
       <Grid>
         <main className="col-span-full py-4 pb-10 lg:py-10 lg:pb-26">
           <Suspense fallback={<ArticlesLoading />}>
@@ -48,17 +47,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
           </Suspense>
         </main>
       </Grid>
-      <Marquee
-        autoFill={true}
-        className="bg-black text-white text-nowrap gap-4"
-      >
-        <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px] ">
-          <div className="">Free shipping on all eligible orders</div>
-          <LogoIcons className="w-6" />
-          <div className="">Refund guaranteed within 15 days</div>
-          <LogoIcons className="w-6" />
-        </div>
-      </Marquee>
+      <PreFooterMarquee />
     </div>
   );
 }

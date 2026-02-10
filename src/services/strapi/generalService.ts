@@ -3,7 +3,7 @@ import { StrapiLink, StrapiMarquee } from "@/types/strapi";
 import qs from "qs";
 
 export async function getGeneral(
-  locale?: string
+  locale?: string,
 ): Promise<StrapiGeneral | null> {
   const query = qs.stringify({
     populate: {
@@ -12,6 +12,9 @@ export async function getGeneral(
       },
       marquee: {
         fields: ["label", "link"],
+      },
+      bottomMarquee: {
+        fields: ["firstText", "secondText"],
       },
     },
   });
@@ -22,8 +25,14 @@ export async function getGeneral(
   return result.data?.data as StrapiGeneral;
 }
 
+interface StrapiBottomMarquee {
+  firstText: string;
+  secondText: string;
+}
+
 export interface StrapiGeneral {
   id: number;
   socials: Array<StrapiLink>;
   marquee: StrapiMarquee;
+  bottomMarquee: StrapiBottomMarquee;
 }
