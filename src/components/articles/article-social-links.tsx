@@ -36,20 +36,31 @@ export function ArticleSocialLinks({
   }, []);
 
   return (
-    <ul className={cn("flex ml-4 gap-4 overflow-hidden", className)}>
+    <ul
+      className={cn(
+        "flex lg:pl-0 lg:ml-4 gap-3 lg:gap-4 overflow-hidden",
+        className,
+      )}
+    >
       <li>
         <FacebookShareButton url={currentUrl}>
-          <FacebookIcon />
+          <div className="p-4 pb-3 lg:p-0">
+            <FacebookIcon />
+          </div>
         </FacebookShareButton>
       </li>
       <li>
         <LinkedinShareButton url={currentUrl}>
-          <LinkedinIcon />
+          <div className="p-4 pb-3 lg:p-0">
+            <LinkedinIcon />
+          </div>
         </LinkedinShareButton>
       </li>
       <li>
         <TwitterShareButton url={currentUrl}>
-          <XIcon />
+          <div className="p-4 pb-3 lg:p-0">
+            <XIcon />
+          </div>
         </TwitterShareButton>
       </li>
       <li>
@@ -62,7 +73,9 @@ export function ArticleSocialLinks({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <SendMailIcon />
+          <div className="p-4 pb-3 lg:p-0">
+            <SendMailIcon />
+          </div>
         </Link>
       </li>
     </ul>
