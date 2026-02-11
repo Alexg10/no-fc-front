@@ -167,7 +167,7 @@ export function ArticleSummary({
                 articleDescription={article?.shortDescription}
               />
             )}
-            <div className="heading-l-obviously relative z-10 leading-none text-[18px] p-4 border-2 border-black">
+            <div className="heading-l-obviously bg-white relative z-10 leading-none text-[18px] p-4 border-2 border-black">
               <div
                 ref={progressBarRef}
                 className={cn(
