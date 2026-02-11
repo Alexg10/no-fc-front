@@ -20,7 +20,7 @@ export async function getArticles(locale?: string): Promise<StrapiArticle[]> {
 
 export async function getArticleBySlug(
   slug: string,
-  locale?: string
+  locale?: string,
 ): Promise<StrapiArticle | null> {
   const query = qs.stringify({
     filters: {
@@ -89,7 +89,7 @@ export async function getArticleBySlug(
 }
 
 export async function getLastArticle(
-  locale?: string
+  locale?: string,
 ): Promise<StrapiArticle | null> {
   const query = qs.stringify({
     sort: ["publishedAt:desc"],
@@ -110,7 +110,7 @@ export async function getLastArticle(
 }
 
 export async function getPreviousTwoArticles(
-  locale?: string
+  locale?: string,
 ): Promise<StrapiArticle[]> {
   const query = qs.stringify({
     sort: ["publishedAt:desc"],
@@ -134,7 +134,7 @@ export async function getPreviousTwoArticles(
 export async function getOtherArticles(
   excludeSlug: string,
   limit: number = 2,
-  locale?: string
+  locale?: string,
 ): Promise<StrapiArticle[]> {
   const query = qs.stringify({
     filters: {

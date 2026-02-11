@@ -11,14 +11,15 @@ import { ImageColsBlock } from "@/components/dynamic-blocks/image-cols-block";
 import { ImageStackBlock } from "@/components/dynamic-blocks/image-stack-block";
 import { ImagesBlock } from "@/components/dynamic-blocks/images-block";
 import { LargeImageBlock } from "@/components/dynamic-blocks/large-image-block";
+import { PhotoTextRepeatBlock } from "@/components/dynamic-blocks/photo-text-repeat-block";
 import { ProductBlock } from "@/components/dynamic-blocks/product-block";
 import { SectionPushBlock } from "@/components/dynamic-blocks/section-push-block";
 import { Content } from "@/components/dynamic-blocks/simple-page/content";
 import { FaqsBlock } from "@/components/dynamic-blocks/simple-page/faqs-block";
+import { TextImageBlock } from "@/components/dynamic-blocks/text-image-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
 import { VideoFullWidthBlock } from "@/components/dynamic-blocks/video-full-width-block";
 import { VideoPortraitBlock } from "@/components/dynamic-blocks/video-portrait-block";
-import { TextImageBlock } from "@/components/dynamic-blocks/text-image-block";
 import type { StrapiBlock } from "@/types/strapi";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
 
@@ -48,6 +49,8 @@ export async function BlockRenderer({
       return <VideoPortraitBlock block={block} />;
     case "common.text-image":
       return <TextImageBlock block={block} />;
+    case "common.photo-and-text-repeat":
+      return <PhotoTextRepeatBlock block={block} />;
     case "homepage.home-products":
       return <HomeProductsBlock block={block} />;
     case "homepage.newest-articles":
@@ -57,7 +60,9 @@ export async function BlockRenderer({
     case "simple-page.faqs":
       return <FaqsBlock block={block} />;
     case "article.quote":
-      return mainColor ? <ArticleQuoteBlock block={block} mainColor={mainColor} /> : null;
+      return mainColor ? (
+        <ArticleQuoteBlock block={block} mainColor={mainColor} />
+      ) : null;
     case "article.description":
       return mainColor && issueNumber ? (
         <ArticleIntroBlock
