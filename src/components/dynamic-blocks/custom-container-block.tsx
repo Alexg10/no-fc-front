@@ -7,25 +7,15 @@ import { getStrapiImageUrl } from "@/lib/strapi";
 import type { StrapiArticleCustomContainer } from "@/types/strapi";
 import type { BlocksContent } from "@strapi/blocks-react-renderer";
 import Image from "next/image";
+import { getColorClass } from "@/lib/utils";
 
 interface CustomContainerBlockProps {
   block: StrapiArticleCustomContainer;
 }
 
-const bgColorMap: Record<string, string> = {
-  white: "bg-white",
-  black: "bg-black",
-  pink: "bg-pink",
-  lime: "bg-lime",
-  blue: "bg-blue",
-  grey: "bg-grey",
-};
-
 export function CustomContainerBlock({ block }: CustomContainerBlockProps) {
   const textColor = block.whiteText ? "text-white" : "text-black";
-  const bgColor = block.backgroundColor
-    ? bgColorMap[block.backgroundColor]
-    : "";
+  const bgColor = getColorClass(block.backgroundColor, "bg");
 
   return (
     <section

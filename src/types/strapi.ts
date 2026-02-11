@@ -245,6 +245,23 @@ export interface StrapiCommonTextImage {
   imageLeft?: boolean;
 }
 
+export interface StrapiCommonPhotoTextRepeatItem {
+  id: number;
+  text?: string;
+  textColor?: string;
+  backgroundColor?: string;
+  images?: StrapiImage[];
+}
+
+export interface StrapiCommonPhotoTextRepeat {
+  __component: "common.photo-and-text-repeat";
+  id: number;
+  text?: string;
+  textColor?: string;
+  backgroundColor?: string;
+  images?: StrapiImage[];
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -266,7 +283,8 @@ export type StrapiBlock =
   | StrapiArticleLargeImage
   | StrapiCommonSectionPush
   | StrapiCommonVideoPortrait
-  | StrapiCommonTextImage;
+  | StrapiCommonTextImage
+  | StrapiCommonPhotoTextRepeat;
 
 export interface StrapiProduct {
   id: number;
