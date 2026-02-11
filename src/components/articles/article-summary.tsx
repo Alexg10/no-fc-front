@@ -66,6 +66,9 @@ export function ArticleSummary({
       });
     }
     setSocialsIsOpen(!socialsIsOpen);
+    if (isUnderDesktop) {
+      setSocialsIsOpen(!socialsIsOpen);
+    }
   };
 
   useEffect(() => {
@@ -139,10 +142,10 @@ export function ArticleSummary({
   return (
     <div className="max-w-[1424px] mx-auto w-full px-4">
       <div
-        className="absolute z-40 flex flex-col items-start justify-end top-5"
+        className="absolute z-40 flex flex-col items-start justify-end top-5 bg-white"
         ref={summaryRef}
       >
-        <div className="bg-white p-2 lg:p-4 w-full!important h-full!important">
+        <div className="p-2 lg:p-4 w-full!important h-full!important bg-white">
           <div
             className={cn(
               "top-full bg-white right-0 w-full grid transition-all duration-300 ease-in-out",
@@ -153,8 +156,18 @@ export function ArticleSummary({
               <ArticleSummaryLink />
             </div>
           </div>
-          <div className="flex gap-2">
-            <div className="heading-l-obviously relative leading-none text-[18px] p-4 border-2 border-black">
+          <div className="flex gap-2 bg-white overflow-hidden">
+            {isUnderDesktop && (
+              <ArticleSocialLinks
+                className={cn(
+                  "absolute z-0 top-0 left-0 w-full bg-white  transition-all duration-300 ease-in-out",
+                  socialsIsOpen ? "-translate-y-full" : "translate-y-0",
+                )}
+                articleTitle={article?.title}
+                articleDescription={article?.shortDescription}
+              />
+            )}
+            <div className="heading-l-obviously bg-white relative z-10 leading-none text-[18px] p-4 border-2 border-black">
               <div
                 ref={progressBarRef}
                 className={cn(
@@ -177,7 +190,7 @@ export function ArticleSummary({
                 ISSUE N°{issueNumber}
               </span>
             </div>
-            <div className="heading-l-obviously flex text-[18px]">
+            <div className="heading-l-obviously bg-white relative z-10 flex text-[18px]">
               <button
                 className="border-2 border-black p-4 border-r-0 cursor-pointer"
                 onClick={toggleSummary}
@@ -186,18 +199,20 @@ export function ArticleSummary({
               </button>
               <div
                 className={cn(
-                  "border-black p-4 border-2 flex items-center overflow-hidden transition-all duration-300 ease-in-out",
-                  socialsIsOpen ? "w-[190px]" : "w-[58px]",
+                  "border-black p-4 border-2  flex items-center overflow-hidden transition-all duration-300 ease-in-out",
+                  socialsIsOpen ? "lg:w-[190px]" : "lg:w-[58px]",
                 )}
               >
                 <button className="cursor-pointer" onClick={toggleSocials}>
                   <ShareIcon />
                 </button>
-                <ArticleSocialLinks
-                  className="transition-all duration-300 ease-in-out"
-                  articleTitle={article?.title}
-                  articleDescription={article?.shortDescription}
-                />
+                {!isUnderDesktop && (
+                  <ArticleSocialLinks
+                    className="bg-white transition-all duration-300 ease-in-out"
+                    articleTitle={article?.title}
+                    articleDescription={article?.shortDescription}
+                  />
+                )}
               </div>
             </div>
           </div>
