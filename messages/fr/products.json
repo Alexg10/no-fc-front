@@ -7,6 +7,8 @@
   "noVariants": "Aucune variante disponible pour ce produit.",
   "inStock": "En stock",
   "outOfStock": "Rupture de stock",
+  "addToCart": "Ajouter au panier",
+  "adding": "Ajout en cours...",
   "sort": {
     "relevance": "Pertinence",
     "newest": "Plus récent",

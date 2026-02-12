@@ -16,10 +16,10 @@ export function MenuMarquee({
     <>
       {marquee.link ? (
         <Link href={marquee.link}>
-          <div className="py-4">{marquee.label}</div>
+          <div className="py-2 lg:py-4">{marquee.label}</div>
         </Link>
       ) : (
-        <span className="py-4">{marquee.label}</span>
+        <span className="py-2 lg:py-4">{marquee.label}</span>
       )}
     </>
   );

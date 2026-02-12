@@ -188,6 +188,8 @@ export interface StrapiArticleCustomContainer {
   title?: string;
   content?: BlocksContent;
   image?: StrapiImage;
+  quote?: StrapiArticleQuote;
+  video?: StrapiCommonVideoFullWidth;
 }
 
 export interface StrapiArticleLargeImage {

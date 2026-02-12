@@ -7,6 +7,8 @@
   "noVariants": "No variants available for this product.",
   "inStock": "In stock",
   "outOfStock": "Out of stock",
+  "addToCart": "Add to cart",
+  "adding": "Adding...",
   "sort": {
     "relevance": "Relevance",
     "newest": "Newest",
