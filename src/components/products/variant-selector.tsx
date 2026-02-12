@@ -96,8 +96,8 @@ export function VariantSelector({
                   variant && isAvailable && setSelectedVariant(variant)
                 }
                 disabled={!isAvailable}
-                className={`text-[18px] px-[4px]  uppercase p-1 min-w-[27px] h-[27px]
-                  transition-all duration-200 text-polymath
+                className={`text-[18px] px-[4px] uppercase p-1 min-w-[27px] h-[27px]
+                  transition-all duration-200 text-polymath max-content
                   ${
                     isSelected
                       ? "bg-black text-white "
@@ -115,7 +115,7 @@ export function VariantSelector({
       </div>
 
       {/* Bouton Add to Cart + Prix */}
-      <div className="bg-black text-white p-2">
+      <div className="bg-black text-white p-2 max-content">
         <div className="flex items-stretch border border-white">
           <button
             onClick={handleAddToCart}
