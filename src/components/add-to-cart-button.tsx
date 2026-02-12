@@ -2,9 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/cart-context";
-import { useTranslations } from "next-intl";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { CartIcon } from "./icons/cart-icon";
 
 interface AddToCartButtonProps {
   variantId: string;
@@ -16,8 +17,6 @@ interface AddToCartButtonProps {
 export function AddToCartButton({
   variantId,
   availableForSale,
-  variantTitle,
-  fullWidth = false,
 }: AddToCartButtonProps) {
   const { addToCart, isLoading } = useCart();
   const t = useTranslations("common");
@@ -41,26 +40,20 @@ export function AddToCartButton({
     <Button
       onClick={handleAddToCart}
       disabled={!availableForSale || isLoading || isAdding}
-      className={`bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-        fullWidth ? "w-full py-3 px-6" : "py-2 px-4 whitespace-nowrap"
-      }`}
-      size={fullWidth ? "lg" : "sm"}
+      className="transition-colors cursor-pointer px-6 lg:px-4 disabled:opacity-50 disabled:cursor-not-allowed lg:text-[24px]! "
     >
       {isAdding || isLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          {fullWidth ? t("addingInProgress") : t("adding")}
+          {t("addingInProgress")}
         </>
       ) : !availableForSale ? (
-        fullWidth ? (
-          t("outOfStock")
-        ) : (
-          t("outOfStockShort")
-        )
-      ) : fullWidth ? (
-        t("addToCart")
+        t("outOfStock")
       ) : (
-        t("addToCart")
+        <div className="flex items-center gap-3">
+          <CartIcon className="size-6" />
+          {t("addToCart")}
+        </div>
       )}
     </Button>
   );

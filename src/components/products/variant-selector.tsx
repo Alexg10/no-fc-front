@@ -72,7 +72,7 @@ export function VariantSelector({
   const selectedPrice = selectedVariant?.price;
 
   return (
-    <div className="space-y-10 md:pt-40 lg:pt-60 lg:space-y-6">
+    <div className="space-y-10 lg:space-y-6">
       {/* Titre du produit */}
       <Title
         level={1}
@@ -120,7 +120,7 @@ export function VariantSelector({
           <button
             onClick={handleAddToCart}
             disabled={!selectedVariant?.availableForSale || isAdding}
-            className={`flex-1 flex items-center justify-center gap-3 lg:text-[24px] px-6 py-4 lg:px-2 text-obviously uppercase md:flex-2  transition-all duration-200 border-r border-white
+            className={`flex-1 flex items-center text-nowrap justify-center gap-3 lg:text-[24px] px-6 py-4 lg:px-2 text-obviously uppercase md:flex-2  transition-all duration-200 border-r border-white
               ${
                 selectedVariant?.availableForSale
                   ? "hover:bg-black hover:text-white"
@@ -131,7 +131,7 @@ export function VariantSelector({
             <CartIcon />
             {isAdding ? t("adding") : t("addToCart")}
           </button>
-          <div className="flex flex-1 items-center justify-center px-8 text-[18px]">
+          <div className="flex flex-1 text-nowrap items-center justify-center px-8 text-[18px]">
             <span className="">
               {selectedPrice
                 ? `${parseFloat(selectedPrice.amount).toFixed(2)} €`

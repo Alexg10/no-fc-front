@@ -102,7 +102,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               )}
             </div>
 
-            <div className="px-4 md:col-span-3 md:px-0 lg:col-span-3 lg:col-start-2">
+            <div className="px-4 md:col-span-3 md:px-0 lg:col-span-3 lg:col-start-2 md:pt-40 lg:pt-60 ">
               {product.variants.edges.length > 1 ? (
                 <VariantSelector
                   variants={product.variants.edges.map((edge) => edge.node)}
@@ -111,23 +111,32 @@ export default async function ProductPage({ params }: ProductPageProps) {
               ) : (
                 <>
                   <div>
-                    <Title level={1} className="lg:text-[64px]">
+                    <Title
+                      level={1}
+                      className="lg:text-[64px] text-left mb-8 lg:mb-10"
+                    >
                       {product.title}
                     </Title>
-                    <div className="text-3xl font-semibold text-black dark:text-zinc-50">
-                      {parseFloat(price.amount).toFixed(2)} {price.currencyCode}
+                    <div className="bg-black text-white p-2 max-content">
+                      <div className="flex items-stretch border border-white">
+                        <AddToCartButton
+                          variantId={product.variants.edges[0].node.id}
+                          availableForSale={
+                            product.variants.edges[0].node.availableForSale
+                          }
+                          variantTitle={product.variants.edges[0].node.title}
+                        />
+                        <div className="flex flex-1 border-l border-white items-center justify-center py-4 pb-3 px-8 lg:pb-2 text-[18px]">
+                          <span className="text-nowrap">
+                            {parseFloat(price.amount).toFixed(2)}
+                            {" €"}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
                   {/* Bouton d'ajout au panier pour un seul variant */}
-                  <AddToCartButton
-                    variantId={product.variants.edges[0].node.id}
-                    availableForSale={
-                      product.variants.edges[0].node.availableForSale
-                    }
-                    variantTitle={product.variants.edges[0].node.title}
-                    fullWidth={true}
-                  />
                 </>
               )}
 
