@@ -5,6 +5,7 @@ interface TitleProps {
   children: React.ReactNode;
   className?: string;
   level?: 1 | 2 | 3 | 4 | 5 | 6;
+  style?: React.CSSProperties;
 }
 
 function parseBreaks(text: React.ReactNode): React.ReactNode {
@@ -19,12 +20,13 @@ function parseBreaks(text: React.ReactNode): React.ReactNode {
   ));
 }
 
-export function Title({ children, className, level = 2 }: TitleProps) {
+export function Title({ children, className, level = 2, style }: TitleProps) {
   return createHeadingElement(level, {
     className: cn(
       "heading-l-obviously text-center uppercase balance",
       className,
     ),
+    style,
     children: parseBreaks(children),
   });
 }

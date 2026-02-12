@@ -3,6 +3,7 @@
 import { ShareIcon } from "@/components/icons/share-icon";
 import { SummaryMenuIcon } from "@/components/icons/summary-menu-icon";
 import { useArticleRef } from "@/contexts/article-context";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { cn, getColorClass } from "@/lib/utils";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
 import gsap from "gsap";
@@ -17,7 +18,7 @@ const PIN_END_OFFSET = 250;
 
 function getPinEndValue(
   main: HTMLElement | null,
-  summary: HTMLElement | null
+  summary: HTMLElement | null,
 ): string {
   if (!main || !summary) return "+=0";
   const mainHeight = main.offsetHeight;
@@ -25,7 +26,7 @@ function getPinEndValue(
     summary.getBoundingClientRect().top - main.getBoundingClientRect().top;
   return `+=${Math.max(
     0,
-    mainHeight - summaryOffsetFromMain - PIN_END_OFFSET
+    mainHeight - summaryOffsetFromMain - PIN_END_OFFSET,
   )}`;
 }
 
@@ -44,6 +45,7 @@ export function ArticleSummary({
   const [isOpen, setIsOpen] = useState(false);
   const [socialsIsOpen, setSocialsIsOpen] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
+  const { isUnderDesktop } = useBreakpoints();
 
   const toggleSummary = () => {
     if (socialsIsOpen) {
@@ -64,6 +66,9 @@ export function ArticleSummary({
       });
     }
     setSocialsIsOpen(!socialsIsOpen);
+    if (isUnderDesktop) {
+      setSocialsIsOpen(!socialsIsOpen);
+    }
   };
 
   useEffect(() => {
@@ -108,7 +113,7 @@ export function ArticleSummary({
       gsap.to(summaryEl, {
         scrollTrigger: {
           trigger: summaryEl,
-          start: "top center",
+          start: isUnderDesktop ? "bottom bottom-=16px" : "center center",
           end: () => getPinEndValue(mainEl, summaryEl),
           pin: true,
           pinSpacing: false,
@@ -132,27 +137,37 @@ export function ArticleSummary({
         if (st.trigger === summaryEl) st.kill();
       });
     };
-  }, [mainRef, summaryRef]);
+  }, [mainRef, summaryRef, isUnderDesktop]);
 
   return (
     <div className="max-w-[1424px] mx-auto w-full px-4">
       <div
-        className="absolute z-40 flex flex-col items-start justify-end"
+        className="absolute z-40 flex flex-col items-start justify-end top-5 bg-white"
         ref={summaryRef}
       >
-        <div className="bg-white p-4 w-full!important h-full!important">
+        <div className="p-2 lg:p-4 w-full!important h-full!important bg-white">
           <div
             className={cn(
               "top-full bg-white right-0 w-full grid transition-all duration-300 ease-in-out",
-              isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] "
+              isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] ",
             )}
           >
             <div className="overflow-hidden max-w-[203px] text-polymath">
               <ArticleSummaryLink />
             </div>
           </div>
-          <div className="flex gap-2">
-            <div className="heading-l-obviously relative leading-none text-[18px] p-4 border-2 border-black">
+          <div className="flex gap-2 bg-white overflow-hidden">
+            {isUnderDesktop && (
+              <ArticleSocialLinks
+                className={cn(
+                  "absolute z-0 top-0 left-0 w-full bg-white  transition-all duration-300 ease-in-out",
+                  socialsIsOpen ? "-translate-y-full" : "translate-y-0",
+                )}
+                articleTitle={article?.title}
+                articleDescription={article?.shortDescription}
+              />
+            )}
+            <div className="heading-l-obviously bg-white relative z-10 leading-none text-[18px] p-4 border-2 border-black">
               <div
                 ref={progressBarRef}
                 className={cn(
@@ -160,7 +175,7 @@ export function ArticleSummary({
                   getColorClass(mainColor, "bg"),
                   mainColor === "black" || mainColor === "white"
                     ? "mix-blend-difference"
-                    : ""
+                    : "",
                 )}
               />
               <span
@@ -169,13 +184,13 @@ export function ArticleSummary({
                   mainColor === "black" ? "text-white" : "text-black",
                   mainColor === "black" || mainColor === "white"
                     ? "mix-blend-difference text-white"
-                    : ""
+                    : "",
                 )}
               >
                 ISSUE N°{issueNumber}
               </span>
             </div>
-            <div className="heading-l-obviously flex text-[18px]">
+            <div className="heading-l-obviously bg-white relative z-10 flex text-[18px]">
               <button
                 className="border-2 border-black p-4 border-r-0 cursor-pointer"
                 onClick={toggleSummary}
@@ -184,18 +199,20 @@ export function ArticleSummary({
               </button>
               <div
                 className={cn(
-                  "border-black p-4 border-2 flex items-center overflow-hidden transition-all duration-300 ease-in-out",
-                  socialsIsOpen ? "w-[190px]" : "w-[58px]"
+                  "border-black p-4 border-2  flex items-center overflow-hidden transition-all duration-300 ease-in-out",
+                  socialsIsOpen ? "lg:w-[190px]" : "lg:w-[58px]",
                 )}
               >
                 <button className="cursor-pointer" onClick={toggleSocials}>
                   <ShareIcon />
                 </button>
-                <ArticleSocialLinks
-                  className="transition-all duration-300 ease-in-out"
-                  articleTitle={article?.title}
-                  articleDescription={article?.shortDescription}
-                />
+                {!isUnderDesktop && (
+                  <ArticleSocialLinks
+                    className="bg-white transition-all duration-300 ease-in-out"
+                    articleTitle={article?.title}
+                    articleDescription={article?.shortDescription}
+                  />
+                )}
               </div>
             </div>
           </div>
