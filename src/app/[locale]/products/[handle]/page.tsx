@@ -3,6 +3,7 @@ import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
 import { BlockRenderer } from "@/components/common/block-renderer";
 import { ProductDescription } from "@/components/products/product-description";
 import { ProductSchema } from "@/components/products/product-schema";
+import { ShippingInfo } from "@/components/products/shipping-info";
 import { VariantSelector } from "@/components/products/variant-selector";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { Title } from "@/components/ui/title";
@@ -11,7 +12,6 @@ import { getProductWithCustomizations } from "@/lib/products";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -135,8 +135,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       </div>
                     </div>
                   </div>
-
-                  {/* Bouton d'ajout au panier pour un seul variant */}
                 </>
               )}
 
@@ -147,26 +145,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 />
               )}
 
-              <div className="flex flex-col gap-1 lg:pt-2">
-                <p className="text-polymath-display tracking-normal lg:text-[14px] lg:mb-1">
-                  Livraison & retours
-                </p>
-                <p className="text-s-polymath text-[12px] leading-[120%]">
-                  Nous livrons partout dans le monde ! Compter en moyenne 3/5
-                  jours ouvrés pour recevoir votre colis en France
-                  métropolitaine, et en moyenne 10 jours ouvrés pour recevoir
-                  votre colis dans les autres pays.
-                </p>
-                <p className="text-s-polymath text-[12px]">
-                  Nous acceptons les retours, échanges et remboursements.
-                </p>
-                <Link
-                  href="/pages/livraison-et-retours"
-                  className="text-s-polymath text-[12px] underline"
-                >
-                  Voir les conditions
-                </Link>
-              </div>
+              <ShippingInfo />
             </div>
           </div>
 
