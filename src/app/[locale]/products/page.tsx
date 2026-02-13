@@ -1,4 +1,5 @@
 import { ArticleCollection } from "@/components/articles/article-collection";
+import Grid from "@/components/common/grid";
 import { PageHeader } from "@/components/common/page-header";
 import { CollectionsSection } from "@/components/products/collections-section";
 import { ProductsContent } from "@/components/products/products-content";
@@ -58,28 +59,36 @@ export default async function ProductsPage({
   const productsPageData = await getProductsPage(locale);
 
   return (
-    <>
-      <PageHeader title="Not Merch. Culture." />
+    <section className="bg-off-white">
+      <PageHeader title="Not Merch. Culture." marquee="SHOP" />
       <main className="space-y-12">
-        <Suspense fallback={<CollectionsListLoading />}>
-          <CollectionsSection collections={productsPageData?.collections} />
-        </Suspense>
-        <Suspense fallback={<ProductsPageHeroLoading />}>
-          <ProductsPageHeroSection hero={productsPageData?.hero} />
-        </Suspense>
+        <Grid>
+          <div className="col-span-full">
+            <Suspense fallback={<CollectionsListLoading />}>
+              <CollectionsSection collections={productsPageData?.collections} />
+            </Suspense>
+            <Suspense fallback={<ProductsPageHeroLoading />}>
+              <ProductsPageHeroSection hero={productsPageData?.hero} />
+            </Suspense>
+          </div>
+        </Grid>
 
-        <div className="container mx-auto px-4 py-8">
-          <Suspense fallback={<ArticleCollectionLoading limit={3} />}>
-            <ArticleCollection collectionHandle="best-sellers" limit={4} />
-          </Suspense>
-        </div>
+        <Grid>
+          <div className="col-span-full">
+            <Suspense fallback={<ArticleCollectionLoading limit={3} />}>
+              <ArticleCollection collectionHandle="best-sellers" limit={4} />
+            </Suspense>
+          </div>
+        </Grid>
 
-        <div className="container mx-auto px-4">
-          <Suspense fallback={<ProductsPageLoading />}>
-            <ProductsContent locale={locale} searchParams={paramsSearch} />
-          </Suspense>
-        </div>
+        <Grid>
+          <div className="col-span-full">
+            <Suspense fallback={<ProductsPageLoading />}>
+              <ProductsContent locale={locale} searchParams={paramsSearch} />
+            </Suspense>
+          </div>
+        </Grid>
       </main>
-    </>
+    </section>
   );
 }

@@ -30,21 +30,16 @@ export async function ArticleCollection({
     }
 
     return (
-      <section className="space-y-6">
+      <section className="gap-6 flex flex-col">
         {(title || response.collection?.title) && (
-          <div className="border-b pb-4">
-            <h2 className="text-2xl font-bold">
+          <div className="">
+            <h2 className="heading-s-obviously ">
               {title || response.collection?.title}
             </h2>
-            {response.collection?.description && (
-              <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-                {response.collection.description}
-              </p>
-            )}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
           {products.map((product, index) => (
             <ProductCard
               key={product.id}
@@ -58,7 +53,7 @@ export async function ArticleCollection({
   } catch (error) {
     console.error(
       `Error fetching collection products for ${collectionHandle}:`,
-      error
+      error,
     );
     return (
       <div className="py-8 text-center">

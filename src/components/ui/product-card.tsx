@@ -17,14 +17,15 @@ export function ProductCard({
 }: ProductCardProps) {
   const firstImage = product.images.edges[0]?.node;
   const price = product.priceRange.minVariantPrice;
-  const productHref = href || `${locale ? `/${locale}` : ""}/products/${product.handle}`;
+  const productHref =
+    href || `${locale ? `/${locale}` : ""}/products/${product.handle}`;
 
   return (
     <Link
       href={productHref}
-      className="group flex flex-col bg-white dark:bg-zinc-900 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:shadow-lg transition-all duration-300 hover:border-zinc-400 dark:hover:border-zinc-600"
+      className="group flex flex-col bg-off-white overflow-hidden border-black transition-all duration-300 border-2"
     >
-      <div className="relative aspect-square w-full overflow-hidden bg-gray-100 dark:bg-zinc-800">
+      <div className="relative aspect-square overflow-hidden">
         {firstImage ? (
           <Image
             src={firstImage.url}
@@ -54,21 +55,13 @@ export function ProductCard({
         )}
       </div>
 
-      <div className="p-4 flex flex-col grow">
-        <h2 className="text-lg font-semibold text-black dark:text-zinc-50 mb-2 line-clamp-2 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+      <div className="p-4 flex flex-col lg:flex-row justify-between gap-4 border-t-2 border-black lg:pb-13 bg-off-white">
+        <h2 className="text-polymath-display text-[16px] mb-2 line-clamp-2 ">
           {product.title}
         </h2>
 
-        {product.description && (
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2 grow">
-            {product.description}
-          </p>
-        )}
-
-        <div className="mt-auto">
-          <div className="text-xl font-bold text-black dark:text-zinc-50">
-            {parseFloat(price.amount).toFixed(2)} {price.currencyCode}
-          </div>
+        <div className="text-polymath text-[16px] text-black text-nowrap">
+          {parseFloat(price.amount).toFixed(2)} €
         </div>
       </div>
     </Link>
