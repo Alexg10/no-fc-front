@@ -103,7 +103,7 @@ export interface ShopifyProductImages {
 
 // Requête GraphQL pour récupérer un produit par handle
 const GET_PRODUCT_BY_HANDLE = `
-  query getProduct($handle: String!) {
+  query getProduct($handle: String!, $language: LanguageCode) @inContext(language: $language) {
     product(handle: $handle) {
       id
       title
@@ -318,20 +318,32 @@ const GET_COLLECTION_PRODUCTS = `
 `;
 
 /**
+ * Convertit une locale (ex: "fr", "en") en LanguageCode Shopify (ex: "FR", "EN")
+ */
+function toShopifyLanguage(locale?: string): string | undefined {
+  if (!locale) return undefined;
+  return locale.toUpperCase();
+}
+
+/**
  * Récupère un produit par son handle
  * @param handle - Le handle du produit (slug)
+ * @param locale - La locale pour récupérer la version traduite
  * @returns Le produit ou null si non trouvé
  */
 export async function getProductByHandle(
-  handle: string
+  handle: string,
+  locale?: string,
 ): Promise<ShopifyProduct | null> {
   try {
+    const language = toShopifyLanguage(locale);
     const response = await client.request(GET_PRODUCT_BY_HANDLE, {
-      variables: { handle },
+      variables: { handle, language },
     });
 
     if (response.data?.product) {
-      return response.data.product as ShopifyProduct;
+      const product = response.data.product as ShopifyProduct;
+      return product;
     }
 
     return null;
@@ -347,7 +359,7 @@ export async function getProductByHandle(
  * @returns Les images du produit ou null si non trouvé
  */
 export async function getProductImages(
-  handle: string
+  handle: string,
 ): Promise<ShopifyProductImages | null> {
   try {
     const response = await client.request(GET_PRODUCT_IMAGES, {
@@ -390,7 +402,7 @@ export interface GetProductsOptions {
  * Récupère la liste des produits avec pagination, filtres et tri
  */
 export async function getProducts(
-  options: GetProductsOptions = {}
+  options: GetProductsOptions = {},
 ): Promise<ShopifyProductsResponse> {
   try {
     const {
@@ -487,7 +499,7 @@ export async function getProducts(
  * Récupère toutes les collections
  */
 export async function getCollections(
-  first: number = 50
+  first: number = 50,
 ): Promise<ShopifyCollectionsResponse> {
   try {
     const response = await client.request(GET_COLLECTIONS, {
@@ -519,7 +531,7 @@ export async function getCollectionProducts(
     last?: number;
     sortKey?: ProductSortKey;
     reverse?: boolean;
-  } = {}
+  } = {},
 ): Promise<ShopifyProductsResponse & { collection?: ShopifyCollection }> {
   try {
     const {

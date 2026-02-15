@@ -43,126 +43,121 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { handle, locale } = await params;
   const tCommon = await getTranslations({ locale, namespace: "common" });
 
-  try {
-    const { shopify: product, strapi: strapiProduct } =
-      await getProductWithCustomizations(handle, locale);
+  const { shopify: product, strapi: strapiProduct } =
+    await getProductWithCustomizations(handle, locale);
 
-    if (!product) {
-      notFound();
-    }
+  if (!product) {
+    notFound();
+  }
 
-    const firstImage = product.images.edges[0]?.node;
-    const price = product.priceRange.minVariantPrice;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const firstImage = product.images.edges[0]?.node;
+  const price = product.priceRange.minVariantPrice;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-    // Breadcrumbs pour Schema.org
-    const breadcrumbItems = [
-      { name: tCommon("home"), url: siteUrl },
-      { name: tCommon("products"), url: `${siteUrl}/${locale}/products` },
-      { name: product.title, url: `${siteUrl}/${locale}/products/${handle}` },
-    ];
+  // Breadcrumbs pour Schema.org
+  const breadcrumbItems = [
+    { name: tCommon("home"), url: siteUrl },
+    { name: tCommon("products"), url: `${siteUrl}/${locale}/products` },
+    { name: product.title, url: `${siteUrl}/${locale}/products/${handle}` },
+  ];
 
-    return (
-      <div className="bg-off-white md:pt-4 lg:pt-6">
-        <ProductSchema product={product} />
-        <BreadcrumbSchema items={breadcrumbItems} />
-        <div className="">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-8 md:px-4 lg:grid-cols-12 lg:gap-4 lg:px-4 lg:max-w-[1464px] lg:mx-auto">
-            <div className="space-y-4 md:space-y-6 md:col-span-3 md:order-2 lg:col-span-6 lg:col-start-7">
-              {firstImage && (
-                <div className="relative aspect-4/5 w-full overflow-hidden  ">
-                  <Image
-                    src={firstImage.url}
-                    alt={firstImage.altText || product.title}
-                    fill
-                    className="object-cover"
-                    priority
-                    loading="eager"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-              )}
-              {product.images.edges.length > 1 && (
-                <div className="flex flex-col gap-6">
-                  {product.images.edges.slice(1, 5).map(({ node: image }) => (
-                    <div
-                      key={image.id}
-                      className="relative aspect-4/5 w-full overflow-hidden"
-                    >
-                      <Image
-                        src={image.url}
-                        alt={image.altText || product.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 25vw, 20vw"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="px-4 md:col-span-3 md:px-0 lg:col-span-3 lg:col-start-2 md:pt-40 lg:pt-60 ">
-              {product.variants.edges.length > 1 ? (
-                <VariantSelector
-                  variants={product.variants.edges.map((edge) => edge.node)}
-                  productTitle={product.title}
+  return (
+    <div className="bg-off-white md:pt-4 lg:pt-6">
+      <ProductSchema product={product} />
+      <BreadcrumbSchema items={breadcrumbItems} />
+      <div className="">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-8 md:px-4 lg:grid-cols-12 lg:gap-4 lg:px-4 lg:max-w-[1464px] lg:mx-auto">
+          <div className="space-y-4 md:space-y-6 md:col-span-3 md:order-2 lg:col-span-6 lg:col-start-7">
+            {firstImage && (
+              <div className="relative aspect-4/5 w-full overflow-hidden  ">
+                <Image
+                  src={firstImage.url}
+                  alt={firstImage.altText || product.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  loading="eager"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
-              ) : (
-                <>
-                  <div>
-                    <Title
-                      level={1}
-                      className="lg:text-[64px] text-left mb-8 lg:mb-10"
-                    >
-                      {product.title}
-                    </Title>
-                    <div className="bg-black text-white p-2 max-content">
-                      <div className="flex items-stretch border border-white">
-                        <AddToCartButton
-                          variantId={product.variants.edges[0].node.id}
-                          availableForSale={
-                            product.variants.edges[0].node.availableForSale
-                          }
-                          variantTitle={product.variants.edges[0].node.title}
-                        />
-                        <div className="flex flex-1 border-l border-white items-center justify-center py-4 pb-3 px-8 lg:pb-2 text-[18px]">
-                          <span className="text-nowrap">
-                            {parseFloat(price.amount).toFixed(2)}
-                            {" €"}
-                          </span>
-                        </div>
+              </div>
+            )}
+            {product.images.edges.length > 1 && (
+              <div className="flex flex-col gap-6">
+                {product.images.edges.slice(1, 5).map(({ node: image }) => (
+                  <div
+                    key={image.id}
+                    className="relative aspect-4/5 w-full overflow-hidden"
+                  >
+                    <Image
+                      src={image.url}
+                      alt={image.altText || product.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 25vw, 20vw"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="px-4 md:col-span-3 md:px-0 lg:col-span-3 lg:col-start-2 md:pt-40 lg:pt-60 ">
+            {product.variants.edges.length > 1 ? (
+              <VariantSelector
+                variants={product.variants.edges.map((edge) => edge.node)}
+                productTitle={product.title}
+              />
+            ) : (
+              <>
+                <div>
+                  <Title
+                    level={1}
+                    className="lg:text-[64px] text-left mb-8 lg:mb-10"
+                  >
+                    {product.title}
+                  </Title>
+                  <div className="bg-black text-white p-2 max-content">
+                    <div className="flex items-stretch border border-white">
+                      <AddToCartButton
+                        variantId={product.variants.edges[0].node.id}
+                        availableForSale={
+                          product.variants.edges[0].node.availableForSale
+                        }
+                        variantTitle={product.variants.edges[0].node.title}
+                      />
+                      <div className="flex flex-1 border-l border-white items-center justify-center py-4 pb-3 px-8 lg:pb-2 text-[18px]">
+                        <span className="text-nowrap">
+                          {parseFloat(price.amount).toFixed(2)}
+                          {" €"}
+                        </span>
                       </div>
                     </div>
                   </div>
-                </>
-              )}
+                </div>
+              </>
+            )}
 
-              {product.descriptionHtml && (
-                <ProductDescription
-                  html={product.descriptionHtml}
-                  className="mt-6 list-disc lg:mt-15"
-                />
-              )}
+            {product.descriptionHtml && (
+              <ProductDescription
+                html={product.descriptionHtml}
+                className="mt-6 list-disc lg:mt-15"
+              />
+            )}
 
-              <ShippingInfo />
-            </div>
+            <ShippingInfo />
           </div>
-
-          {strapiProduct?.blocks && strapiProduct.blocks.length > 0 && (
-            <div className="col-span-full mt-12">
-              {strapiProduct.blocks.map((block, index) => (
-                <Suspense key={block.id || index} fallback={<BlockSkeleton />}>
-                  <BlockRenderer block={block} locale={locale} />
-                </Suspense>
-              ))}
-            </div>
-          )}
         </div>
+
+        {strapiProduct?.blocks && strapiProduct.blocks.length > 0 && (
+          <div className="col-span-full mt-12">
+            {strapiProduct.blocks.map((block, index) => (
+              <Suspense key={block.id || index} fallback={<BlockSkeleton />}>
+                <BlockRenderer block={block} locale={locale} />
+              </Suspense>
+            ))}
+          </div>
+        )}
       </div>
-    );
-  } catch (error) {
-    console.error("Error loading product:", error);
-    throw error;
-  }
+    </div>
+  );
 }
