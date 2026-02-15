@@ -6,6 +6,11 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
+import Grid from "@/components/common/grid";
+import { PreFooterMarquee } from "@/components/common/pre-footer-marquee";
+import { CollectionsSection } from "@/components/products/collections-section";
+import { CollectionsListLoading } from "@/components/skeleton/collections-list-loading";
+import { getGeneral } from "@/services/strapi/generalService";
 interface CollectionPageProps {
   params: Promise<{ locale: string; handle: string }>;
   searchParams: Promise<{
@@ -13,6 +18,7 @@ interface CollectionPageProps {
     after?: string;
     before?: string;
     sort?: string;
+    [key: string]: string | undefined;
   }>;
 }
 
@@ -21,9 +27,10 @@ export async function generateMetadata({
 }: CollectionPageProps): Promise<Metadata> {
   const { handle, locale } = await params;
   const tMetadata = await getTranslations({ locale, namespace: "metadata" });
+
   const collectionsData = await getCollections();
   const collection = collectionsData.edges.find(
-    (edge) => edge.node.handle === handle
+    (edge) => edge.node.handle === handle,
   )?.node;
 
   if (!collection) {
@@ -67,19 +74,33 @@ export default async function CollectionPage({
 }: CollectionPageProps) {
   const { handle, locale } = await params;
   const paramsSearch = await searchParams;
-
+  const general = await getGeneral(locale);
+  const selectedCollections = general?.selectedCollections;
   return (
-    <>
-      <PageHeader title={`Collection ${handle}`} />
-      <main className="container mx-auto px-4 py-8">
-        <Suspense fallback={<ProductsPageLoading />}>
-          <CollectionContent
-            locale={locale}
-            handle={handle}
-            searchParams={paramsSearch}
-          />
-        </Suspense>
+    <section className="bg-off-white">
+      <PageHeader title={`${handle}`} marquee="SHOP" />
+      <main className=" pb-20 lg:pb-27">
+        <Grid>
+          <div className="col-span-full">
+            <Suspense fallback={<CollectionsListLoading />}>
+              <CollectionsSection collections={selectedCollections} />
+            </Suspense>
+          </div>
+        </Grid>
+        <hr className="border-black" />
+        <Grid>
+          <div className="col-span-full pt-6">
+            <Suspense fallback={<ProductsPageLoading />}>
+              <CollectionContent
+                locale={locale}
+                handle={handle}
+                searchParams={paramsSearch}
+              />
+            </Suspense>
+          </div>
+        </Grid>
       </main>
-    </>
+      <PreFooterMarquee />
+    </section>
   );
 }

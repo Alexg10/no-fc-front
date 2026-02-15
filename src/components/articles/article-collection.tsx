@@ -1,5 +1,6 @@
 import { ProductCard } from "@/components/ui/product-card";
 import { getCollectionProducts } from "@/lib/shopify";
+import { Link } from "@/lib/navigation";
 
 interface ArticleCollectionProps {
   collectionHandle: string;
@@ -33,9 +34,11 @@ export async function ArticleCollection({
       <section className="gap-6 flex flex-col">
         {(title || response.collection?.title) && (
           <div className="">
-            <h2 className="heading-s-obviously ">
-              {title || response.collection?.title}
-            </h2>
+            <Link href={`/collections/${collectionHandle}`}>
+              <h2 className="heading-s-obviously ">
+                {title || response.collection?.title}
+              </h2>
+            </Link>
           </div>
         )}
 

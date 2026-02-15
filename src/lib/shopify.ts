@@ -101,6 +101,11 @@ export interface ShopifyCollectionsResponse {
   edges: ShopifyCollectionEdge[];
 }
 
+export interface VariantOption {
+  name: string;
+  values: string[];
+}
+
 export interface ShopifyProductImages {
   id: string;
   handle: string;
@@ -289,6 +294,22 @@ const GET_COLLECTIONS = `
   }
 `;
 
+// Requête GraphQL pour récupérer les options de variants disponibles
+const GET_PRODUCT_OPTIONS = `
+  query getProductOptions($first: Int, $query: String) {
+    products(first: $first, query: $query) {
+      edges {
+        node {
+          options {
+            name
+            values
+          }
+        }
+      }
+    }
+  }
+`;
+
 // Requête GraphQL pour récupérer les produits d'une collection
 const GET_COLLECTION_PRODUCTS = `
   query getCollectionProducts(
@@ -445,6 +466,7 @@ export interface GetProductsOptions {
   minPrice?: number;
   maxPrice?: number;
   availableOnly?: boolean;
+  variantOptions?: Record<string, string>;
 }
 
 /**
@@ -465,6 +487,7 @@ export async function getProducts(
       minPrice,
       maxPrice,
       availableOnly,
+      variantOptions,
     } = options;
 
     // Construire la requête de filtre
@@ -484,6 +507,15 @@ export async function getProducts(
 
     if (availableOnly) {
       queryParts.push("available_for_sale:true");
+    }
+
+    // Ajouter les filtres de variants
+    if (variantOptions) {
+      for (const [optionName, value] of Object.entries(variantOptions)) {
+        if (value) {
+          queryParts.push(`variant_options.${optionName}:${value}`);
+        }
+      }
     }
 
     const query = queryParts.length > 0 ? queryParts.join(" AND ") : undefined;
@@ -565,6 +597,48 @@ export async function getCollections(
   } catch (error) {
     console.error("Error fetching collections:", error);
     throw error;
+  }
+}
+
+/**
+ * Récupère les options de variants disponibles (taille, couleur, etc.)
+ * @param collection - Optionnel: filtrer par collection
+ */
+export async function getProductOptions(
+  collection?: string,
+): Promise<VariantOption[]> {
+  try {
+    const query = collection ? `collection:${collection}` : undefined;
+
+    const response = await client.request(GET_PRODUCT_OPTIONS, {
+      variables: { first: 250, query },
+    });
+
+    if (response.data?.products?.edges) {
+      const optionsMap = new Map<string, Set<string>>();
+
+      for (const edge of response.data.products.edges) {
+        const product = edge.node as { options: { name: string; values: string[] }[] };
+        for (const option of product.options) {
+          if (!optionsMap.has(option.name)) {
+            optionsMap.set(option.name, new Set());
+          }
+          for (const value of option.values) {
+            optionsMap.get(option.name)!.add(value);
+          }
+        }
+      }
+
+      return Array.from(optionsMap.entries()).map(([name, values]) => ({
+        name,
+        values: Array.from(values).sort(),
+      }));
+    }
+
+    return [];
+  } catch (error) {
+    console.error("Error fetching product options:", error);
+    return [];
   }
 }
 

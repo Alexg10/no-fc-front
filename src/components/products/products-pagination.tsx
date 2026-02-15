@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ShopifyPageInfo } from "@/lib/shopify";
 import { Link, usePathname } from "@/lib/navigation";
-import { useTranslations } from "next-intl";
+import { ShopifyPageInfo } from "@/lib/shopify";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 
 interface ProductsPaginationProps {
@@ -25,7 +25,7 @@ export function ProductsPagination({
   const buildUrl = (
     page: number,
     cursor?: string,
-    cursorType?: "after" | "before"
+    cursorType?: "after" | "before",
   ) => {
     const params = new URLSearchParams();
 
@@ -84,39 +84,46 @@ export function ProductsPagination({
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 mt-8">
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-6 text-black">
         {prevUrl ? (
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="text-black size-14">
             <Link href={prevUrl}>
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              {t("previous")}
+              <ChevronLeft className="h-4 w-4" />
             </Link>
           </Button>
         ) : (
-          <Button variant="outline" disabled>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            {t("previous")}
+          <Button
+            variant="outline"
+            disabled
+            className="text-black size-14 border-none flex items-center justify-center"
+          >
+            <div className="border-1 border-black p-2">
+              <ChevronLeft className="h-4 w-4" />
+            </div>
           </Button>
         )}
 
         <div className="flex items-center gap-2 px-4 py-2">
-          <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("page")}</span>
           <span className="font-semibold text-black dark:text-zinc-50">
             {currentPage}
           </span>
         </div>
 
         {nextUrl ? (
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="text-black">
             <Link href={nextUrl}>
-              {t("next")}
-              <ChevronRight className="ml-2 h-4 w-4" />
+              <ChevronRight className=" h-4 w-4" />
             </Link>
           </Button>
         ) : (
-          <Button variant="outline" disabled>
-            {t("next")}
-            <ChevronRight className="ml-2 h-4 w-4" />
+          <Button
+            variant="outline"
+            disabled
+            className="text-black border-none flex items-center justify-center"
+          >
+            <div className="border-1 border-black p-2">
+              <ChevronRight className=" h-4 w-4" />
+            </div>
           </Button>
         )}
       </div>

@@ -1,10 +1,10 @@
-import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
 import { ProductsFilters } from "@/components/products/products-filters";
 import { ProductsPagination } from "@/components/products/products-pagination";
 import { ProductCard } from "@/components/ui/product-card";
 import {
   getCollectionProducts,
   getCollections,
+  getProductOptions,
   ProductSortKey,
 } from "@/lib/shopify";
 import { getTranslations } from "next-intl/server";
@@ -18,6 +18,7 @@ interface CollectionContentProps {
     after?: string;
     before?: string;
     sort?: string;
+    [key: string]: string | undefined;
   };
 }
 
@@ -47,7 +48,7 @@ export async function CollectionContent({
     sortKey = sortParam as ProductSortKey;
   }
 
-  const [collectionsData, productsData] = await Promise.all([
+  const [collectionsData, productsData, variantOptions] = await Promise.all([
     getCollections(),
     getCollectionProducts(handle, {
       first: 12,
@@ -57,6 +58,7 @@ export async function CollectionContent({
       sortKey,
       reverse,
     }),
+    getProductOptions(handle),
   ]);
 
   const collections = collectionsData.edges.map((edge) => edge.node);
@@ -78,18 +80,10 @@ export async function CollectionContent({
 
   return (
     <>
-      <BreadcrumbSchema items={breadcrumbItems} />
-      <h1 className="text-4xl font-bold text-black dark:text-zinc-50 mb-4">
-        {currentCollection.title}
-      </h1>
-
-      {currentCollection.description && (
-        <p className="text-zinc-600 dark:text-zinc-400 mb-8">
-          {currentCollection.description}
-        </p>
-      )}
-
-      <ProductsFilters collections={collections} defaultCollection={handle} />
+      <ProductsFilters
+        defaultCollection={handle}
+        variantOptions={variantOptions}
+      />
 
       {products.length === 0 ? (
         <div className="text-center py-12">
@@ -98,7 +92,7 @@ export async function CollectionContent({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
           {products.map(({ node: product }, index) => (
             <ProductCard
               key={product.id}

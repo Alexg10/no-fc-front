@@ -1,23 +1,23 @@
 "use client";
 
-import { CollectionFilter } from "@/components/products/_components/collection-filter";
 import { SortControl } from "@/components/products/_components/sort-control";
+import { VariantFilter } from "@/components/products/_components/variant-filter";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@/lib/navigation";
-import { ShopifyCollection } from "@/lib/shopify";
-import { Filter, X } from "lucide-react";
+import { VariantOption } from "@/lib/shopify";
+import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface ProductsFiltersProps {
-  collections: ShopifyCollection[];
   defaultCollection?: string;
+  variantOptions?: VariantOption[];
 }
 
 export function ProductsFilters({
-  collections,
   defaultCollection,
+  variantOptions = [],
 }: ProductsFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -31,12 +31,27 @@ export function ProductsFilters({
   const initialMaxPrice = searchParams.get("maxPrice") || "";
   const initialAvailableOnly = searchParams.get("available") === "true";
 
+  // Initialiser les options de variants depuis l'URL
+  const getInitialVariantSelections = (): Record<string, string> => {
+    const selections: Record<string, string> = {};
+    for (const option of variantOptions) {
+      const value = searchParams.get(`variant_${option.name}`);
+      if (value) {
+        selections[option.name] = value;
+      }
+    }
+    return selections;
+  };
+
   const [collection, setCollection] = useState<string>(initialCollection);
   const [sortKey, setSortKey] = useState<string>(initialSortKey);
   const [minPrice, setMinPrice] = useState<string>(initialMinPrice);
   const [maxPrice, setMaxPrice] = useState<string>(initialMaxPrice);
   const [availableOnly, setAvailableOnly] =
     useState<boolean>(initialAvailableOnly);
+  const [variantSelections, setVariantSelections] = useState<
+    Record<string, string>
+  >(getInitialVariantSelections);
 
   // Synchroniser avec les paramètres d'URL quand ils changent
   useEffect(() => {
@@ -48,34 +63,48 @@ export function ProductsFilters({
       const maxPriceParam = searchParams.get("maxPrice") || "";
       const availableParam = searchParams.get("available") === "true";
 
+      const variantParams: Record<string, string> = {};
+      for (const option of variantOptions) {
+        const value = searchParams.get(`variant_${option.name}`);
+        if (value) {
+          variantParams[option.name] = value;
+        }
+      }
+
       setCollection(collectionParam);
       setSortKey(sortParam);
       setMinPrice(minPriceParam);
       setMaxPrice(maxPriceParam);
       setAvailableOnly(availableParam);
+      setVariantSelections(variantParams);
     };
 
     updateFromURL();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString(), defaultCollection]);
 
-  const updateURL = () => {
+  const updateURL = (overrides?: {
+    sortKey?: string;
+    variantSelections?: Record<string, string>;
+  }) => {
     const params = new URLSearchParams();
 
-    // Garder la pagination
-    const page = searchParams.get("page");
-    const after = searchParams.get("after");
-    const before = searchParams.get("before");
-
-    if (page) params.set("page", page);
-    if (after) params.set("after", after);
-    if (before) params.set("before", before);
+    const currentSort = overrides?.sortKey ?? sortKey;
+    const currentVariants = overrides?.variantSelections ?? variantSelections;
 
     // Ajouter les filtres
-    if (sortKey && sortKey !== "RELEVANCE") params.set("sort", sortKey);
+    if (currentSort && currentSort !== "RELEVANCE")
+      params.set("sort", currentSort);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
     if (availableOnly) params.set("available", "true");
+
+    // Ajouter les filtres de variants
+    for (const [optionName, value] of Object.entries(currentVariants)) {
+      if (value && value !== "all") {
+        params.set(`variant_${optionName}`, value);
+      }
+    }
 
     const queryString = params.toString();
     const pathWithQuery = queryString ? `?${queryString}` : "";
@@ -106,35 +135,57 @@ export function ProductsFilters({
     setMinPrice("");
     setMaxPrice("");
     setAvailableOnly(false);
+    setVariantSelections({});
 
-    const params = new URLSearchParams();
-    const page = searchParams.get("page");
-    if (page) params.set("page", page);
-
-    const queryString = params.toString();
-    router.push(`/products${queryString ? `?${queryString}` : ""}`);
+    // Rester sur la page actuelle sans filtres
+    if (defaultCollection) {
+      router.push(`/collections/${defaultCollection}`);
+    } else {
+      router.push("/products");
+    }
   };
 
+  const handleVariantChange = (optionName: string, value: string) => {
+    const newValue = value === "all" ? "" : value;
+    const newSelections = {
+      ...variantSelections,
+      [optionName]: newValue,
+    };
+    setVariantSelections(newSelections);
+    updateURL({ variantSelections: newSelections });
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortKey(value);
+    updateURL({ sortKey: value });
+  };
+
+  const hasActiveVariantFilters = Object.values(variantSelections).some(
+    (v) => v && v !== "all",
+  );
+
   const hasActiveFilters =
-    collection ||
     (sortKey && sortKey !== "RELEVANCE") ||
     minPrice ||
     maxPrice ||
-    availableOnly;
+    availableOnly ||
+    hasActiveVariantFilters;
 
   return (
-    <div className="space-y-4 mb-8 p-6 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-black dark:text-zinc-50 flex items-center gap-2">
-          <Filter className="h-5 w-5" />
-          {t("filtersAndSort")}
-        </h2>
+    <div className="mb-10">
+      <div className="flex gap-2 justify-center items-center">
+        <VariantFilter
+          options={variantOptions}
+          selectedOptions={variantSelections}
+          onChange={handleVariantChange}
+        />
+        <SortControl value={sortKey} onChange={handleSortChange} />
         {hasActiveFilters && (
           <Button
             variant="ghost"
             size="sm"
             onClick={clearFilters}
-            className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-zinc-50"
+            className="text-dark cursor-pointer dark:text-zinc-400 bg-transparent border-none p-0 hover:text-black dark:hover:text-zinc-50 gap-0  text-[16px] normal-case"
           >
             <X className="h-4 w-4 mr-2" />
             {t("resetFilters")}
@@ -142,20 +193,11 @@ export function ProductsFilters({
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <CollectionFilter
-          collections={collections}
-          value={collection}
-          onChange={setCollection}
-        />
-        <SortControl value={sortKey} onChange={setSortKey} />
-      </div>
-
-      <div className="flex items-center justify-between pt-2">
+      {/* <div className="flex items-center justify-between pt-2">
         <Button onClick={updateURL} className="w-auto">
           {t("applyFilters")}
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -130,7 +130,7 @@ export async function ProductsContent({
         {collectionTitle || t("title")}
       </h1>
 
-      <ProductsFilters collections={collections} />
+      <ProductsFilters />
 
       {products.length === 0 ? (
         <div className="text-center py-12">

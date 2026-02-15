@@ -21,5 +21,6 @@
   "error": "Error",
   "retry": "Retry",
   "home": "Home",
-  "products": "Products"
+  "products": "Products",
+  "all": "All"
 }
