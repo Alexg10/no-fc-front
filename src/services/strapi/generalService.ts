@@ -1,5 +1,6 @@
 import { strapiFetchWithFallback } from "@/lib/strapi";
 import { StrapiLink, StrapiMarquee } from "@/types/strapi";
+import { StrapiCollection } from "@/types/strapi/products-page";
 import { BlocksContent } from "@strapi/blocks-react-renderer";
 import qs from "qs";
 
@@ -19,6 +20,9 @@ export async function getGeneral(
       },
       shippingInfos: {
         fields: ["title", "content"],
+      },
+      selectedCollections: {
+        populate: "*",
       },
     },
   });
@@ -45,4 +49,5 @@ export interface StrapiGeneral {
   marquee: StrapiMarquee;
   bottomMarquee: StrapiBottomMarquee;
   shippingInfos: StrapiShippingInfos;
+  selectedCollections: Array<StrapiCollection>;
 }

@@ -37,7 +37,7 @@ export function ProductsPageHero({ hero }: ProductsPageHeroProps) {
         className={cn(
           "absolute left-0 right-0 px-6 flex flex-col md:justify-start md:items-start justify-center items-center",
           hero.btnLink
-            ? "bottom-10 lg:bottom-16 space-y-6"
+            ? "bottom-10 lg:bottom-6 space-y-6"
             : "bottom-0 p-6 gap-6",
         )}
       >

@@ -7,6 +7,7 @@ import { ProductsPageHeroSection } from "@/components/products/products-page-her
 import { ArticleCollectionLoading } from "@/components/skeleton/article-collection-loading";
 import { CollectionsListLoading } from "@/components/skeleton/collections-list-loading";
 import { ProductsPageHeroLoading } from "@/components/skeleton/products-page-hero-loading";
+import { getGeneral } from "@/services/strapi/generalService";
 import { getProductsPage } from "@/services/strapi/productsPageService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -52,6 +53,8 @@ export async function generateMetadata({
 export default async function ProductsPage({ params }: ProductsPageProps) {
   const { locale } = await params;
   const productsPageData = await getProductsPage(locale);
+  const general = await getGeneral(locale);
+  const selectedCollections = general?.selectedCollections;
   const collections = productsPageData?.collections?.map((collection) => ({
     handle: collection.handle,
     limit: collection.nbProductToShow || 4,
@@ -64,7 +67,7 @@ export default async function ProductsPage({ params }: ProductsPageProps) {
         <Grid>
           <div className="col-span-full">
             <Suspense fallback={<CollectionsListLoading />}>
-              <CollectionsSection collections={productsPageData?.collections} />
+              <CollectionsSection collections={selectedCollections} />
             </Suspense>
             <Suspense fallback={<ProductsPageHeroLoading />}>
               <ProductsPageHeroSection hero={productsPageData?.hero} />
