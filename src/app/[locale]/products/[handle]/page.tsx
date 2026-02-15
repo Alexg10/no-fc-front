@@ -4,6 +4,7 @@ import { ProductSchema } from "@/components/products/product-schema";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { generateProductMetadata } from "@/lib/metadata";
 import { getProductWithCustomizations } from "@/lib/products";
+import { getGeneral } from "@/services/strapi/generalService";
 
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -38,9 +39,12 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { handle, locale } = await params;
-  const tCommon = await getTranslations({ locale, namespace: "common" });
-  const { shopify: product, strapi: strapiProduct } =
-    await getProductWithCustomizations(handle, locale);
+  const [tCommon, productData, general] = await Promise.all([
+    getTranslations({ locale, namespace: "common" }),
+    getProductWithCustomizations(handle, locale),
+    getGeneral(locale),
+  ]);
+  const { shopify: product, strapi: strapiProduct } = productData;
 
   if (!product) {
     notFound();
@@ -60,7 +64,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <ProductSchema product={product} />
       <BreadcrumbSchema items={breadcrumbItems} />
       <div className="">
-        <ProductContent product={product} />
+        <ProductContent product={product} shippingInfos={general?.shippingInfos} />
         {strapiProduct?.blocks && strapiProduct.blocks.length > 0 && (
           <div className="col-span-full">
             {strapiProduct.blocks.map((block, index) => (

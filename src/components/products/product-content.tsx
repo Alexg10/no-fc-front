@@ -1,11 +1,12 @@
 "use client";
 
-import { ShopifyProduct } from "@/lib/shopify";
+import type { ShopifyProduct } from "@/lib/shopify";
 import Image from "next/image";
 import { Title } from "../ui/title";
 
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { VariantSelector } from "@/components/products/variant-selector";
+import { StrapiShippingInfos } from "@/services/strapi/generalService";
 import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -17,8 +18,9 @@ import { ShippingInfo } from "./shipping-info";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 interface ProductContentProps {
   product: ShopifyProduct;
+  shippingInfos?: StrapiShippingInfos | null;
 }
-export function ProductContent({ product }: ProductContentProps) {
+export function ProductContent({ product, shippingInfos }: ProductContentProps) {
   const firstImage = product.images.edges[0]?.node;
   const price = product.priceRange.minVariantPrice;
   const pinTrigger = useRef<HTMLDivElement>(null);
@@ -129,7 +131,7 @@ export function ProductContent({ product }: ProductContentProps) {
           />
         )}
 
-        <ShippingInfo />
+        <ShippingInfo shippingInfos={shippingInfos} />
       </div>
     </div>
   );
