@@ -74,7 +74,6 @@ export default async function ProductsPage({ params }: ProductsPageProps) {
 
         {collections &&
           collections.map((collection) => {
-            console.log(collection);
             return (
               <Grid key={collection.handle}>
                 <div className="col-span-full">

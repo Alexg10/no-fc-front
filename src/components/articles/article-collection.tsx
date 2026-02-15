@@ -19,8 +19,6 @@ export async function ArticleCollection({
 
     const products = response.edges?.map((edge) => edge.node) ?? [];
 
-    console.log("😍", response);
-
     if (!products.length) {
       return (
         <div className="py-8 text-center">

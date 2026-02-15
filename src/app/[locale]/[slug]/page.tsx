@@ -45,8 +45,6 @@ export default async function Page({ params }: PageProps) {
   if (!page) {
     notFound();
   }
-  console.log(page);
-
   return (
     <section className="min-h-screen bg-off-white">
       <header className="bg-black text-white pt-48 pb-6 overflow-hidden lg:min-h-[300px] lg:relative">
