@@ -3,7 +3,7 @@ import { StrapiProductsPage } from "@/types/strapi/products-page";
 import qs from "qs";
 
 export async function getProductsPage(
-  locale?: string
+  locale?: string,
 ): Promise<StrapiProductsPage | null> {
   const query = qs.stringify({
     populate: {
@@ -12,17 +12,17 @@ export async function getProductsPage(
           cover: true,
         },
       },
-      collections: {
-        populate: {
-          fields: ["title"],
-        },
-      },
+      collections: true,
     },
   });
 
-  const result = await strapiFetchWithFallback(`/products-page?${query}`, locale, {
-    next: { revalidate: 3600 },
-  });
+  const result = await strapiFetchWithFallback(
+    `/products-page?${query}`,
+    locale,
+    {
+      next: { revalidate: 3600 },
+    },
+  );
 
   return (result.data?.data as unknown as StrapiProductsPage) ?? null;
 }

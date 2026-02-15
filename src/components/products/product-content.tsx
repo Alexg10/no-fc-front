@@ -6,13 +6,14 @@ import { Title } from "../ui/title";
 
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { VariantSelector } from "@/components/products/variant-selector";
-import { StrapiShippingInfos } from "@/services/strapi/generalService";
 import { useBreakpoints } from "@/hooks/useBreakpoints";
+import { StrapiShippingInfos } from "@/services/strapi/generalService";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useRef } from "react";
 import { ProductDescription } from "./product-description";
+import { ProductImageCarousel } from "./product-image-carousel";
 import { ShippingInfo } from "./shipping-info";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -20,18 +21,30 @@ interface ProductContentProps {
   product: ShopifyProduct;
   shippingInfos?: StrapiShippingInfos | null;
 }
-export function ProductContent({ product, shippingInfos }: ProductContentProps) {
+export function ProductContent({
+  product,
+  shippingInfos,
+}: ProductContentProps) {
   const firstImage = product.images.edges[0]?.node;
   const price = product.priceRange.minVariantPrice;
+  const compareAtPrice = product.compareAtPriceRange?.minVariantPrice;
+  const hasDiscount =
+    compareAtPrice &&
+    parseFloat(compareAtPrice.amount) > parseFloat(price.amount);
   const pinTrigger = useRef<HTMLDivElement>(null);
   const productInfoRef = useRef<HTMLDivElement>(null);
   const imagesColRef = useRef<HTMLDivElement>(null);
-  const isUnderDesktop = useBreakpoints().isUnderDesktop;
+  const isUnderTablet = useBreakpoints().isUnderTablet;
 
   useGSAP(
     () => {
-      if (isUnderDesktop) return;
-      if (!productInfoRef.current || !imagesColRef.current) return;
+      if (isUnderTablet) return;
+      if (
+        !productInfoRef.current ||
+        !imagesColRef.current ||
+        !pinTrigger.current
+      )
+        return;
 
       const paddingTop = parseFloat(
         getComputedStyle(productInfoRef.current).paddingTop,
@@ -47,45 +60,56 @@ export function ProductContent({ product, shippingInfos }: ProductContentProps) 
         pinSpacing: false,
       });
     },
-    { dependencies: [isUnderDesktop], revertOnUpdate: true },
+    { dependencies: [isUnderTablet], revertOnUpdate: true },
   );
   return (
     <div className="grid grid-cols-1 pb-12 md:grid-cols-6 gap-8 md:px-4 lg:grid-cols-12 lg:gap-4 lg:px-4 lg:max-w-[1464px] lg:mx-auto">
       <div
         ref={imagesColRef}
-        className="space-y-4 md:space-y-6 md:col-span-3 md:order-2 lg:col-span-6 lg:col-start-7"
+        className="md:space-y-6 md:col-span-3 md:order-2 lg:col-span-6 lg:col-start-7"
       >
-        {firstImage && (
-          <div className="relative aspect-4/5 w-full overflow-hidden  ">
-            <Image
-              src={firstImage.url}
-              alt={firstImage.altText || product.title}
-              fill
-              className="object-cover"
-              priority
-              loading="eager"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-        )}
-        {product.images.edges.length > 1 && (
-          <div className="flex flex-col gap-6">
-            {product.images.edges.slice(1, 5).map(({ node: image }) => (
-              <div
-                key={image.id}
-                className="relative aspect-4/5 w-full overflow-hidden"
-              >
-                <Image
-                  src={image.url}
-                  alt={image.altText || product.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 25vw, 20vw"
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Mobile: Carousel */}
+        <div className="md:hidden">
+          <ProductImageCarousel
+            images={product.images.edges.map(({ node }) => node)}
+            productTitle={product.title}
+          />
+        </div>
+
+        {/* Desktop: Images empilées */}
+        <div className="hidden md:block space-y-6">
+          {firstImage && (
+            <div className="relative aspect-4/5 w-full overflow-hidden">
+              <Image
+                src={firstImage.url}
+                alt={firstImage.altText || product.title}
+                fill
+                className="object-cover"
+                priority
+                loading="eager"
+                sizes="50vw"
+              />
+            </div>
+          )}
+          {product.images.edges.length > 1 && (
+            <div className="flex flex-col gap-6">
+              {product.images.edges.slice(1, 5).map(({ node: image }) => (
+                <div
+                  key={image.id}
+                  className="relative aspect-4/5 w-full overflow-hidden"
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.altText || product.title}
+                    fill
+                    className="object-cover"
+                    sizes="50vw"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <div
@@ -113,10 +137,14 @@ export function ProductContent({ product, shippingInfos }: ProductContentProps) 
                   }
                   variantTitle={product.variants.edges[0].node.title}
                 />
-                <div className="flex flex-1 border-l border-white items-center justify-center py-4 pb-3 px-8 lg:pb-2 text-[18px]">
+                <div className="flex flex-1 flex-col border-l border-white items-center justify-center py-4 pb-3 px-8 lg:pb-2 text-[18px]">
+                  {hasDiscount && compareAtPrice && (
+                    <span className="text-nowrap line-through opacity-50">
+                      {parseFloat(compareAtPrice.amount).toFixed(2)} €
+                    </span>
+                  )}
                   <span className="text-nowrap">
-                    {parseFloat(price.amount).toFixed(2)}
-                    {" €"}
+                    {parseFloat(price.amount).toFixed(2)} €
                   </span>
                 </div>
               </div>

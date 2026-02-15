@@ -19,6 +19,8 @@ export async function ArticleCollection({
 
     const products = response.edges?.map((edge) => edge.node) ?? [];
 
+    console.log("😍", response);
+
     if (!products.length) {
       return (
         <div className="py-8 text-center">
@@ -39,7 +41,7 @@ export async function ArticleCollection({
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4 lg:gap-6">
           {products.map((product, index) => (
             <ProductCard
               key={product.id}

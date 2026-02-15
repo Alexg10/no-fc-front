@@ -13,6 +13,10 @@ interface VariantOption {
     amount: string;
     currencyCode: string;
   };
+  compareAtPrice: {
+    amount: string;
+    currencyCode: string;
+  } | null;
   availableForSale: boolean;
   selectedOptions: Array<{
     name: string;
@@ -70,6 +74,11 @@ export function VariantSelector({
   };
 
   const selectedPrice = selectedVariant?.price;
+  const selectedCompareAtPrice = selectedVariant?.compareAtPrice;
+  const hasDiscount =
+    selectedCompareAtPrice &&
+    parseFloat(selectedCompareAtPrice.amount) >
+      parseFloat(selectedPrice?.amount || "0");
 
   return (
     <div className="space-y-10 lg:space-y-6">
@@ -131,8 +140,13 @@ export function VariantSelector({
             <CartIcon />
             {isAdding ? t("adding") : t("addToCart")}
           </button>
-          <div className="flex flex-1 text-nowrap items-center justify-center px-8 text-[18px]">
-            <span className="">
+          <div className="flex flex-1 text-nowrap items-center justify-center px-8 text-[18px] gap-2">
+            {hasDiscount && selectedCompareAtPrice && (
+              <span className="line-through opacity-50">
+                {parseFloat(selectedCompareAtPrice.amount).toFixed(2)} €
+              </span>
+            )}
+            <span>
               {selectedPrice
                 ? `${parseFloat(selectedPrice.amount).toFixed(2)} €`
                 : "—"}

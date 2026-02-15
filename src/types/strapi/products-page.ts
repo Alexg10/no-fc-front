@@ -7,12 +7,14 @@ export interface StrapiProductsPageHero {
   cover?: StrapiImage;
   btnLabel?: string;
   btnLink?: string;
+  whiteText?: boolean;
 }
 
 export interface StrapiCollection {
   id: number;
   title: string;
   handle: string;
+  nbProductToShow: number;
 }
 
 export interface StrapiProductsPage {

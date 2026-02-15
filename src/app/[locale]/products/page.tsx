@@ -1,13 +1,12 @@
 import { ArticleCollection } from "@/components/articles/article-collection";
 import Grid from "@/components/common/grid";
 import { PageHeader } from "@/components/common/page-header";
+import { PreFooterMarquee } from "@/components/common/pre-footer-marquee";
 import { CollectionsSection } from "@/components/products/collections-section";
-import { ProductsContent } from "@/components/products/products-content";
 import { ProductsPageHeroSection } from "@/components/products/products-page-hero-section";
 import { ArticleCollectionLoading } from "@/components/skeleton/article-collection-loading";
 import { CollectionsListLoading } from "@/components/skeleton/collections-list-loading";
 import { ProductsPageHeroLoading } from "@/components/skeleton/products-page-hero-loading";
-import { ProductsPageLoading } from "@/components/skeleton/products-page-loading";
 import { getProductsPage } from "@/services/strapi/productsPageService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -50,18 +49,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductsPage({
-  params,
-  searchParams,
-}: ProductsPageProps) {
+export default async function ProductsPage({ params }: ProductsPageProps) {
   const { locale } = await params;
-  const paramsSearch = await searchParams;
   const productsPageData = await getProductsPage(locale);
+  const collections = productsPageData?.collections?.map((collection) => ({
+    handle: collection.handle,
+    limit: collection.nbProductToShow || 4,
+  }));
 
   return (
     <section className="bg-off-white">
       <PageHeader title="Not Merch. Culture." marquee="SHOP" />
-      <main className="space-y-12">
+      <main className="space-y-12 pb-20 lg:pb-27">
         <Grid>
           <div className="col-span-full">
             <Suspense fallback={<CollectionsListLoading />}>
@@ -73,22 +72,28 @@ export default async function ProductsPage({
           </div>
         </Grid>
 
-        <Grid>
-          <div className="col-span-full">
-            <Suspense fallback={<ArticleCollectionLoading limit={3} />}>
-              <ArticleCollection collectionHandle="best-sellers" limit={4} />
-            </Suspense>
-          </div>
-        </Grid>
-
-        <Grid>
-          <div className="col-span-full">
-            <Suspense fallback={<ProductsPageLoading />}>
-              <ProductsContent locale={locale} searchParams={paramsSearch} />
-            </Suspense>
-          </div>
-        </Grid>
+        {collections &&
+          collections.map((collection) => {
+            console.log(collection);
+            return (
+              <Grid key={collection.handle}>
+                <div className="col-span-full">
+                  <Suspense
+                    fallback={
+                      <ArticleCollectionLoading limit={collection.limit} />
+                    }
+                  >
+                    <ArticleCollection
+                      collectionHandle={collection.handle}
+                      limit={collection.limit}
+                    />
+                  </Suspense>
+                </div>
+              </Grid>
+            );
+          })}
       </main>
+      <PreFooterMarquee />
     </section>
   );
 }

@@ -15,6 +15,7 @@ const buttonLinkVariants = cva(
     variants: {
       variant: {
         default: "bg-black text-white",
+        secondary: "bg-white text-black border-white",
       },
     },
     defaultVariants: {
@@ -50,7 +51,12 @@ export function ButtonLink({
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <div className="flex items-center gap-2 border border-white p-2 px-4">
+      <div
+        className={cn(
+          "flex items-center gap-2 border p-2 px-4",
+          variant === "secondary" ? "border-black" : "border-white",
+        )}
+      >
         {hasIcon && (
           <span className="size-5 bg-black">
             <Lottie

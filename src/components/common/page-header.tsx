@@ -10,7 +10,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, marquee }: PageHeaderProps) {
   return (
-    <header className="bg-off-white border-b border-black text-black uppercase text-center ">
+    <header className="bg-off-white text-black uppercase text-center ">
       <Grid className="px-4 pt-34 pb-6 lg:pt-6 lg:gap-y-10">
         {marquee && (
           <div className="hidden lg:flex col-span-full justify-center">

@@ -14,6 +14,7 @@ export interface ShopifyProduct {
   handle: string;
   description: string;
   descriptionHtml: string;
+  availableForSale: boolean;
   images: {
     edges: Array<{
       node: {
@@ -34,6 +35,10 @@ export interface ShopifyProduct {
           amount: string;
           currencyCode: string;
         };
+        compareAtPrice: {
+          amount: string;
+          currencyCode: string;
+        } | null;
         availableForSale: boolean;
         selectedOptions: Array<{
           name: string;
@@ -43,6 +48,16 @@ export interface ShopifyProduct {
     }>;
   };
   priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+    maxVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+  compareAtPriceRange: {
     minVariantPrice: {
       amount: string;
       currencyCode: string;
@@ -130,6 +145,10 @@ const GET_PRODUCT_BY_HANDLE = `
               amount
               currencyCode
             }
+            compareAtPrice {
+              amount
+              currencyCode
+            }
             availableForSale
             selectedOptions {
               name
@@ -139,6 +158,16 @@ const GET_PRODUCT_BY_HANDLE = `
         }
       }
       priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+        maxVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      compareAtPriceRange {
         minVariantPrice {
           amount
           currencyCode
@@ -200,7 +229,7 @@ const GET_PRODUCTS = `
           description
           availableForSale
           createdAt
-          images(first: 1) {
+          images(first: 5) {
             edges {
               node {
                 id
@@ -212,6 +241,16 @@ const GET_PRODUCTS = `
             }
           }
           priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          compareAtPriceRange {
             minVariantPrice {
               amount
               currencyCode
@@ -282,7 +321,7 @@ const GET_COLLECTION_PRODUCTS = `
             description
             availableForSale
             createdAt
-            images(first: 1) {
+            images(first: 5) {
               edges {
                 node {
                   id
@@ -294,6 +333,16 @@ const GET_COLLECTION_PRODUCTS = `
               }
             }
             priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+              maxVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            compareAtPriceRange {
               minVariantPrice {
                 amount
                 currencyCode

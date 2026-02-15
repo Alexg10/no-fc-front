@@ -14,8 +14,13 @@ interface ProductsPageHeroProps {
 
 export function ProductsPageHero({ hero }: ProductsPageHeroProps) {
   return (
-    <section className="relative w-full overflow-hidden">
-      <div className="relative w-full aspect-video">
+    <section
+      className={cn(
+        "relative w-full overflow-hidden",
+        hero.whiteText ? "text-white" : "text-black",
+      )}
+    >
+      <div className="relative w-full aspect-3/4 md:aspect-video">
         {hero.cover && (
           <Image
             src={getStrapiImageUrl(hero.cover.url)}
@@ -30,23 +35,32 @@ export function ProductsPageHero({ hero }: ProductsPageHeroProps) {
 
       <div
         className={cn(
-          "absolute left-0 right-0 px-6 flex flex-col justify-start items-start",
+          "absolute left-0 right-0 px-6 flex flex-col md:justify-start md:items-start justify-center items-center",
           hero.btnLink
-            ? "bottom-10 md:bottom-16 space-y-6"
+            ? "bottom-10 lg:bottom-16 space-y-6"
             : "bottom-0 p-6 gap-6",
         )}
       >
-        {hero.title && <h2 className="heading-m-obviously">{hero.title}</h2>}
+        {hero.title && (
+          <h2 className="heading-m-obviously text-center md:text-left">
+            {hero.title}
+          </h2>
+        )}
 
         {hero.description && (
           <BlockRendererClient
             content={hero.description as unknown as BlocksContent}
-            className="text-polymath text-[16px] [&>p]:text-[16px]! [&>p]:mb-0!"
+            className="text-polymath text-[16px] [&>p]:text-[16px]! [&>p]:mb-0! text-center md:text-left"
           />
         )}
 
         {hero.btnLabel && hero.btnLink && (
-          <ButtonLink href={hero.btnLink}>{hero.btnLabel}</ButtonLink>
+          <ButtonLink
+            href={hero.btnLink}
+            variant={hero.whiteText ? "secondary" : "default"}
+          >
+            {hero.btnLabel}
+          </ButtonLink>
         )}
       </div>
     </section>
