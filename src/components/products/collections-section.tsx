@@ -12,9 +12,5 @@ export async function CollectionsSection({
     return null;
   }
 
-  return (
-    <div className="container mx-auto px-4">
-      <CollectionsList collections={collections} />
-    </div>
-  );
+  return <CollectionsList collections={collections} />;
 }

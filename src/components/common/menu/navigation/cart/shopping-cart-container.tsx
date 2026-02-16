@@ -18,7 +18,7 @@ export function ShoppingCartContainer() {
         <ItemIcon className="size-6" />
         {itemCount > 0 && (
           <span className="absolute -bottom-[6px] -right-2 flex justify-center size-4 text-obviously uppercase items-center text-[12px] rounded-full bg-pink text-black">
-            <div className="-translate-y-1 lg:-translate-y-0.5">
+            <div className="-translate-y-0.5">
               {itemCount > 99 ? "99+" : itemCount}
             </div>
           </span>

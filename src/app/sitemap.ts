@@ -39,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     let hasNextPage = true;
     let cursor: string | undefined = undefined;
-    let allProducts: string[] = [];
+    const allProducts: string[] = [];
 
     // Récupérer tous les produits par lots de 250
     let maxIterations = 10; // Limiter à 10 itérations pour éviter les boucles infinies

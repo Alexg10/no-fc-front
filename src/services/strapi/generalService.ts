@@ -1,5 +1,7 @@
 import { strapiFetchWithFallback } from "@/lib/strapi";
 import { StrapiLink, StrapiMarquee } from "@/types/strapi";
+import { StrapiCollection } from "@/types/strapi/products-page";
+import { BlocksContent } from "@strapi/blocks-react-renderer";
 import qs from "qs";
 
 export async function getGeneral(
@@ -16,6 +18,12 @@ export async function getGeneral(
       bottomMarquee: {
         fields: ["firstText", "secondText"],
       },
+      shippingInfos: {
+        fields: ["title", "content"],
+      },
+      selectedCollections: {
+        populate: "*",
+      },
     },
   });
   const result = await strapiFetchWithFallback(`/general?${query}`, locale, {
@@ -30,9 +38,16 @@ interface StrapiBottomMarquee {
   secondText: string;
 }
 
+export interface StrapiShippingInfos {
+  title: string;
+  content: BlocksContent;
+}
+
 export interface StrapiGeneral {
   id: number;
   socials: Array<StrapiLink>;
   marquee: StrapiMarquee;
   bottomMarquee: StrapiBottomMarquee;
+  shippingInfos: StrapiShippingInfos;
+  selectedCollections: Array<StrapiCollection>;
 }

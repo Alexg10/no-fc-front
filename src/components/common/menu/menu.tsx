@@ -11,6 +11,7 @@ import { StrapiMenu } from "@/types/strapi/menu";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import LottiePlayer from "react-lottie-player";
 import Tagline from "../../../../public/lotties/tagline.json";
@@ -26,13 +27,15 @@ export function Menu({
   menu: StrapiMenu;
   marquee: StrapiMarquee;
 }) {
+  const pathname = usePathname();
+  const isHomepage = pathname === "/" || pathname === "/fr";
   const { isUnderDesktop } = useBreakpoints();
   const isUnderDesktopRef = useRef(isUnderDesktop);
-  const [isMenuVisible, setIsMenuVisible] = useState(true);
+  const [isMenuVisible, setIsMenuVisible] = useState(isHomepage);
   const [isTaglinePlaying, setIsTaglinePlaying] = useState(false);
   const [isTaglineIsReversed, setIsTaglineIsReversed] = useState(false);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [isInScrollZone, setIsInScrollZone] = useState(true);
+  const [isInScrollZone, setIsInScrollZone] = useState(isHomepage);
   const burgerTimeline = useRef<GSAPTimeline>(null);
 
   // Keep ref in sync with current value
@@ -40,16 +43,25 @@ export function Menu({
     isUnderDesktopRef.current = isUnderDesktop;
   }, [isUnderDesktop]);
 
+  // Reset menu state when navigating between homepage and other pages
   useEffect(() => {
-    if (isUnderDesktop) {
-      queueMicrotask(() => setIsMenuVisible(false));
+    if (isHomepage) {
+      setIsMenuVisible(true);
+      setMenuIsOpen(false);
+      setIsInScrollZone(true);
+      burgerTimeline.current?.reverse();
     } else {
-      queueMicrotask(() => setIsMenuVisible(true));
+      setIsMenuVisible(false);
+      setMenuIsOpen(false);
+      setIsInScrollZone(false);
     }
-  }, [isUnderDesktop]);
+  }, [isHomepage]);
 
   useGSAP(
     () => {
+      // Kill all existing ScrollTriggers to prevent stale triggers
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+
       burgerTimeline.current = gsap
         .timeline({
           paused: true,
@@ -61,32 +73,37 @@ export function Menu({
           stagger: 0.1,
         });
 
-      ScrollTrigger.create({
-        trigger: "body",
-        start: "top center",
-        end: "+=125%",
-        onLeave: () => {
-          setIsMenuVisible(false);
-          setIsTaglineIsReversed(false);
-          setIsTaglinePlaying(true);
-          setIsInScrollZone(false);
-          setMenuIsOpen(false);
-          burgerTimeline.current?.play();
-        },
-        onEnterBack: () => {
-          setIsInScrollZone(true);
-          if (!isUnderDesktopRef.current) {
-            setIsMenuVisible(true);
-            burgerTimeline.current?.reverse();
-            setTimeout(() => {
-              setIsTaglineIsReversed(true);
-              setIsTaglinePlaying(true);
-            }, 500);
-          }
-        },
-      });
+      // Only apply ScrollTrigger behavior on homepage
+      if (isHomepage) {
+        ScrollTrigger.create({
+          trigger: "body",
+          start: "top center",
+          end: "+=125%",
+          onLeave: () => {
+            setIsMenuVisible(false);
+            setIsTaglineIsReversed(false);
+            setIsTaglinePlaying(true);
+            setIsInScrollZone(false);
+            setMenuIsOpen(false);
+            burgerTimeline.current?.play();
+          },
+          onEnterBack: () => {
+            setIsInScrollZone(true);
+            if (!isUnderDesktopRef.current) {
+              setIsMenuVisible(true);
+              burgerTimeline.current?.reverse();
+              setTimeout(() => {
+                setIsTaglineIsReversed(true);
+                setIsTaglinePlaying(true);
+              }, 500);
+            }
+          },
+        });
+      } else {
+        burgerTimeline.current?.play();
+      }
     },
-    { dependencies: [isUnderDesktop] },
+    { dependencies: [isUnderDesktop, pathname] },
   );
   return (
     <>
@@ -102,12 +119,18 @@ export function Menu({
             {menu.links && menu.links.length > 0 && (
               <NavigationMenuContainer
                 menu={menu as StrapiMenu}
-                onLinkClick={() => setIsMenuVisible(false)}
+                onLinkClick={() => {
+                  setIsMenuVisible(false);
+                  setMenuIsOpen(false);
+                }}
               />
             )}
             <NavigationMenuContainer
               menu={menu as StrapiMenu}
-              onLinkClick={() => setIsMenuVisible(false)}
+              onLinkClick={() => {
+                setIsMenuVisible(false);
+                setMenuIsOpen(false);
+              }}
             />
             <div className="flex border-t border-black pt-4">
               <LanguageSwitcher />
@@ -116,7 +139,7 @@ export function Menu({
         </div>
       )}
       <div className="absolute top-0 flex left-0 flex-col h-full gap-4 z-[51]">
-        <div className="flex flex-col gap-4 max-w-[108px] lg:max-w-[148px]">
+        <div className="flex flex-col gap-2 lg:gap-4 max-w-[108px] lg:max-w-[148px]">
           <div className="relative bg-white p-2 lg:p-3 ">
             <div
               className={cn(
@@ -133,24 +156,27 @@ export function Menu({
               <button
                 className="flex relative items-center p-2 size-11 lg:size-15 cursor-pointer justify-center"
                 onClick={() => {
-                  if (isInScrollZone && !isUnderDesktop) {
+                  if (isHomepage && isInScrollZone && !isUnderDesktop) {
                     return;
-                  } else {
-                    setIsMenuVisible(!isMenuVisible);
-                    setMenuIsOpen(!menuIsOpen);
                   }
+                  setIsMenuVisible(!isMenuVisible);
+                  setMenuIsOpen(!menuIsOpen);
                 }}
               >
-                <div className="lg:scale-[1.06]">
-                  <LottiePlayer
-                    animationData={Tagline}
-                    play={isTaglinePlaying}
-                    direction={isTaglineIsReversed ? -1 : 1}
-                    className="size-16 lg:size-25"
-                    loop={false}
-                  />
-                </div>
-                <BurgerIcon isOpen={menuIsOpen} />
+                {isHomepage ? (
+                  <div className="lg:scale-[1.06]">
+                    <LottiePlayer
+                      animationData={Tagline}
+                      play={isTaglinePlaying}
+                      direction={isTaglineIsReversed ? -1 : 1}
+                      className="size-16 lg:size-25"
+                      loop={false}
+                    />
+                  </div>
+                ) : (
+                  <BurgerIcon isOpen={menuIsOpen} />
+                )}
+                {isHomepage && <BurgerIcon isOpen={menuIsOpen} />}
               </button>
             </div>
             {!isUnderDesktop && (
@@ -165,7 +191,10 @@ export function Menu({
                     {menu.links && menu.links.length > 0 && (
                       <NavigationMenuContainer
                         menu={menu as StrapiMenu}
-                        onLinkClick={() => setIsMenuVisible(false)}
+                        onLinkClick={() => {
+                          setIsMenuVisible(false);
+                          setMenuIsOpen(false);
+                        }}
                       />
                     )}
                     <div className="flex border-t border-black pt-4">

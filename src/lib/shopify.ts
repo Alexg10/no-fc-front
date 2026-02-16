@@ -14,6 +14,7 @@ export interface ShopifyProduct {
   handle: string;
   description: string;
   descriptionHtml: string;
+  availableForSale: boolean;
   images: {
     edges: Array<{
       node: {
@@ -34,6 +35,10 @@ export interface ShopifyProduct {
           amount: string;
           currencyCode: string;
         };
+        compareAtPrice: {
+          amount: string;
+          currencyCode: string;
+        } | null;
         availableForSale: boolean;
         selectedOptions: Array<{
           name: string;
@@ -43,6 +48,16 @@ export interface ShopifyProduct {
     }>;
   };
   priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+    maxVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+  compareAtPriceRange: {
     minVariantPrice: {
       amount: string;
       currencyCode: string;
@@ -86,6 +101,11 @@ export interface ShopifyCollectionsResponse {
   edges: ShopifyCollectionEdge[];
 }
 
+export interface VariantOption {
+  name: string;
+  values: string[];
+}
+
 export interface ShopifyProductImages {
   id: string;
   handle: string;
@@ -103,7 +123,7 @@ export interface ShopifyProductImages {
 
 // Requête GraphQL pour récupérer un produit par handle
 const GET_PRODUCT_BY_HANDLE = `
-  query getProduct($handle: String!) {
+  query getProduct($handle: String!, $language: LanguageCode) @inContext(language: $language) {
     product(handle: $handle) {
       id
       title
@@ -130,6 +150,10 @@ const GET_PRODUCT_BY_HANDLE = `
               amount
               currencyCode
             }
+            compareAtPrice {
+              amount
+              currencyCode
+            }
             availableForSale
             selectedOptions {
               name
@@ -139,6 +163,16 @@ const GET_PRODUCT_BY_HANDLE = `
         }
       }
       priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+        maxVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      compareAtPriceRange {
         minVariantPrice {
           amount
           currencyCode
@@ -200,7 +234,7 @@ const GET_PRODUCTS = `
           description
           availableForSale
           createdAt
-          images(first: 1) {
+          images(first: 5) {
             edges {
               node {
                 id
@@ -212,6 +246,16 @@ const GET_PRODUCTS = `
             }
           }
           priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          compareAtPriceRange {
             minVariantPrice {
               amount
               currencyCode
@@ -250,6 +294,22 @@ const GET_COLLECTIONS = `
   }
 `;
 
+// Requête GraphQL pour récupérer les options de variants disponibles
+const GET_PRODUCT_OPTIONS = `
+  query getProductOptions($first: Int, $query: String) {
+    products(first: $first, query: $query) {
+      edges {
+        node {
+          options {
+            name
+            values
+          }
+        }
+      }
+    }
+  }
+`;
+
 // Requête GraphQL pour récupérer les produits d'une collection
 const GET_COLLECTION_PRODUCTS = `
   query getCollectionProducts(
@@ -282,7 +342,7 @@ const GET_COLLECTION_PRODUCTS = `
             description
             availableForSale
             createdAt
-            images(first: 1) {
+            images(first: 5) {
               edges {
                 node {
                   id
@@ -294,6 +354,16 @@ const GET_COLLECTION_PRODUCTS = `
               }
             }
             priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+              maxVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            compareAtPriceRange {
               minVariantPrice {
                 amount
                 currencyCode
@@ -318,20 +388,32 @@ const GET_COLLECTION_PRODUCTS = `
 `;
 
 /**
+ * Convertit une locale (ex: "fr", "en") en LanguageCode Shopify (ex: "FR", "EN")
+ */
+function toShopifyLanguage(locale?: string): string | undefined {
+  if (!locale) return undefined;
+  return locale.toUpperCase();
+}
+
+/**
  * Récupère un produit par son handle
  * @param handle - Le handle du produit (slug)
+ * @param locale - La locale pour récupérer la version traduite
  * @returns Le produit ou null si non trouvé
  */
 export async function getProductByHandle(
-  handle: string
+  handle: string,
+  locale?: string,
 ): Promise<ShopifyProduct | null> {
   try {
+    const language = toShopifyLanguage(locale);
     const response = await client.request(GET_PRODUCT_BY_HANDLE, {
-      variables: { handle },
+      variables: { handle, language },
     });
 
     if (response.data?.product) {
-      return response.data.product as ShopifyProduct;
+      const product = response.data.product as ShopifyProduct;
+      return product;
     }
 
     return null;
@@ -347,7 +429,7 @@ export async function getProductByHandle(
  * @returns Les images du produit ou null si non trouvé
  */
 export async function getProductImages(
-  handle: string
+  handle: string,
 ): Promise<ShopifyProductImages | null> {
   try {
     const response = await client.request(GET_PRODUCT_IMAGES, {
@@ -384,13 +466,14 @@ export interface GetProductsOptions {
   minPrice?: number;
   maxPrice?: number;
   availableOnly?: boolean;
+  variantOptions?: Record<string, string>;
 }
 
 /**
  * Récupère la liste des produits avec pagination, filtres et tri
  */
 export async function getProducts(
-  options: GetProductsOptions = {}
+  options: GetProductsOptions = {},
 ): Promise<ShopifyProductsResponse> {
   try {
     const {
@@ -404,6 +487,7 @@ export async function getProducts(
       minPrice,
       maxPrice,
       availableOnly,
+      variantOptions,
     } = options;
 
     // Construire la requête de filtre
@@ -423,6 +507,15 @@ export async function getProducts(
 
     if (availableOnly) {
       queryParts.push("available_for_sale:true");
+    }
+
+    // Ajouter les filtres de variants
+    if (variantOptions) {
+      for (const [optionName, value] of Object.entries(variantOptions)) {
+        if (value) {
+          queryParts.push(`variant_options.${optionName}:${value}`);
+        }
+      }
     }
 
     const query = queryParts.length > 0 ? queryParts.join(" AND ") : undefined;
@@ -487,7 +580,7 @@ export async function getProducts(
  * Récupère toutes les collections
  */
 export async function getCollections(
-  first: number = 50
+  first: number = 50,
 ): Promise<ShopifyCollectionsResponse> {
   try {
     const response = await client.request(GET_COLLECTIONS, {
@@ -508,6 +601,48 @@ export async function getCollections(
 }
 
 /**
+ * Récupère les options de variants disponibles (taille, couleur, etc.)
+ * @param collection - Optionnel: filtrer par collection
+ */
+export async function getProductOptions(
+  collection?: string,
+): Promise<VariantOption[]> {
+  try {
+    const query = collection ? `collection:${collection}` : undefined;
+
+    const response = await client.request(GET_PRODUCT_OPTIONS, {
+      variables: { first: 250, query },
+    });
+
+    if (response.data?.products?.edges) {
+      const optionsMap = new Map<string, Set<string>>();
+
+      for (const edge of response.data.products.edges) {
+        const product = edge.node as { options: { name: string; values: string[] }[] };
+        for (const option of product.options) {
+          if (!optionsMap.has(option.name)) {
+            optionsMap.set(option.name, new Set());
+          }
+          for (const value of option.values) {
+            optionsMap.get(option.name)!.add(value);
+          }
+        }
+      }
+
+      return Array.from(optionsMap.entries()).map(([name, values]) => ({
+        name,
+        values: Array.from(values).sort(),
+      }));
+    }
+
+    return [];
+  } catch (error) {
+    console.error("Error fetching product options:", error);
+    return [];
+  }
+}
+
+/**
  * Récupère les produits d'une collection avec pagination et tri
  */
 export async function getCollectionProducts(
@@ -519,7 +654,7 @@ export async function getCollectionProducts(
     last?: number;
     sortKey?: ProductSortKey;
     reverse?: boolean;
-  } = {}
+  } = {},
 ): Promise<ShopifyProductsResponse & { collection?: ShopifyCollection }> {
   try {
     const {

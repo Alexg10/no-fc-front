@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/cart-context";
 import { Link } from "@/lib/navigation";
+import { formatPrice } from "@/lib/utils";
+import { Minus, Plus, ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import Image from "next/image";
+import { CartIcon } from "./icons/cart-icon";
 import { CartItemSkeleton } from "./skeleton/cart-item-skeleton";
 
 export function CartSheet() {
@@ -28,155 +30,161 @@ export function CartSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={closeCart}>
-      <SheetContent className="flex flex-col w-full sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>{t("title")}</SheetTitle>
-          <SheetDescription>
+      <SheetContent className="flex flex-col w-full sm:max-w-lg p-4 bg-off-white">
+        <SheetHeader className="sr-only">
+          <SheetTitle className="sr-only">{t("title")}</SheetTitle>
+          <SheetDescription className="sr-only">
             {cartItems.length === 0
               ? t("empty")
               : t("items", { count: cart?.totalQuantity || 0 })}
           </SheetDescription>
         </SheetHeader>
-
-        {isLoading && cartItems.length === 0 ? (
-          <div className="flex-1 overflow-y-auto py-4">
-            <div className="space-y-4">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <CartItemSkeleton key={index} />
-              ))}
-            </div>
-          </div>
-        ) : cartItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center flex-1 gap-4 py-12">
-            <ShoppingBag className="w-16 h-16 text-zinc-400 dark:text-zinc-600" />
-            <p className="text-zinc-600 dark:text-zinc-400">
-              {t("empty")}
-            </p>
-            <Button asChild variant="outline" onClick={closeCart}>
-              <Link href="/products">{tCommon("seeProducts")}</Link>
-            </Button>
-          </div>
-        ) : (
-          <>
+        <div className="flex flex-col gap-4 h-full border-2 border-black overflow-auto">
+          {isLoading && cartItems.length === 0 ? (
             <div className="flex-1 overflow-y-auto py-4">
               <div className="space-y-4">
-                {cartItems.map(({ node: line }) => {
-                  const image =
-                    line.merchandise.product.images.edges[0]?.node.url;
-                  const productHandle = line.merchandise.product.handle;
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <CartItemSkeleton key={index} />
+                ))}
+              </div>
+            </div>
+          ) : cartItems.length === 0 ? (
+            <div className="flex flex-col items-center justify-center flex-1 gap-4 py-12">
+              <ShoppingBag className="w-16 h-16 text-zinc-400 dark:text-zinc-600" />
+              <p className="text-zinc-600 dark:text-zinc-400">{t("empty")}</p>
+              <Button asChild variant="outline" onClick={closeCart}>
+                <Link href="/products">{tCommon("seeProducts")}</Link>
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="flex-1 overflow-y-auto p-4 ">
+                <div className="flex flex-col gap-4 pt-20">
+                  {cartItems.map(({ node: line }) => {
+                    const image =
+                      line.merchandise.product.images.edges[0]?.node.url;
+                    const productHandle = line.merchandise.product.handle;
 
-                  return (
-                    <div
-                      key={line.id}
-                      className="flex gap-4 p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg"
-                    >
-                      {image && (
-                        <Link
-                          href={`/products/${productHandle}`}
-                          onClick={closeCart}
-                          className="relative shrink-0 w-20 h-20 overflow-hidden rounded-lg bg-gray-100 dark:bg-zinc-800"
-                        >
-                          <Image
-                            src={image}
-                            alt={
-                              line.merchandise.product.images.edges[0]?.node
-                                .altText || line.merchandise.product.title
-                            }
-                            fill
-                            className="object-cover"
-                            sizes="80px"
-                          />
-                        </Link>
-                      )}
-
-                      <div className="flex-1 flex flex-col gap-2">
-                        <div>
+                    return (
+                      <div
+                        key={line.id}
+                        className="flex gap-4 border-b-2 border-black py-4"
+                      >
+                        {image && (
                           <Link
                             href={`/products/${productHandle}`}
                             onClick={closeCart}
-                            className="font-medium text-black dark:text-zinc-50 hover:underline"
+                            className="relative shrink-0 w-20 h-30 overflow-hidden "
                           >
-                            {line.merchandise.product.title}
+                            <Image
+                              src={image}
+                              alt={
+                                line.merchandise.product.images.edges[0]?.node
+                                  .altText || line.merchandise.product.title
+                              }
+                              fill
+                              className="object-cover"
+                              sizes="120px"
+                            />
                           </Link>
-                          {line.merchandise.title !== "Default Title" && (
-                            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                              {line.merchandise.title}
-                            </p>
-                          )}
-                        </div>
+                        )}
 
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() =>
-                                updateQuantity(line.id, line.quantity - 1)
-                              }
-                              disabled={isLoading || line.quantity <= 1}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
-                            <span className="w-8 text-center text-sm font-medium text-black dark:text-zinc-50">
-                              {line.quantity}
-                            </span>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() =>
-                                updateQuantity(line.id, line.quantity + 1)
-                              }
-                              disabled={isLoading}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
+                        <div className="flex-1 flex flex-col gap-2 justify-between ">
+                          <div className="flex flex-col items-start h-full gap-0">
+                            <div className="flex flex-col gap-1">
+                              <Link
+                                href={`/products/${productHandle}`}
+                                onClick={closeCart}
+                                className="font-polymath-display text-[16px] hover:underline"
+                              >
+                                {line.merchandise.product.title}
+                              </Link>
+                              {line.merchandise.title !== "Default Title" && (
+                                <p className="text-grey text-[14px]">
+                                  {t("size")}: {line.merchandise.title}
+                                </p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 text-grey text-[14px]">
+                              {t("quantity")}
+                              <div className="flex gap-1 items-center">
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  className="h-6 w-6 border-none flex items-center justify-center bg-transparent shadow-none p-0"
+                                  onClick={() =>
+                                    updateQuantity(line.id, line.quantity - 1)
+                                  }
+                                  disabled={isLoading || line.quantity <= 1}
+                                >
+                                  <Minus className="size-3 text-grey" />
+                                </Button>
+                                <span className="w-6 text-center text-sm font-medium text-grey ">
+                                  {line.quantity}
+                                </span>
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  className="h-6 w-6 border-none flex items-center justify-center  bg-transparent shadow-none p-0"
+                                  onClick={() =>
+                                    updateQuantity(line.id, line.quantity + 1)
+                                  }
+                                  disabled={isLoading}
+                                >
+                                  <Plus className="size-3 text-grey" />
+                                </Button>
+                              </div>
+                            </div>
                           </div>
-
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-black dark:text-zinc-50">
-                              {(
-                                parseFloat(line.merchandise.price.amount) *
-                                line.quantity
-                              ).toFixed(2)}{" "}
-                              {line.merchandise.price.currencyCode}
-                            </span>
+                          <div className="flex items-center gap-2 justify-between w-full">
                             <Button
                               variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                              className="underline text-black bg-transparent p-0 font-polymath-text! border-none text-[16px] normal-case"
                               onClick={() => removeLine(line.id)}
                               disabled={isLoading}
                             >
-                              <Trash2 className="h-4 w-4" />
+                              {t("remove")}
                             </Button>
+                            <span className="font-polymath-text! text-black ">
+                              {formatPrice(
+                                parseFloat(line.merchandise.price.amount) *
+                                  line.quantity,
+                                line.merchandise.price.currencyCode,
+                              )}
+                            </span>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            <SheetFooter className="flex-col gap-4 sm:flex-row">
-              <div className="flex items-center justify-between w-full text-lg font-semibold text-black dark:text-zinc-50">
-                <span>{t("total")}:</span>
-                <span>
-                  {parseFloat(totalAmount).toFixed(2)} {currencyCode}
-                </span>
-              </div>
-              {cart?.checkoutUrl && (
-                <Button asChild className="w-full" size="lg">
-                  <Link href={cart.checkoutUrl} target="_blank">
-                    {t("checkout")}
-                  </Link>
-                </Button>
-              )}
-            </SheetFooter>
-          </>
-        )}
+              <SheetFooter className="flex-col gap-4  pt-0">
+                <p className="text-grey text-[12px]">{t("shippingInfos")}</p>
+                {cart?.checkoutUrl && (
+                  <Button
+                    asChild
+                    className="w-full rounded-none text-black bg-pink hover:bg-pink/90 border-none p-2 h-auto"
+                    size="lg"
+                  >
+                    <Link href={cart.checkoutUrl} target="_blank">
+                      <div className="border border-black h-full w-full flex items-center justify-between p-4">
+                        <div className="flex gap-2 lg:gap-3 items-center text-[24px] text-nowrap">
+                          <CartIcon className="size-5 lg:size-6 translate-y-[2px]" />
+                          {t("checkout")}
+                        </div>
+                        <span className="font-polymath-text! text-nowrap h-full flex items-center justify-center">
+                          {formatPrice(totalAmount, currencyCode)}
+                        </span>
+                      </div>
+                    </Link>
+                  </Button>
+                )}
+              </SheetFooter>
+            </>
+          )}
+        </div>
       </SheetContent>
     </Sheet>
   );

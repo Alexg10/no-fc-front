@@ -20,7 +20,7 @@ export async function getProductWithCustomizations(
 ): Promise<ProductWithCustomizations> {
   try {
     const [shopifyProduct, strapiProduct] = await Promise.all([
-      getShopifyProduct(handle),
+      getShopifyProduct(handle, locale),
       getStrapiProduct(handle, locale),
     ]);
 
@@ -30,7 +30,7 @@ export async function getProductWithCustomizations(
     };
   } catch (error) {
     console.error("Error fetching product with customizations:", error);
-    const shopifyProduct = await getShopifyProduct(handle).catch(() => null);
+    const shopifyProduct = await getShopifyProduct(handle, locale).catch(() => null);
     return {
       shopify: shopifyProduct,
       strapi: null,

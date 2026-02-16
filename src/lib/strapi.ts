@@ -23,7 +23,7 @@ export function getStrapiImageUrl(url: string | undefined): string {
 
 export async function strapiFetch(
   endpoint: string,
-  options?: StrapiFetchOptions
+  options?: StrapiFetchOptions,
 ): Promise<StrapiFetchResult> {
   let url = `${STRAPI_URL}/api${endpoint}`;
 
@@ -62,7 +62,7 @@ export async function strapiFetch(
 
   if (!response.ok) {
     throw new Error(
-      `Strapi API error: ${response.status} ${response.statusText}`
+      `Strapi API error: ${response.status} ${response.statusText}`,
     );
   }
 
@@ -80,15 +80,18 @@ export async function strapiFetch(
 export async function strapiFetchWithFallback(
   endpoint: string,
   locale?: string,
-  options?: StrapiFetchOptions
+  options?: StrapiFetchOptions,
 ): Promise<StrapiFetchResult> {
   const result = await strapiFetch(endpoint, {
     locale,
     ...options,
   });
 
-  // Si 404 et pas EN, fallback vers EN
-  if (result.status === 404 && locale && locale !== "en") {
+  // Si 404 ou data null/vide et pas FR, fallback vers FR (langue par défaut)
+  const hasNoData =
+    result.status === 404 || result.data === null || result.data?.data === null;
+
+  if (hasNoData && locale && locale !== "en") {
     return strapiFetch(endpoint, {
       locale: "en",
       ...options,
@@ -106,7 +109,7 @@ export async function strapiFetchWithFallback(
  */
 export async function getProductByHandle(
   handle: string,
-  locale?: string
+  locale?: string,
 ): Promise<StrapiProduct | null> {
   try {
     const filters = {
@@ -118,6 +121,28 @@ export async function getProductByHandle(
     const populate = {
       blocks: {
         populate: "*",
+        on: {
+          "article.custom-container": {
+            populate: {
+              backgroundImage: {
+                populate: "*",
+              },
+              image: {
+                populate: "*",
+              },
+              quote: {
+                populate: "*",
+              },
+              video: {
+                populate: {
+                  cover: {
+                    populate: "*",
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     };
 
@@ -126,7 +151,7 @@ export async function getProductByHandle(
       {
         encodeValuesOnly: true,
         addQueryPrefix: true,
-      }
+      },
     );
 
     let result = await strapiFetch(`/products${queryString}`, {
@@ -153,7 +178,7 @@ export async function getProductByHandle(
 
 export async function getStrapiEntity<T>(
   endpoint: string,
-  options?: { populate?: string | string[] }
+  options?: { populate?: string | string[] },
 ): Promise<T | null> {
   try {
     const params = new URLSearchParams();

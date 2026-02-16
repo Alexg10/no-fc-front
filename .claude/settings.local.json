@@ -25,7 +25,11 @@
       "Bash(git restore:*)",
       "Bash(pnpm check:*)",
       "Bash(pnpm tsc:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(mcp__figma__get_figma_data:*)",
+      "Bash(claude mcp list:*)",
+      "Bash(env)",
+      "Bash(git diff:*)"
     ],
     "deny": [],
     "ask": []

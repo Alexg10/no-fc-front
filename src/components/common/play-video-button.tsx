@@ -22,7 +22,7 @@ export function PlayVideoButton({
     >
       <div className="flex items-center justify-center gap-4 border border-white w-full py-2">
         <Marquee
-          className="text-white text-nowrap gap-4"
+          className="text-white text-nowrap gap-4 -translate-y-0.5"
           play={marqueeIsPlaying}
         >
           <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px]">
