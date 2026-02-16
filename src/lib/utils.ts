@@ -5,6 +5,21 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+const currencySymbols: Record<string, string> = {
+  EUR: "€",
+  USD: "$",
+  GBP: "£",
+  CAD: "CA$",
+  CHF: "CHF",
+  JPY: "¥",
+};
+
+export function formatPrice(amount: number | string, currencyCode: string): string {
+  const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
+  const symbol = currencySymbols[currencyCode] || currencyCode;
+  return `${numAmount.toFixed(2)} ${symbol}`;
+}
+
 const colorMap: Record<string, { text: string; bg: string; rgb: string }> = {
   pink: { text: "text-pink", bg: "bg-pink", rgb: "255, 90, 133" },
   lime: { text: "text-lime", bg: "bg-lime", rgb: "231, 255, 109" },

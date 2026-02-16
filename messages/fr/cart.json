@@ -3,8 +3,9 @@
   "empty": "Votre panier est vide",
   "items": "{count, plural, =0 {Votre panier est vide} =1 {# article} other {# articles}}",
   "total": "Total",
-  "checkout": "Passer la commande",
+  "checkout": "Paiement",
   "remove": "Retirer",
-  "quantity": "Quantité"
+  "quantity": "Quantité",
+  "size": "Taille",
+  "shippingInfos": "Taxe incluse et livraison calculée à au paiement"
 }
-

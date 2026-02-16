@@ -5,6 +5,7 @@
   "total": "Total",
   "checkout": "Checkout",
   "remove": "Remove",
-  "quantity": "Quantity"
+  "quantity": "Quantity",
+  "size": "Size",
+  "shippingInfos": "Tax included and shipping calculated at checkout"
 }
-
