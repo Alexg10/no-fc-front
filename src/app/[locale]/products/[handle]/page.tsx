@@ -59,19 +59,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
     { name: product.title, url: `${siteUrl}/${locale}/products/${handle}` },
   ];
 
+  console.log(strapiProduct);
+
   return (
     <div className="bg-off-white md:pt-4 lg:pt-6">
       <ProductSchema product={product} />
       <BreadcrumbSchema items={breadcrumbItems} />
       <div className="">
-        <ProductContent product={product} shippingInfos={general?.shippingInfos} />
+        <ProductContent
+          product={product}
+          shippingInfos={general?.shippingInfos}
+        />
         {strapiProduct?.blocks && strapiProduct.blocks.length > 0 && (
           <div className="col-span-full">
-            {strapiProduct.blocks.map((block, index) => (
-              <Suspense key={block.id || index} fallback={<BlockSkeleton />}>
-                <BlockRenderer block={block} locale={locale} />
-              </Suspense>
-            ))}
+            {strapiProduct.blocks.map((block, index) => {
+              console.log(block);
+
+              return (
+                <Suspense key={block.id || index} fallback={<BlockSkeleton />}>
+                  <BlockRenderer block={block} locale={locale} />
+                </Suspense>
+              );
+            })}
           </div>
         )}
       </div>

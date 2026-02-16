@@ -28,7 +28,6 @@ export async function CollectionContent({
   searchParams,
 }: CollectionContentProps) {
   const t = await getTranslations({ locale, namespace: "products" });
-  const tCommon = await getTranslations({ locale, namespace: "common" });
   const page = parseInt(searchParams.page || "1", 10);
   const after = searchParams.after;
   const before = searchParams.before;
@@ -70,13 +69,6 @@ export async function CollectionContent({
   }
 
   const { edges: products, pageInfo } = productsData;
-
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const breadcrumbItems = [
-    { name: tCommon("home"), url: siteUrl },
-    { name: t("title"), url: `${siteUrl}/products` },
-    { name: currentCollection.title, url: `${siteUrl}/collections/${handle}` },
-  ];
 
   return (
     <>

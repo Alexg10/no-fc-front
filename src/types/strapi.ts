@@ -69,7 +69,7 @@ export interface StrapiCenteredText {
 export interface StrapiHomeProducts {
   __component: "homepage.home-products";
   id: number;
-  title?: string;
+  title?: BlocksContent;
   products?: Array<{
     id: number;
     handle: string;

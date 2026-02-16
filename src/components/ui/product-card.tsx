@@ -36,7 +36,7 @@ export function ProductCard({
           productTitle={product.title}
           isAboveFold={isAboveFold}
         />
-        {!product.availableForSale && (
+        {product.availableForSale === false && (
           <div className="absolute bottom-0 left-0 w-full bg-black text-white overflow-hidden">
             <Marquee
               autoFill

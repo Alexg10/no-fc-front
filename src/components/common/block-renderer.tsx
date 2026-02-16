@@ -52,7 +52,7 @@ export async function BlockRenderer({
     case "common.photo-and-text-repeat":
       return <PhotoTextRepeatBlock block={block} />;
     case "homepage.home-products":
-      return <HomeProductsBlock block={block} />;
+      return <HomeProductsBlock block={block} locale={locale || "en"} />;
     case "homepage.newest-articles":
       return <NewestArticles block={block} locale={locale} />;
     case "simple-page.content":
