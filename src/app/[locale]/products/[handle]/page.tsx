@@ -1,17 +1,16 @@
 import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
 import { BlockRenderer } from "@/components/common/block-renderer";
+import { PreFooterMarquee } from "@/components/common/pre-footer-marquee";
+import { ProductContent } from "@/components/products/product-content";
 import { ProductSchema } from "@/components/products/product-schema";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { generateProductMetadata } from "@/lib/metadata";
 import { getProductWithCustomizations } from "@/lib/products";
 import { getGeneral } from "@/services/strapi/generalService";
-
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-
-import { ProductContent } from "@/components/products/product-content";
 
 interface ProductPageProps {
   params: Promise<{ locale: string; handle: string }>;
@@ -84,6 +83,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         )}
       </div>
+      <PreFooterMarquee />
     </div>
   );
 }
