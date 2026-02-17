@@ -52,7 +52,7 @@ export async function strapiFetch(
   const response = await fetch(url, {
     ...fetchOptions,
     headers,
-    next: { revalidate: 60 },
+    next: { revalidate: 60, ...fetchOptions.next },
   });
 
   // Pour les 404, retourner null au lieu de throw (locale peut ne pas exister)
@@ -87,7 +87,7 @@ export async function strapiFetchWithFallback(
     ...options,
   });
 
-  // Si 404 ou data null/vide et pas FR, fallback vers FR (langue par défaut)
+  // Si 404 ou data null/vide et pas EN, fallback vers EN (langue par défaut Strapi)
   const hasNoData =
     result.status === 404 || result.data === null || result.data?.data === null;
 

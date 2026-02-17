@@ -7,6 +7,7 @@ import footer from "./footer.json";
 import homepage from "./homepage.json";
 import metadata from "./metadata.json";
 import navigation from "./navigation.json";
+import pages from "./pages.json";
 import products from "./products.json";
 export default {
   common,
@@ -19,5 +20,6 @@ export default {
   metadata,
   article,
   contact,
+  pages,
 };
 
