@@ -50,9 +50,9 @@ export function CartSheet() {
             </div>
           ) : cartItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center flex-1 gap-4 py-12">
-              <ShoppingBag className="w-16 h-16 text-zinc-400 dark:text-zinc-600" />
+              <ShoppingBag className="w-10 h-10 text-black" />
               <p className="text-zinc-600 dark:text-zinc-400">{t("empty")}</p>
-              <Button asChild variant="outline" onClick={closeCart}>
+              <Button asChild onClick={closeCart}>
                 <Link href="/products">{tCommon("seeProducts")}</Link>
               </Button>
             </div>
