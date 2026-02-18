@@ -13,6 +13,7 @@ export interface StrapiArticle {
   shortDescription: BlocksContent;
   mainColor: ColorList;
   issueNumber: string;
+  titleColor: ColorList | null;
 }
 
 export type ColorList = "blue" | "lime" | "pink" | "black" | "white" | "grey";

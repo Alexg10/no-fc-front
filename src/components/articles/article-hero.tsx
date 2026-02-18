@@ -21,16 +21,19 @@ interface ArticleHeroProps {
   article: StrapiArticle;
   mainColor: ColorList;
   isLink?: boolean;
+  titleColor: ColorList | null;
 }
 
 export function ArticleHero({
   article,
   mainColor,
   isLink = false,
+  titleColor,
 }: ArticleHeroProps) {
   const t = useTranslations("article");
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const resolvedTitleColor = titleColor ?? mainColor;
 
   useGSAP(
     () => {
@@ -57,7 +60,7 @@ export function ArticleHero({
         },
       });
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   useEffect(() => {
@@ -97,7 +100,7 @@ export function ArticleHero({
             <h1
               className={cn(
                 "heading-xl-obviously leading-[85%]",
-                getColorClass(mainColor)
+                getColorClass(resolvedTitleColor),
               )}
             >
               {article.title}
@@ -106,7 +109,7 @@ export function ArticleHero({
               content={article.shortDescription}
               className={cn(
                 "text-l-polymath lg:mt-6",
-                getColorClass(mainColor)
+                getColorClass(resolvedTitleColor),
               )}
             />
           </div>

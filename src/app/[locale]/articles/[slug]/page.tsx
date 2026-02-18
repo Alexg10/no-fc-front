@@ -20,12 +20,17 @@ export default async function ArticlePage({
   }
 
   const mainColor = article?.mainColor;
+  const titleColor = article?.titleColor;
   const issueNumber = article?.issueNumber;
 
   return (
     <ArticlePageWrapper>
       <article className="min-h-[120dvh] bg-off-white overflow-hidden article-content-wrapper">
-        <ArticleHero article={article} mainColor={mainColor} />
+        <ArticleHero
+          article={article}
+          mainColor={mainColor}
+          titleColor={titleColor}
+        />
         <ArticleMainContent>
           {article.blocks && article.blocks.length > 0 && (
             <div>
