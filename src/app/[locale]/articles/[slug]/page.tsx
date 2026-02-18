@@ -1,3 +1,4 @@
+import { ArticleAlternateLinks } from "@/components/articles/article-alternate-links";
 import { ArticleHero } from "@/components/articles/article-hero";
 import { ArticleMainContent } from "@/components/articles/article-main-content";
 import { ArticlePageWrapper } from "@/components/articles/article-page-wrapper";
@@ -20,12 +21,21 @@ export default async function ArticlePage({
   }
 
   const mainColor = article?.mainColor;
+  const titleColor = article?.titleColor;
   const issueNumber = article?.issueNumber;
-
   return (
     <ArticlePageWrapper>
+      <ArticleAlternateLinks
+        currentSlug={slug}
+        currentLocale={locale}
+        localizations={article.localizations ?? []}
+      />
       <article className="min-h-[120dvh] bg-off-white overflow-hidden article-content-wrapper">
-        <ArticleHero article={article} mainColor={mainColor} />
+        <ArticleHero
+          article={article}
+          mainColor={mainColor}
+          titleColor={titleColor}
+        />
         <ArticleMainContent>
           {article.blocks && article.blocks.length > 0 && (
             <div>
