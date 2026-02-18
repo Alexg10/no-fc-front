@@ -6,10 +6,10 @@ export async function getFooter(locale?: string): Promise<StrapiFooter | null> {
   const query = qs.stringify({
     populate: {
       topLinks: {
-        populate: "*",
+        fields: ["label", "link", "target"],
       },
       bottomLinks: {
-        populate: "*",
+        fields: ["label", "link", "target"],
       },
     },
   });

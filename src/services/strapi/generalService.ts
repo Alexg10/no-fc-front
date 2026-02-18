@@ -22,7 +22,7 @@ export async function getGeneral(
         fields: ["title", "content"],
       },
       selectedCollections: {
-        populate: "*",
+        fields: ["title", "handle", "nbProductToShow"],
       },
     },
   });
