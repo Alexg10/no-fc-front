@@ -1,11 +1,18 @@
+import { AlternateLinksUpdater } from "@/components/common/alternate-links-updater";
 import { BlockRenderer } from "@/components/common/block-renderer";
 import Grid from "@/components/common/grid";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
+import { routing } from "@/routing";
 import { getPageBySlug } from "@/services/strapi/pageService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+
+function pagePath(locale: string, slug: string): string {
+  const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
+  return `${prefix}/${slug}`;
+}
 
 interface PageProps {
   params: Promise<{
@@ -45,8 +52,17 @@ export default async function Page({ params }: PageProps) {
   if (!page) {
     notFound();
   }
+
+  const alternateLinks: Record<string, string> = {
+    [locale]: pagePath(locale, slug),
+  };
+  for (const loc of page.localizations ?? []) {
+    alternateLinks[loc.locale] = pagePath(loc.locale, loc.slug);
+  }
+
   return (
     <section className="min-h-screen bg-off-white">
+      <AlternateLinksUpdater links={alternateLinks} />
       <header className="bg-black text-white pt-48 pb-6 overflow-hidden lg:min-h-[300px] lg:relative">
         <Grid>
           <div className="col-span-full lg:col-start-4 lg:col-end-10 overflow-hidden ">

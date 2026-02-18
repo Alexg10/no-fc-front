@@ -14,6 +14,7 @@ export interface StrapiArticle {
   mainColor: ColorList;
   issueNumber: string;
   titleColor: ColorList | null;
+  localizations?: Array<{ slug: string; locale: string }>;
 }
 
 export type ColorList = "blue" | "lime" | "pink" | "black" | "white" | "grey";

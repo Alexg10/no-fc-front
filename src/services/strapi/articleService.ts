@@ -32,6 +32,9 @@ export async function getArticleBySlug(
       cover: {
         fields: ["url", "alternativeText", "width", "height", "formats"],
       },
+      localizations: {
+        fields: ["slug", "locale"],
+      },
       blocks: {
         populate: "*",
         on: {

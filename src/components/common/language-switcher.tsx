@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAlternateLinks } from "@/contexts/alternate-links-context";
 import { usePathname, useRouter } from "@/lib/navigation";
 import { routing } from "@/routing";
 import { useParams, useSearchParams } from "next/navigation";
@@ -23,6 +24,7 @@ export function LanguageSwitcher() {
   const params = useParams();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const { alternateLinks } = useAlternateLinks();
 
   const currentLocale = (params?.locale as string) || routing.defaultLocale;
 
@@ -31,6 +33,17 @@ export function LanguageSwitcher() {
 
     startTransition(() => {
       const queryString = searchParams.toString();
+
+      // Si un lien alternatif existe pour ce locale (ex: article avec slug traduit)
+      if (alternateLinks[newLocale]) {
+        const alternatePath = queryString
+          ? `${alternateLinks[newLocale]}?${queryString}`
+          : alternateLinks[newLocale];
+        router.push(alternatePath);
+        return;
+      }
+
+      // Comportement par défaut : même chemin, locale changée
       const newPath = queryString ? `${pathname}?${queryString}` : pathname;
       router.push(newPath, { locale: newLocale });
     });

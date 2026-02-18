@@ -11,6 +11,7 @@ export interface StrapiPage {
   updatedAt: string;
   publishedAt: string;
   locale: string;
+  localizations?: Array<{ slug: string; locale: string }>;
 }
 
 export interface StrapiPageResponse {
