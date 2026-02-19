@@ -3,8 +3,8 @@
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import Grid from "@/components/common/grid";
 import { ButtonUi } from "@/components/ui/button-ui";
-import { cn } from "@/lib/utils";
 import { getStrapiImageUrl } from "@/lib/strapi";
+import { cn } from "@/lib/utils";
 import type { StrapiCommonSectionPush } from "@/types/strapi";
 import type { BlocksContent } from "@strapi/blocks-react-renderer";
 import Image from "next/image";
@@ -14,8 +14,8 @@ interface SectionPushBlockProps {
   block: StrapiCommonSectionPush;
 }
 
-export function SectionPushBlock({ block }: SectionPushBlockProps) {
-  const Content = () => (
+function SectionPushContent({ block }: SectionPushBlockProps) {
+  return (
     <>
       {block.cover && (
         <div className="relative w-full aspect-3/4 md:aspect-video overflow-hidden">
@@ -25,7 +25,8 @@ export function SectionPushBlock({ block }: SectionPushBlockProps) {
             fill
             className={cn(
               "object-cover",
-              block.button?.link && "group-hover:scale-105 transition-all duration-300"
+              block.button?.link &&
+                "group-hover:scale-105 transition-all duration-300",
             )}
           />
         </div>
@@ -36,11 +37,11 @@ export function SectionPushBlock({ block }: SectionPushBlockProps) {
           "absolute left-0 right-0 px-6 flex flex-col justify-center items-center",
           block.button?.link
             ? "bottom-10 md:bottom-16 space-y-6"
-            : "bottom-0 p-6 gap-6"
+            : "bottom-0 p-6 gap-6",
         )}
       >
         {block.title && (
-          <h2 className="heading-m-obviously">{block.title}</h2>
+          <h2 className="heading-m-obviously text-center">{block.title}</h2>
         )}
 
         {block.description && (
@@ -58,22 +59,24 @@ export function SectionPushBlock({ block }: SectionPushBlockProps) {
       </div>
     </>
   );
+}
 
+export function SectionPushBlock({ block }: SectionPushBlockProps) {
   return (
     <section
       className={cn(
         "py-4 lg:py-6 lg:px-2",
-        block.whiteText ? "text-white" : "text-black dark:text-white"
+        block.whiteText ? "text-white" : "text-black dark:text-white",
       )}
     >
       <Grid>
         <div className="relative col-span-full group">
           {block.button?.link ? (
             <Link href={block.button.link}>
-              <Content />
+              <SectionPushContent block={block} />
             </Link>
           ) : (
-            <Content />
+            <SectionPushContent block={block} />
           )}
         </div>
       </Grid>
