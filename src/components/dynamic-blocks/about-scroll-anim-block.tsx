@@ -33,6 +33,9 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
   const fourthSceneTopImageRef = useRef<HTMLDivElement>(null);
   const fourthSceneBottomImageRef = useRef<HTMLDivElement>(null);
   const fourthSceneImages = useRef<(HTMLDivElement | null)[]>([]);
+  const fifthSceneRef = useRef<HTMLDivElement>(null);
+  const fifthSceneTitleRef = useRef<HTMLDivElement>(null);
+  const fifthSceneSecondTitleRef = useRef<HTMLDivElement>(null);
 
   const parallaxValues = [100, -150, 120, -80];
   const fourthSceneParallaxValues = [470, -400, -220, -380];
@@ -71,7 +74,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=400%",
+          end: "+=500%",
           pin: true,
           pinSpacing: true,
           scrub: 1,
@@ -163,7 +166,33 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             duration: 1,
           },
           "fourthSceneImage-=0.3",
-        );
+        )
+        .to(
+          fifthSceneRef.current,
+          {
+            height: "100vh",
+            duration: 0.5,
+          },
+          "fifthScene",
+        )
+        .to(
+          fifthSceneTitleRef.current?.querySelectorAll("span"),
+          {
+            opacity: 1,
+            stagger: {
+              each: 0.1,
+              from: "center",
+            },
+            duration: 0.5,
+          },
+          "fifthScene-=0.1",
+        )
+        .to(fifthSceneTitleRef.current, {
+          display: "none",
+        })
+        .to(fifthSceneSecondTitleRef.current, {
+          display: "flex",
+        });
 
       fourthSceneImages.current.forEach((img, index) => {
         if (!img) return;
@@ -385,6 +414,59 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           <br />
           footbal how we see it.
         </p>
+      </div>
+      <div
+        className="flex flex-wrap gap-4 h-0 absolute justify-center items-center inset-0 z-50 top-1/2 -translate-y-1/2 w-full overflow-hidden"
+        ref={fifthSceneRef}
+      >
+        <video
+          src="/videos/about/about-texture-video.mp4"
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+
+        <div
+          className="heading-xl-obviously [&>span]:opacity-0 flex flex-col text-pink w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          ref={fifthSceneTitleRef}
+        >
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+          <span>No clubs</span>
+        </div>
+        <div
+          className="heading-xl-obviously hidden flex-col lg:text-[320px] text-pink w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          ref={fifthSceneSecondTitleRef}
+        >
+          No colors
+        </div>
+        <div
+          className="absolute top-[-40px] left-0 w-full h-[100px] bg-no-repeat"
+          style={{
+            backgroundImage: `url("/images/article/article_ripped.webp")`,
+            backgroundSize: "auto 65%",
+          }}
+        />
+        <div
+          className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-no-repeat"
+          style={{
+            backgroundImage: `url("/images/article/article_ripped.webp")`,
+            backgroundSize: "auto 65%",
+          }}
+        />
       </div>
     </section>
   );
