@@ -32,8 +32,10 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
   const fourthSceneTitleRef = useRef<HTMLParagraphElement>(null);
   const fourthSceneTopImageRef = useRef<HTMLDivElement>(null);
   const fourthSceneBottomImageRef = useRef<HTMLDivElement>(null);
+  const fourthSceneImages = useRef<(HTMLDivElement | null)[]>([]);
 
   const parallaxValues = [100, -150, 120, -80];
+  const fourthSceneParallaxValues = [470, -400, -220, -380];
 
   useGSAP(
     () => {
@@ -128,6 +130,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           },
           "thirdSceneImage-=0.3",
         )
+        .to({}, { duration: 0.5 })
         .to(
           fourthSceneRef.current,
           {
@@ -161,6 +164,20 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           },
           "fourthSceneImage-=0.3",
         );
+
+      fourthSceneImages.current.forEach((img, index) => {
+        if (!img) return;
+        aboutTimeline.to(
+          img,
+          {
+            y: fourthSceneParallaxValues[
+              index % fourthSceneParallaxValues.length
+            ],
+            duration: 1,
+          },
+          "fourthSceneImage-=0.3",
+        );
+      });
 
       firstImagesRefs.current.forEach((img, index) => {
         if (!img) return;
@@ -312,6 +329,31 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             className="object-cover"
           />
         </div>
+        <div className="absolute inset-0 w-full h-full">
+          {block.fourthSceneImages?.map((image, index) => (
+            <div
+              key={image.id}
+              className={[
+                "absolute aspect-2/3 w-[38vw] lg:w-[22vw]",
+                index === 0
+                  ? "top-[0%] left-[25%] lg:top-[-30%] lg:left-[44%] -rotate-6"
+                  : index === 1
+                    ? "bottom-[-10%] right-[2%] lg:bottom-[-36%] lg:right-[6%] rotate-[5deg]"
+                    : "bottom-[-5%] left-[-8%] lg:bottom-[-8%] lg:left-[12%] rotate-8",
+              ].join(" ")}
+              ref={(el) => {
+                fourthSceneImages.current[index] = el;
+              }}
+            >
+              <Image
+                src={getStrapiImageUrl(image.url)}
+                alt={image.alternativeText || ""}
+                fill
+                className="object-cover first-images"
+              />
+            </div>
+          ))}
+        </div>
         <div
           className="w-full h-1/3 absolute top-0 left-0"
           ref={fourthSceneTopImageRef}
@@ -335,29 +377,6 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           />
         </div>
 
-        {block.fourthSceneImages?.map((image, index) => (
-          <div
-            key={image.id}
-            className={[
-              "absolute aspect-2/3 w-[38vw] lg:w-[22vw]",
-              index === 0
-                ? "top-[5%] left-[25%] lg:top-[8%] lg:left-[44%] -rotate-6"
-                : index === 1
-                  ? "bottom-[14%] right-[2%] lg:bottom-[6%] lg:right-[6%] rotate-[5deg]"
-                  : "bottom-[5%] left-[-8%] lg:bottom-[8%] lg:left-[12%] rotate-8",
-            ].join(" ")}
-            ref={(el) => {
-              fourthSceneImages.current[index] = el;
-            }}
-          >
-            <Image
-              src={getStrapiImageUrl(image.url)}
-              alt={image.alternativeText || ""}
-              fill
-              className="object-cover first-images"
-            />
-          </div>
-        ))}
         <p
           className="heading-xl-obviously text-pink text-center px-10 relative z-10"
           ref={fourthSceneTitleRef}
