@@ -108,7 +108,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=1100%",
+          end: "+=1300%",
           pin: true,
           pinSpacing: true,
           scrub: 1,
@@ -576,10 +576,10 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
               className={[
                 "absolute aspect-2/3 w-[38vw] lg:w-[22vw]",
                 index === 0
-                  ? "top-[0%] left-[25%] lg:top-[-30%] lg:left-[44%] -rotate-6"
+                  ? "top-[0%] left-[25%] lg:top-[-60%] lg:left-[44%] -rotate-6"
                   : index === 1
-                    ? "bottom-[-10%] right-[2%] lg:bottom-[-36%] lg:right-[6%] rotate-[5deg]"
-                    : "bottom-[-5%] left-[-8%] lg:bottom-[-8%] lg:left-[12%] rotate-8",
+                    ? "bottom-[-10%] right-[2%] lg:bottom-[-50%] lg:right-[6%] rotate-[5deg]"
+                    : "bottom-[-5%] left-[-8%] lg:bottom-[-40%] lg:left-[12%] rotate-8",
               ].join(" ")}
               ref={(el) => {
                 fourthSceneImages.current[index] = el;
