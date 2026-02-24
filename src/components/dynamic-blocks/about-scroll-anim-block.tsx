@@ -230,7 +230,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           "fifthScene",
         )
         .to(
-          fifthSceneTitleRef.current?.querySelectorAll("span"),
+          fifthSceneTitleRef.current?.querySelectorAll("span") ?? [],
           {
             opacity: 1,
             stagger: {
