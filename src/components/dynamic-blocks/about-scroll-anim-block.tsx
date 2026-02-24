@@ -49,6 +49,9 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
   const sixthSceneTitleRef = useRef<HTMLDivElement>(null);
   const sixthSceneTitleTwoRef = useRef<HTMLDivElement>(null);
   const sixthSceneTitleThreeRef = useRef<HTMLDivElement>(null);
+  const seventhSceneRef = useRef<HTMLDivElement>(null);
+  const seventhSceneTitleRef = useRef<HTMLDivElement>(null);
+  const seventhSceneSecondTitleRef = useRef<HTMLDivElement>(null);
 
   const parallaxValues = [100, -150, 120, -80];
   const fourthSceneParallaxValues = [470, -400, -220, -380];
@@ -105,7 +108,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=600%",
+          end: "+=1100%",
           pin: true,
           pinSpacing: true,
           scrub: 1,
@@ -118,10 +121,22 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           stagger: { each: 0.15 },
           duration: 0.1,
         })
-        .to(secondSceneRef.current, {
-          height: "100vh",
-          duration: 0.3,
-        })
+        .to({}, { duration: 0.5 })
+        .to(
+          secondSceneRef.current,
+          {
+            display: "flex",
+          },
+          "secondSceneRef",
+        )
+        .to(
+          secondSceneRef.current,
+          {
+            height: "100vh",
+            duration: 0.3,
+          },
+          "secondSceneRef",
+        )
         .from(
           secondSceneTitleSplit.words,
           {
@@ -139,6 +154,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           },
           "secondSceneTitle-=0.6",
         )
+        .to({}, { duration: 0.5 })
         .to(
           thirdSceneRef.current,
           {
@@ -197,6 +213,13 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             duration: 1,
           },
           "fourthSceneImage-=0.3",
+        )
+        .to(
+          fifthSceneRef.current,
+          {
+            display: "flex",
+          },
+          "fifthScene",
         )
         .to(
           fifthSceneRef.current,
@@ -284,14 +307,14 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           {
             display: "flex",
           },
-          "sixthSceneTitleSplit+=0.3",
+          "sixthSceneTitleSplit+=0.5",
         )
         .to(
           sixthScenePictureFour.current,
           {
             display: "flex",
           },
-          "sixthSceneTitleSplit+=0.5",
+          "sixthSceneTitleSplit+=0.9",
         )
         .to(sixthSceneTitleRef.current, {
           opacity: 0,
@@ -322,7 +345,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           {
             display: "flex",
           },
-          "sixthSceneTitleTwoSplit+=0.3",
+          "sixthSceneTitleTwoSplit+=0.5",
         )
         .to(sixthSceneTitleTwoRef.current, {
           opacity: 0,
@@ -336,7 +359,51 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             duration: 0.1,
           },
           "sixthSceneTitleThreeSplit",
-        );
+        )
+        .to({}, { duration: 0.5 })
+        .to(
+          seventhSceneRef.current,
+          {
+            display: "flex",
+          },
+          "seventhScene",
+        )
+        .to(
+          seventhSceneRef.current,
+          {
+            height: "100vh",
+            duration: 0.5,
+          },
+          "seventhScene",
+        )
+        .to(
+          seventhSceneTitleRef.current?.querySelectorAll("span"),
+          {
+            opacity: 1,
+            stagger: {
+              each: 0.1,
+              from: "center",
+            },
+            duration: 0.5,
+          },
+          "seventhScene-=0.1",
+        )
+        .to(seventhSceneTitleRef.current, {
+          display: "none",
+        })
+        .to(seventhSceneSecondTitleRef.current, {
+          display: "flex",
+        })
+        .to(seventhSceneSecondTitleRef.current, {
+          x: () => {
+            const scrollW =
+              seventhSceneSecondTitleRef.current?.scrollWidth ?? 0;
+            return -(scrollW - window.innerWidth);
+          },
+          duration: 3,
+          ease: "linear",
+        })
+        .to({}, { duration: 1 });
 
       fourthSceneImages.current.forEach((img, index) => {
         if (!img) return;
@@ -422,7 +489,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         </p>
       </div>
       <div
-        className="flex flex-wrap gap-4 absolute justify-center items-center inset-0 z-10 top-1/2 -translate-y-1/2 w-full h-0 overflow-hidden"
+        className="hidden flex-wrap gap-4 absolute justify-center items-center inset-0 z-10 top-1/2 -translate-y-1/2 w-full h-0"
         ref={secondSceneRef}
       >
         <video
@@ -560,7 +627,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         </p>
       </div>
       <div
-        className="flex flex-wrap gap-4 h-0 absolute justify-center items-center inset-0 z-50 top-1/2 -translate-y-1/2 w-full overflow-hidden"
+        className="flex-wrap gap-4 hidden h-0 absolute justify-center items-center inset-0 z-50 top-1/2 -translate-y-1/2 w-full "
         ref={fifthSceneRef}
       >
         <video
@@ -617,7 +684,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         />
       </div>
       <div
-        className="flex-wrap  gap-4 h-full absolute justify-center items-center inset-0 z-[99] top-1/2 -translate-y-1/2 w-full overflow-hidden"
+        className="flex-wrap gap-4 h-full absolute justify-center items-center inset-0 z-50 top-1/2 -translate-y-1/2 w-full"
         ref={sixthSceneRef}
       >
         <div
@@ -746,6 +813,59 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           <br />
           everything.
         </p>
+      </div>
+      <div
+        className="flex-wrap hidden gap-4 h-0 absolute justify-center items-center inset-0 z-50 top-1/2 -translate-y-1/2 w-full"
+        ref={seventhSceneRef}
+      >
+        <video
+          src="/videos/about/about-texture-video.mp4"
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+
+        <div
+          className="heading-xl-obviously [&>span]:opacity-0 flex flex-col text-pink w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          ref={seventhSceneTitleRef}
+        >
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+          <span>No Games</span>
+        </div>
+        <div
+          className="heading-xl-obviously hidden whitespace-nowrap justify-start px-10 lg:text-[320px] text-pink w-full text-left absolute top-1/2 left-0 -translate-y-1/2"
+          ref={seventhSceneSecondTitleRef}
+        >
+          <span>Just football through the eyes of design</span>
+        </div>
+        <div
+          className="absolute top-[-40px] left-0 w-full h-[100px] bg-no-repeat"
+          style={{
+            backgroundImage: `url("/images/article/article_ripped.webp")`,
+            backgroundSize: "auto 65%",
+          }}
+        />
+        <div
+          className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-no-repeat"
+          style={{
+            backgroundImage: `url("/images/article/article_ripped.webp")`,
+            backgroundSize: "auto 65%",
+          }}
+        />
       </div>
     </section>
   );
