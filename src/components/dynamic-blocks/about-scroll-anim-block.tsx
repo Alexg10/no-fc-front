@@ -377,7 +377,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           "seventhScene",
         )
         .to(
-          seventhSceneTitleRef.current?.querySelectorAll("span"),
+          seventhSceneTitleRef.current?.querySelectorAll("span") ?? [],
           {
             opacity: 1,
             stagger: {
@@ -621,7 +621,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           className="heading-xl-obviously text-pink text-center px-10 relative z-10"
           ref={fourthSceneTitleRef}
         >
-          We're here to show
+          We&apos;re here to show
           <br />
           footbal how we see it.
         </p>
