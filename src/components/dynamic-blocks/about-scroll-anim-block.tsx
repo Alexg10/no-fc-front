@@ -36,6 +36,19 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
   const fifthSceneRef = useRef<HTMLDivElement>(null);
   const fifthSceneTitleRef = useRef<HTMLDivElement>(null);
   const fifthSceneSecondTitleRef = useRef<HTMLDivElement>(null);
+  const sixthSceneRef = useRef<HTMLDivElement>(null);
+  const sixthSceneTopPartRef = useRef<HTMLDivElement>(null);
+  const sixthSceneBottomPartRef = useRef<HTMLDivElement>(null);
+  const sixthScenePictureOne = useRef<HTMLDivElement>(null);
+  const sixthScenePictureTwo = useRef<HTMLDivElement>(null);
+  const sixthScenePictureThree = useRef<HTMLDivElement>(null);
+  const sixthScenePictureFour = useRef<HTMLDivElement>(null);
+  const sixthScenePictureFive = useRef<HTMLDivElement>(null);
+  const sixthScenePictureSix = useRef<HTMLDivElement>(null);
+  const sixthScenePictureSeven = useRef<HTMLDivElement>(null);
+  const sixthSceneTitleRef = useRef<HTMLDivElement>(null);
+  const sixthSceneTitleTwoRef = useRef<HTMLDivElement>(null);
+  const sixthSceneTitleThreeRef = useRef<HTMLDivElement>(null);
 
   const parallaxValues = [100, -150, 120, -80];
   const fourthSceneParallaxValues = [470, -400, -220, -380];
@@ -69,12 +82,30 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           type: "words",
         },
       );
+      const sixthSceneTitleSplit = SplitText.create(
+        sixthSceneTitleRef.current,
+        {
+          type: "words",
+        },
+      );
+      const sixthSceneTitleTwoSplit = SplitText.create(
+        sixthSceneTitleTwoRef.current,
+        {
+          type: "words",
+        },
+      );
+      const sixthSceneTitleThreeSplit = SplitText.create(
+        sixthSceneTitleThreeRef.current,
+        {
+          type: "words",
+        },
+      );
 
       const aboutTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=500%",
+          end: "+=600%",
           pin: true,
           pinSpacing: true,
           scrub: 1,
@@ -192,7 +223,120 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         })
         .to(fifthSceneSecondTitleRef.current, {
           display: "flex",
-        });
+        })
+        .to(
+          sixthSceneRef.current,
+          {
+            display: "flex",
+          },
+          "sixthScene",
+        )
+        .to(
+          fifthSceneSecondTitleRef.current,
+          {
+            x: "-100vw",
+            duration: 1,
+            ease: "linear",
+          },
+          "sixthScene",
+        )
+        .from(
+          sixthSceneTopPartRef.current,
+          {
+            yPercent: -100,
+            duration: 1,
+          },
+          "sixthScene+=0.2",
+        )
+        .from(
+          sixthSceneBottomPartRef.current,
+          {
+            yPercent: 100,
+            duration: 1,
+          },
+          "sixthScene+=0.2",
+        )
+        .to(
+          sixthScenePictureOne.current,
+          {
+            display: "flex",
+          },
+          "sixthScene+=0.6",
+        )
+        .from(
+          sixthSceneTitleSplit.words,
+          {
+            opacity: 0,
+            stagger: { each: 0.1 },
+            duration: 0.1,
+          },
+          "sixthSceneTitleSplit",
+        )
+        .to(
+          sixthScenePictureTwo.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleSplit+=0.1",
+        )
+        .to(
+          sixthScenePictureThree.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleSplit+=0.3",
+        )
+        .to(
+          sixthScenePictureFour.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleSplit+=0.5",
+        )
+        .to(sixthSceneTitleRef.current, {
+          opacity: 0,
+          duration: 0,
+        })
+        .from(
+          sixthSceneTitleTwoSplit.words,
+          {
+            opacity: 0,
+            stagger: { each: 0.1 },
+            duration: 0.1,
+          },
+          "sixthSceneTitleTwoSplit",
+        )
+        .to(sixthScenePictureFive.current, {
+          display: "flex",
+        })
+
+        .to(
+          sixthScenePictureSix.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleTwoSplit+=0.1",
+        )
+        .to(
+          sixthScenePictureSeven.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleTwoSplit+=0.3",
+        )
+        .to(sixthSceneTitleTwoRef.current, {
+          opacity: 0,
+          duration: 0,
+        })
+        .from(
+          sixthSceneTitleThreeSplit.words,
+          {
+            opacity: 0,
+            stagger: { each: 0.1 },
+            duration: 0.1,
+          },
+          "sixthSceneTitleThreeSplit",
+        );
 
       fourthSceneImages.current.forEach((img, index) => {
         if (!img) return;
@@ -448,10 +592,14 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           <span>No clubs</span>
         </div>
         <div
-          className="heading-xl-obviously hidden flex-col lg:text-[320px] text-pink w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="heading-xl-obviously hidden whitespace-nowrap justify-center lg:text-[320px] text-pink w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           ref={fifthSceneSecondTitleRef}
         >
-          No colors
+          <span>No colors</span>
+          <span className="absolute left-full ml-20 flex gap-40">
+            <span>No colors</span>
+            <span>No colors</span>
+          </span>
         </div>
         <div
           className="absolute top-[-40px] left-0 w-full h-[100px] bg-no-repeat"
@@ -467,6 +615,137 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             backgroundSize: "auto 65%",
           }}
         />
+      </div>
+      <div
+        className="flex-wrap  gap-4 h-full absolute justify-center items-center inset-0 z-[99] top-1/2 -translate-y-1/2 w-full overflow-hidden"
+        ref={sixthSceneRef}
+      >
+        <div
+          className="flex absolute top-0 bg-pink w-full h-1/2"
+          ref={sixthSceneTopPartRef}
+        >
+          <div
+            className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-no-repeat"
+            style={{
+              backgroundImage: `url("/images/article/article_ripped.webp")`,
+              backgroundSize: "auto 65%",
+            }}
+          />
+          <div
+            className="h-full w-[70%] absolute bottom-0 left-0 hidden"
+            ref={sixthScenePictureOne}
+          >
+            <Image
+              src={"/images/about/sixthScenePictureOne.webp"}
+              alt="Papper texture about"
+              className="object-cover"
+              fill
+            />
+          </div>
+        </div>
+
+        <div
+          className="flex absolute bottom-0 bg-pink w-full h-1/2"
+          ref={sixthSceneBottomPartRef}
+        >
+          <div
+            className="absolute top-[-40px]  left-0 w-full h-[100px] bg-no-repeat"
+            style={{
+              backgroundImage: `url("/images/article/article_ripped.webp")`,
+              backgroundSize: "auto 65%",
+            }}
+          />
+        </div>
+        <div
+          className="h-[120%] w-1/3 absolute -bottom-[10%] -right-[10%] hidden"
+          ref={sixthScenePictureTwo}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureTwo.webp"}
+            alt="Papper texture about"
+            className="object-cover"
+            fill
+          />
+        </div>
+        <div
+          className="h-[50%] w-[620px] absolute bottom-0 left-1/2 -translate-x-1/2 hidden"
+          ref={sixthScenePictureThree}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureThree.webp"}
+            alt="Papper texture about"
+            className="object-cover"
+            fill
+          />
+        </div>
+        <div
+          className="h-full w-[620px] absolute -bottom-1/3 left-0 translate-x-[15%] hidden"
+          ref={sixthScenePictureFour}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureFour.webp"}
+            alt="Papper texture about"
+            width={811}
+            height={1442}
+          />
+        </div>
+        <div
+          className="h-full w-[620px] absolute -bottom-[40%] left-0 -translate-x-[25%] hidden"
+          ref={sixthScenePictureFive}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureFive.webp"}
+            alt="Papper texture about"
+            width={593}
+            height={1354}
+          />
+        </div>
+        <div
+          className="h-full w-[620px] absolute top-[-5%] right-[10%] hidden"
+          ref={sixthScenePictureSix}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureSeven.webp"}
+            alt="Papper texture about"
+            width={610}
+            height={1085}
+          />
+        </div>
+        <div
+          className="h-1/2 w-[557px] absolute bottom-[5%] right-[10%] hidden"
+          ref={sixthScenePictureSeven}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureSix.webp"}
+            alt="Papper texture about"
+            width={557}
+            height={874}
+          />
+        </div>
+        <p
+          className="heading-xl-obviously absolute top-1/2 -translate-x-1/2 left-1/2  -translate-y-1/2 title-shadow text-white text-center px-10  z-10"
+          ref={sixthSceneTitleRef}
+        >
+          Just symbols,
+          <br />
+          shapes, RITUAL,
+          <br /> NOISES
+        </p>
+        <p
+          className="heading-xl-obviously absolute top-1/2 -translate-x-1/2 left-1/2  -translate-y-1/2 title-shadow text-white text-center px-10  z-10"
+          ref={sixthSceneTitleTwoRef}
+        >
+          We don’t support
+          <br /> anything.
+        </p>
+        <p
+          className="heading-xl-obviously absolute top-1/2 -translate-x-1/2 left-1/2  -translate-y-1/2 title-shadow text-white text-center px-10  z-10"
+          ref={sixthSceneTitleThreeRef}
+        >
+          We reinterpret
+          <br />
+          everything.
+        </p>
       </div>
     </section>
   );
