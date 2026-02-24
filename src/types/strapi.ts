@@ -264,6 +264,13 @@ export interface StrapiCommonPhotoTextRepeat {
   images?: StrapiImage[];
 }
 
+export interface StrapiCommunAboutScrollAnim {
+  __component: "common.about-scroll-anim";
+  id: number;
+  firstImages?: StrapiImage[];
+  fourthSceneImages?: StrapiImage[];
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -286,7 +293,8 @@ export type StrapiBlock =
   | StrapiCommonSectionPush
   | StrapiCommonVideoPortrait
   | StrapiCommonTextImage
-  | StrapiCommonPhotoTextRepeat;
+  | StrapiCommonPhotoTextRepeat
+  | StrapiCommunAboutScrollAnim;
 
 export interface StrapiProduct {
   id: number;
