@@ -1,6 +1,7 @@
 import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
 import { BlockRenderer } from "@/components/common/block-renderer";
 import { PreFooterMarquee } from "@/components/common/pre-footer-marquee";
+import { RelatedProducts } from "@/components/products/related-products";
 import { ProductContent } from "@/components/products/product-content";
 import { ProductSchema } from "@/components/products/product-schema";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
@@ -83,6 +84,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         )}
       </div>
+      <Suspense fallback={<BlockSkeleton />}>
+        <RelatedProducts productHandle={handle} locale={locale} />
+      </Suspense>
       <PreFooterMarquee />
     </div>
   );

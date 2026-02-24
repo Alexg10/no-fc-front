@@ -373,6 +373,27 @@ const GET_COLLECTION_PRODUCTS = `
                 currencyCode
               }
             }
+            variants(first: 1) {
+              edges {
+                node {
+                  id
+                  title
+                  price {
+                    amount
+                    currencyCode
+                  }
+                  compareAtPrice {
+                    amount
+                    currencyCode
+                  }
+                  availableForSale
+                  selectedOptions {
+                    name
+                    value
+                  }
+                }
+              }
+            }
           }
           cursor
         }
@@ -645,6 +666,48 @@ export async function getProductOptions(
 /**
  * Récupère les produits d'une collection avec pagination et tri
  */
+// Requête GraphQL pour récupérer les collections d'un produit
+const GET_PRODUCT_COLLECTIONS = `
+  query getProductCollections($handle: String!) {
+    product(handle: $handle) {
+      collections(first: 10) {
+        edges {
+          node {
+            id
+            title
+            handle
+            description
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * Récupère les collections auxquelles appartient un produit
+ */
+export async function getProductCollections(
+  handle: string,
+): Promise<ShopifyCollection[]> {
+  try {
+    const response = await client.request(GET_PRODUCT_COLLECTIONS, {
+      variables: { handle },
+    });
+
+    if (response.data?.product?.collections?.edges) {
+      return response.data.product.collections.edges.map(
+        (edge: { node: ShopifyCollection }) => edge.node,
+      );
+    }
+
+    return [];
+  } catch (error) {
+    console.error("Error fetching product collections:", error);
+    return [];
+  }
+}
+
 export async function getCollectionProducts(
   handle: string,
   options: {

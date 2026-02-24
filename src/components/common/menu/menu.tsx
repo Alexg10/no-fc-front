@@ -31,7 +31,8 @@ export function Menu({
   const isHomepage = pathname === "/" || pathname === "/fr";
   const { isUnderDesktop } = useBreakpoints();
   const isUnderDesktopRef = useRef(isUnderDesktop);
-  const [isMenuVisible, setIsMenuVisible] = useState(isHomepage);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [isTaglinePlaying, setIsTaglinePlaying] = useState(false);
   const [isTaglineIsReversed, setIsTaglineIsReversed] = useState(false);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
@@ -43,10 +44,15 @@ export function Menu({
     isUnderDesktopRef.current = isUnderDesktop;
   }, [isUnderDesktop]);
 
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setIsMounted(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   // Reset menu state when navigating between homepage and other pages
   useEffect(() => {
     if (isHomepage) {
-      setIsMenuVisible(true);
+      setIsMenuVisible(!isUnderDesktop);
       setMenuIsOpen(false);
       setIsInScrollZone(true);
       burgerTimeline.current?.reverse();
@@ -55,7 +61,7 @@ export function Menu({
       setMenuIsOpen(false);
       setIsInScrollZone(false);
     }
-  }, [isHomepage]);
+  }, [isHomepage, isUnderDesktop]);
 
   useGSAP(
     () => {
@@ -112,7 +118,7 @@ export function Menu({
           className={cn(
             "fixed top-0 left-0 flex-col h-fit w-full z-50 bg-white",
             isMenuVisible ? "translate-y-0" : "-translate-y-full",
-            "transition-all duration-500 ease-in-out",
+            isMounted && "transition-all duration-500 ease-in-out",
           )}
         >
           <div className="p-6 pt-30 gap-2 flex flex-col">
