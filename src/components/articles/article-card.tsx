@@ -27,10 +27,10 @@ export function ArticleCard({ article, issueLabel, locale }: ArticleCardProps) {
               loading="lazy"
             />
             <div
-              className="absolute inset-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
+              className="absolute top-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
               style={{
                 backgroundImage: `url("/images/article/carousel_texture_image.png")`,
-                backgroundSize: "calc(100% + 1px) calc(100% + 1px)",
+                backgroundSize: "calc(100% + 2px) calc(100% + 2px)",
               }}
             />
           </div>

@@ -164,10 +164,10 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
                 <div
-                  className="absolute inset-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
+                  className="absolute top-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
                   style={{
                     backgroundImage: `url("/images/article/carousel_texture_image.png")`,
-                    backgroundSize: "calc(100% + 1px) calc(100% + 1px)",
+                    backgroundSize: "100% 100%",
                     transform: index % 2 === 1 ? "rotate(180deg)" : undefined,
                   }}
                 />
