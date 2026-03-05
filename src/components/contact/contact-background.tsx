@@ -10,14 +10,30 @@ interface ContactBackgroundProps {
 }
 
 function generateRandomImages(images: StrapiImage[]) {
-  // Duplicate images once for better coverage
+  // Duplicate images twice for better coverage
   const duplicatedImages = [...images, ...images];
   const positions = [];
 
+  // Grid-based placement with jitter to avoid clustering
+  const cols = Math.ceil(Math.sqrt(duplicatedImages.length * 1.5));
+  const rows = Math.ceil(duplicatedImages.length / cols);
+
   for (let i = 0; i < duplicatedImages.length; i++) {
-    const randomX = Math.random() * 100;
-    const randomY = Math.random() * 100;
-    const randomRotation = Math.random() * 40 - 20;
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+
+    // Base position from grid, add jitter for organic feel
+    const baseX = (col / cols) * 100 + 50 / cols;
+    const baseY = (row / rows) * 100 + 50 / rows;
+    const jitterX = (Math.random() - 0.5) * (80 / cols);
+    const jitterY = (Math.random() - 0.5) * (80 / rows);
+
+    const randomX = Math.min(95, Math.max(5, baseX + jitterX));
+    const randomY = Math.min(95, Math.max(5, baseY + jitterY));
+
+    // Wide rotation range: -45 to +45, biased toward extremes (avoid near-zero)
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    const randomRotation = sign * (8 + Math.random() * 37);
 
     positions.push({
       id: `${duplicatedImages[i].id}-${i}`,

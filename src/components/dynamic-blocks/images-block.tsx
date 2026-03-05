@@ -16,11 +16,11 @@ export function ImagesBlock({ block }: ImagesBlockProps) {
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
           {images.map((image) => (
             <div
               key={image.id}
-              className="relative aspect-3/4 overflow-hidden rounded-lg"
+              className="relative aspect-3/4 w-full max-w-sm overflow-hidden rounded-lg"
             >
               <Image
                 src={getStrapiImageUrl(image.url)}

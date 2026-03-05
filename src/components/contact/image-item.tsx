@@ -32,22 +32,24 @@ export const ImageItem = memo(function ImageItem({
       style={{
         left: `${x}%`,
         top: `${y}%`,
-        transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) rotate(${rotation}deg)`,
+        transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px))`,
       }}
       onMouseDown={(e) => onMouseDown(e, id)}
     >
-      <Image
-        src={getStrapiImageUrl(image.url)}
-        alt={image.alternativeText || ""}
-        width={image.width}
-        height={image.height}
-        className="pointer-events-none"
-        style={{
-          maxWidth: isUnderDesktop ? "200px" : "400px",
-          height: "auto",
-        }}
-        draggable={false}
-      />
+      <div style={{ transform: `rotate(${rotation}deg)` }}>
+        <Image
+          src={getStrapiImageUrl(image.url)}
+          alt={image.alternativeText || ""}
+          width={image.width}
+          height={image.height}
+          className="pointer-events-none"
+          style={{
+            maxWidth: isUnderDesktop ? "200px" : "400px",
+            height: "auto",
+          }}
+          draggable={false}
+        />
+      </div>
     </div>
   );
 });

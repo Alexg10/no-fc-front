@@ -45,7 +45,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
   };
 
   return (
-    <section className="py-10 mb-7 lg:h-[calc(100%-240px)] flex overflow-hidden">
+    <section className="py-10 mb-7 lg:h-[calc(100%-240px)] flex">
       <div className="flex w-full px-4 max-w-[1424px] mx-auto lg:grid lg:grid-cols-12 lg:gap-6">
         <div
           className={cn(
@@ -76,14 +76,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                   }}
                   onMouseDown={(e) => handleMouseDown(e, image.id)}
                 >
-                  <div className="relative inline-block h-full">
-                    <div
-                      className="absolute inset-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
-                      style={{
-                        backgroundImage: `url("/images/article/carousel_texture_image.png")`,
-                        backgroundSize: "100% 100%",
-                      }}
-                    />
+                  <div className="relative inline-block h-full overflow-hidden">
                     <Image
                       src={getStrapiImageUrl(image.url)}
                       alt={image.alternativeText || ""}
@@ -91,6 +84,13 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                       height={image.height || 600}
                       className="w-full h-auto pointer-events-none"
                       draggable={false}
+                    />
+                    <div
+                      className="absolute top-0 w-full h-full bg-center bg-no-repeat mix-blend-screen z-10"
+                      style={{
+                        backgroundImage: `url("/images/article/carousel_texture_image.png")`,
+                        backgroundSize: "100% 100%",
+                      }}
                     />
                   </div>
                 </div>
