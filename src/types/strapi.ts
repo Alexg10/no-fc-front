@@ -196,6 +196,7 @@ export interface StrapiArticleLargeImage {
   __component: "article.large-image";
   id: number;
   image?: StrapiImage;
+  size?: "small" | "medium" | "large";
 }
 
 export interface StrapiArticleColumnsBlockItem {
