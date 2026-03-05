@@ -145,7 +145,7 @@ export function Menu({
         </div>
       )}
       <div className="absolute top-0 flex left-0 flex-col h-full gap-4 z-[51]">
-        <div className="flex flex-col gap-2 lg:gap-4 max-w-[108px] lg:max-w-[148px]">
+        <div className="flex flex-col gap-2 max-w-[108px] lg:max-w-[148px]">
           <div className="relative bg-white p-2 lg:p-3 ">
             <div
               className={cn(
@@ -193,7 +193,7 @@ export function Menu({
                 )}
               >
                 <div className="overflow-hidden">
-                  <div className="p-2 pt-6 gap-2 flex flex-col pb-0">
+                  <div className="p-2 lg:px-0 pt-6 gap-2 flex flex-col pb-0">
                     {menu.links && menu.links.length > 0 && (
                       <NavigationMenuContainer
                         menu={menu as StrapiMenu}
