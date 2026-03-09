@@ -77,6 +77,17 @@ export async function strapiFetch(
  * @param options - Options de fetch additionnelles (revalidate, headers, etc.)
  * @returns Le résultat du fetch
  */
+function hasData(result: StrapiFetchResult): boolean {
+  return result.status !== 404 && result.data !== null && result.data?.data !== null;
+}
+
+// "fr" → "fr-FR", "fr-FR" → "fr"
+function getAlternateLocale(locale: string): string | null {
+  if (locale.includes("-")) return locale.split("-")[0];
+  const regionMap: Record<string, string> = { fr: "fr-FR", en: "en-US" };
+  return regionMap[locale] || null;
+}
+
 export async function strapiFetchWithFallback(
   endpoint: string,
   locale?: string,
@@ -87,11 +98,22 @@ export async function strapiFetchWithFallback(
     ...options,
   });
 
-  // Si 404 ou data null/vide et pas EN, fallback vers EN (langue par défaut Strapi)
-  const hasNoData =
-    result.status === 404 || result.data === null || result.data?.data === null;
+  if (hasData(result)) return result;
 
-  if (hasNoData && locale && locale !== "en") {
+  // Essayer la variante de locale (fr → fr-FR ou fr-FR → fr)
+  if (locale) {
+    const alternate = getAlternateLocale(locale);
+    if (alternate) {
+      const altResult = await strapiFetch(endpoint, {
+        locale: alternate,
+        ...options,
+      });
+      if (hasData(altResult)) return altResult;
+    }
+  }
+
+  // Fallback vers en (langue par défaut Strapi)
+  if (locale && locale !== "en" && locale !== "en-US") {
     return strapiFetch(endpoint, {
       locale: "en",
       ...options,
