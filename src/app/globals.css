@@ -238,6 +238,10 @@
   text-wrap: balance;
 }
 
+.title-shadow{
+  text-shadow: 0 4px 0 #000;
+}
+
 
 
 /* List styles for BlockRenderer */

@@ -1,4 +1,5 @@
 import Grid from "@/components/common/grid";
+import { HeaderContainer } from "@/components/common/header-container";
 import { getGeneral } from "@/services/strapi/generalService";
 import { getMenu } from "@/services/strapi/menuService";
 import { StrapiMarquee } from "@/types/strapi";
@@ -15,13 +16,13 @@ export async function Header({ locale }: { locale: string }) {
   return (
     <header className="fixed flex justify-center top-0 z-50 w-full">
       <Grid>
-        <div className="col-span-full flex relative items-center justify-between top-4 lg:top-6">
+        <HeaderContainer>
           <Menu
             menu={menu as StrapiMenu}
             marquee={general?.marquee as StrapiMarquee}
           />
           <ShoppingCartContainer />
-        </div>
+        </HeaderContainer>
       </Grid>
     </header>
   );

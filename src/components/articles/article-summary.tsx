@@ -113,7 +113,7 @@ export function ArticleSummary({
       gsap.to(summaryEl, {
         scrollTrigger: {
           trigger: summaryEl,
-          start: isUnderDesktop ? "bottom bottom-=16px" : "center center",
+          start: isUnderDesktop ? "bottom bottom-=16px" : "center bottom-=64px",
           end: () => getPinEndValue(mainEl, summaryEl),
           pin: true,
           pinSpacing: false,
@@ -140,7 +140,7 @@ export function ArticleSummary({
   }, [mainRef, summaryRef, isUnderDesktop]);
 
   return (
-    <div className="max-w-[1424px] mx-auto w-full px-4">
+    <div className="max-w-[1464px] mx-auto w-full px-4">
       <div
         className="absolute z-40 flex flex-col items-start justify-end top-5 bg-white"
         ref={summaryRef}

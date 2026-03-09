@@ -49,7 +49,7 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
   };
 
   return (
-    <section className="relative w-full p-4">
+    <section className="relative w-full py-4 m-0">
       <Grid>
         <div
           className="relative col-span-full w-full aspect-video bg-black overflow-hidden"

@@ -31,12 +31,12 @@ const remotePatterns: Array<{
   },
   {
     protocol: "https",
-    hostname: "sacred-dream-4825ee1b28.strapiapp.com",
+    hostname: "excellent-cheese-5ba4677c1a.strapiapp.com",
     pathname: "/uploads/**",
   },
   {
     protocol: "https",
-    hostname: "sacred-dream-4825ee1b28.media.strapiapp.com",
+    hostname: "excellent-cheese-5ba4677c1a.media.strapiapp.com",
     pathname: "/**",
   },
 ];

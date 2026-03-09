@@ -1,6 +1,7 @@
 import { CartSheet } from "@/components/cart-sheet";
 import { Footer } from "@/components/common/footer/footer";
 import { Header } from "@/components/common/header";
+import { AlternateLinksProvider } from "@/contexts/alternate-links-context";
 import { CartProvider } from "@/contexts/cart-context";
 import { routing } from "@/routing";
 import { Analytics } from "@vercel/analytics/next";
@@ -28,14 +29,16 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <CartProvider>
-        <Header locale={locale} />
-        <main className="flex-1">{children}</main>
-        <Footer locale={locale} />
-        <CartSheet />
-        <Analytics />
-        <SpeedInsights />
-      </CartProvider>
+      <AlternateLinksProvider>
+        <CartProvider>
+          <Header locale={locale} />
+          <main className="flex-1">{children}</main>
+          <Footer locale={locale} />
+          <CartSheet />
+          <Analytics />
+          <SpeedInsights />
+        </CartProvider>
+      </AlternateLinksProvider>
     </NextIntlClientProvider>
   );
 }

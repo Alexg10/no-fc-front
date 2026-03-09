@@ -14,6 +14,9 @@ export async function getPageBySlug(
         },
       },
       populate: {
+        localizations: {
+          fields: ["slug", "locale"],
+        },
         blocks: {
           populate: "*",
           on: {

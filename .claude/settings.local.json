@@ -29,7 +29,8 @@
       "Bash(mcp__figma__get_figma_data:*)",
       "Bash(claude mcp list:*)",
       "Bash(env)",
-      "Bash(git diff:*)"
+      "Bash(git diff:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []

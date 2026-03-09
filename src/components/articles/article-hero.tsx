@@ -21,22 +21,36 @@ interface ArticleHeroProps {
   article: StrapiArticle;
   mainColor: ColorList;
   isLink?: boolean;
+  titleColor: ColorList | null;
 }
 
 export function ArticleHero({
   article,
   mainColor,
   isLink = false,
+  titleColor,
 }: ArticleHeroProps) {
   const t = useTranslations("article");
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const resolvedTitleColor = titleColor ?? mainColor;
+  const coverRef = useRef<HTMLDivElement>(null);
   useGSAP(
     () => {
       const hero = heroRef.current;
       const container = containerRef.current;
-      if (!hero || !container) return;
+      const cover = coverRef.current;
+      if (!hero || !container || !cover) return;
+
+      gsap.to(cover, {
+        yPercent: 13,
+        scrollTrigger: {
+          trigger: cover,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
 
       gsap.to(hero, {
         scrollTrigger: {
@@ -57,7 +71,7 @@ export function ArticleHero({
         },
       });
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   useEffect(() => {
@@ -71,9 +85,12 @@ export function ArticleHero({
   const articleHref = article.slug ? `/articles/${article.slug}` : "#";
 
   const heroContent = (
-    <div className="relative h-[125vh]" ref={containerRef}>
+    <div className="relative h-[125vh] overflow-hidden" ref={containerRef}>
       {article.cover && (
-        <div className="h-[125vh] w-full overflow-hidden absolute top-0 left-0">
+        <div
+          className="h-[125vh] w-full overflow-hidden absolute top-0 left-0"
+          ref={coverRef}
+        >
           <Image
             src={getStrapiImageUrl(article.cover.url)}
             alt={article.cover.alternativeText || article.title}
@@ -97,7 +114,7 @@ export function ArticleHero({
             <h1
               className={cn(
                 "heading-xl-obviously leading-[85%]",
-                getColorClass(mainColor)
+                getColorClass(resolvedTitleColor),
               )}
             >
               {article.title}
@@ -106,7 +123,7 @@ export function ArticleHero({
               content={article.shortDescription}
               className={cn(
                 "text-l-polymath lg:mt-6",
-                getColorClass(mainColor)
+                getColorClass(resolvedTitleColor),
               )}
             />
           </div>

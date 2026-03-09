@@ -14,16 +14,56 @@ export async function getHomepage(
         heroArticle: {
           populate: {
             article: {
-              populate: "*",
+              fields: [
+                "title",
+                "slug",
+                "mainColor",
+                "titleColor",
+                "issueNumber",
+                "shortDescription",
+              ],
+              populate: {
+                cover: {
+                  fields: ["url", "alternativeText", "width", "height"],
+                },
+              },
             },
           },
         },
         blocks: {
           populate: "*",
+          on: {
+            "homepage.newest-articles": {
+              fields: ["title"],
+            },
+            "homepage.home-products": {
+              fields: ["title"],
+              populate: {
+                products: { fields: ["handle"] },
+              },
+            },
+            "common.centered-text": {
+              populate: {
+                button: { fields: ["label", "link", "target"] },
+              },
+            },
+            "common.video-full-width": {
+              fields: ["playerText", "url"],
+              populate: {
+                cover: { fields: ["url", "alternativeText", "width", "height"] },
+              },
+            },
+            "common.section-push": {
+              fields: ["title", "whiteText"],
+              populate: {
+                button: { fields: ["label", "link", "target"] },
+                cover: { fields: ["url", "alternativeText", "width", "height"] },
+              },
+            },
+          },
         },
       },
     },
-    { encodeValuesOnly: true }
   );
 
   const result = await strapiFetchWithFallback(`/homepage?${query}`, locale, {

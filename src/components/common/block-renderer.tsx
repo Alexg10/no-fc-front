@@ -1,4 +1,5 @@
 import { NewestArticles } from "@/components/common/homepage/newest-articles";
+import { AboutScrollAnimBlock } from "@/components/dynamic-blocks/about-scroll-anim-block";
 import { ArticleIntroBlock } from "@/components/dynamic-blocks/article-intro-block";
 import { ArticleQuoteBlock } from "@/components/dynamic-blocks/article-quote-block";
 import { CarouselBlock } from "@/components/dynamic-blocks/carousel-block";
@@ -51,6 +52,8 @@ export async function BlockRenderer({
       return <TextImageBlock block={block} />;
     case "common.photo-and-text-repeat":
       return <PhotoTextRepeatBlock block={block} />;
+    case "common.about-scroll-anim":
+      return <AboutScrollAnimBlock block={block} />;
     case "homepage.home-products":
       return <HomeProductsBlock block={block} locale={locale || "en"} />;
     case "homepage.newest-articles":
