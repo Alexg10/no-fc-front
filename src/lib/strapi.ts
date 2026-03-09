@@ -9,6 +9,20 @@ import qs from "qs";
 const STRAPI_URL = process.env.STRAPI_URL || "http://localhost:1337";
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || "";
 
+/**
+ * Stringify un objet en query string compatible Strapi.
+ * Préserve le `*` dans `populate: "*"` (ne l'encode pas en %2A).
+ */
+export function strapiQuery(params: Record<string, unknown>): string {
+  return qs.stringify(params, {
+    encodeValuesOnly: true,
+    encoder: (str, defaultEncoder, charset) => {
+      if (str === "*") return "*";
+      return defaultEncoder(str, defaultEncoder, charset);
+    },
+  });
+}
+
 export function getStrapiImageUrl(url: string | undefined): string {
   if (!url) return "";
 
@@ -77,8 +91,21 @@ export async function strapiFetch(
  * @param options - Options de fetch additionnelles (revalidate, headers, etc.)
  * @returns Le résultat du fetch
  */
+const STRAPI_BASE_KEYS = new Set([
+  "id", "documentId", "createdAt", "updatedAt", "publishedAt", "locale",
+]);
+
 function hasData(result: StrapiFetchResult): boolean {
-  return result.status !== 404 && result.data !== null && result.data?.data !== null;
+  if (result.status === 404 || result.data === null || result.data?.data === null) {
+    return false;
+  }
+  const data = result.data?.data;
+  if (typeof data === "object" && !Array.isArray(data)) {
+    const keys = Object.keys(data);
+    const hasContentKeys = keys.some((k) => !STRAPI_BASE_KEYS.has(k));
+    return hasContentKeys;
+  }
+  return true;
 }
 
 // "fr" → "fr-FR", "fr-FR" → "fr"
@@ -168,13 +195,7 @@ export async function getProductByHandle(
       },
     };
 
-    const queryString = qs.stringify(
-      { filters, populate },
-      {
-        encodeValuesOnly: true,
-        addQueryPrefix: true,
-      },
-    );
+    const queryString = `?${strapiQuery({ filters, populate })}`;
 
     let result = await strapiFetch(`/products${queryString}`, {
       ...(locale && { locale }),

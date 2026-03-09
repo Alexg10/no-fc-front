@@ -30,7 +30,10 @@
       "Bash(claude mcp list:*)",
       "Bash(env)",
       "Bash(git diff:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(git stash:*)",
+      "WebFetch(domain:excellent-cheese-5ba4677c1a.strapiapp.com)",
+      "Bash(node -e:*)"
     ],
     "deny": [],
     "ask": []

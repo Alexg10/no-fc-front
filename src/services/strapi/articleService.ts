@@ -1,4 +1,4 @@
-import { strapiFetchWithFallback } from "@/lib/strapi";
+import { strapiQuery, strapiFetchWithFallback } from "@/lib/strapi";
 import { StrapiArticle } from "@/types/strapi/article";
 import qs from "qs";
 
@@ -22,7 +22,7 @@ export async function getArticleBySlug(
   slug: string,
   locale?: string,
 ): Promise<StrapiArticle | null> {
-  const query = qs.stringify({
+  const query = strapiQuery({
     filters: {
       slug: {
         $eq: slug,
