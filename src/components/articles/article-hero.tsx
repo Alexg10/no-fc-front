@@ -9,7 +9,6 @@ import { ColorList, StrapiArticle } from "@/types/strapi/article";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
-import { BREAKPOINTS } from "@/hooks/useBreakpoints";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -35,15 +34,17 @@ export function ArticleHero({
   const containerRef = useRef<HTMLDivElement>(null);
   const resolvedTitleColor = titleColor ?? mainColor;
   const coverRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   useGSAP(
     () => {
       const hero = heroRef.current;
       const container = containerRef.current;
       const cover = coverRef.current;
-      if (!hero || !container || !cover) return;
+      const content = contentRef.current;
+      if (!hero || !container || !cover || !content) return;
 
       gsap.to(cover, {
-        yPercent: 13,
+        yPercent: 2,
         scrollTrigger: {
           trigger: cover,
           start: "top top",
@@ -57,12 +58,8 @@ export function ArticleHero({
           trigger: hero,
           start: "top top",
           end: () => {
-            if (!container || !hero) return "+=0";
-            const isUnderTablet =
-              typeof window !== "undefined" &&
-              window.innerWidth < BREAKPOINTS.TABLET;
-            const offset = isUnderTablet ? 40 : 100;
-            return `+=${container.offsetHeight - hero.offsetHeight - offset}`;
+            if (!container) return "+=0";
+            return `+=${content.offsetTop + 100}`;
           },
           pin: true,
           pinSpacing: false,
@@ -102,30 +99,35 @@ export function ArticleHero({
         </div>
       )}
       <div
-        className="text-white relative pt-[25vh] z-20  w-full will-change-transform"
+        className="text-white relative h-screen z-20 w-full will-change-transform"
         ref={heroRef}
       >
         <Grid>
-          <div className="col-span-full  md:col-start-2 md:col-end-6 lg:col-start-3 lg:col-end-10 text-center h-fit flex flex-col justify-center items-center gap-4">
-            <IssueNumberBadge
-              issueNumber={article.issueNumber}
-              issueLabel={t("issue")}
-            />
-            <h1
-              className={cn(
-                "heading-xl-obviously leading-[85%]",
-                getColorClass(resolvedTitleColor),
-              )}
+          <div className="relative flex items-center justify-center col-span-full  md:col-start-2 md:col-end-6 lg:col-start-3 lg:col-end-10">
+            <div
+              className=" text-center relative flex flex-col justify-center items-center gap-4"
+              ref={contentRef}
             >
-              {article.title}
-            </h1>
-            <BlockRendererClient
-              content={article.shortDescription}
-              className={cn(
-                "text-l-polymath lg:mt-6",
-                getColorClass(resolvedTitleColor),
-              )}
-            />
+              <IssueNumberBadge
+                issueNumber={article.issueNumber}
+                issueLabel={t("issue")}
+              />
+              <h1
+                className={cn(
+                  "heading-xl-obviously leading-[85%]",
+                  getColorClass(resolvedTitleColor),
+                )}
+              >
+                {article.title}
+              </h1>
+              <BlockRendererClient
+                content={article.shortDescription}
+                className={cn(
+                  "text-l-polymath lg:mt-6",
+                  getColorClass(resolvedTitleColor),
+                )}
+              />
+            </div>
           </div>
         </Grid>
       </div>
