@@ -86,7 +86,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                       draggable={false}
                     />
                     <div
-                      className="absolute top-0 w-full h-full bg-center bg-no-repeat mix-blend-screen z-10"
+                      className="absolute -top-px -left-px w-[calc(100%+2px)] h-[calc(100%+2px)] bg-center bg-no-repeat mix-blend-screen z-10"
                       style={{
                         backgroundImage: `url("/images/article/carousel_texture_image.png")`,
                         backgroundSize: "100% 100%",
