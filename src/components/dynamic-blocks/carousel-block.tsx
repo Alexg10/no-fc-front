@@ -101,7 +101,7 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
   return (
     <section
       ref={sectionRef}
-      className={`py-9 mb-15 relative lg:py-28 w-full full-width lg:mb-40 lg:cursor-none ${
+      className={`py-9 mb-15 relative lg:py-28 w-full full-width lg:mb-40 lg:cursor-none z-20 [&:has(+.custom-container-block)]:mb-0 ${
         block.backgroundColor ? ` bg-${block.backgroundColor}` : ""
       }`}
       onMouseMove={handleMouseMove}
