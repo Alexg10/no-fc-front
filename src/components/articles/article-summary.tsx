@@ -91,12 +91,21 @@ export function ArticleSummary({
       ease: "power2.inOut",
     });
 
+    let lastHeight = mainEl.offsetHeight;
+    let refreshTimeout: ReturnType<typeof setTimeout>;
     const resizeObserver = new ResizeObserver(() => {
-      ScrollTrigger.refresh();
+      const newHeight = mainEl.offsetHeight;
+      // Only refresh for significant size changes (>50px), not minor reflows
+      if (Math.abs(newHeight - lastHeight) > 50) {
+        lastHeight = newHeight;
+        clearTimeout(refreshTimeout);
+        refreshTimeout = setTimeout(() => ScrollTrigger.refresh(), 200);
+      }
     });
     resizeObserver.observe(mainEl);
 
     return () => {
+      clearTimeout(refreshTimeout);
       resizeObserver.disconnect();
       ScrollTrigger.getAll().forEach((st) => {
         if (st.trigger === mainEl) st.kill();
@@ -141,18 +150,21 @@ export function ArticleSummary({
 
   return (
     <div className="max-w-[1464px] mx-auto w-full px-4">
-      <div
-        className="absolute z-40 flex flex-col items-start justify-end top-5 bg-white"
-        ref={summaryRef}
-      >
-        <div className="p-2 lg:p-4 w-full!important h-full!important bg-white">
+      <div className="absolute z-40 top-5" ref={summaryRef}>
+        <div className="relative p-2 lg:p-4 bg-white">
           <div
             className={cn(
-              "top-full bg-white right-0 w-full grid transition-all duration-300 ease-in-out",
-              isOpen ? "grid-rows-[1fr] " : "grid-rows-[0fr] ",
+              "absolute bottom-full overflow-hidden pb-0 lg:pb-0 left-0 bg-white right-0 w-full grid transition-all duration-300 ease-in-out",
+              isOpen
+                ? "grid-rows-[1fr] py-4 translate-y-0"
+                : "grid-rows-[0fr] pointer-events-none py-0 translate-y-full",
             )}
           >
-            <div className="overflow-hidden max-w-[203px] text-polymath">
+            <div
+              className={cn(
+                "overflow-hidden text-polymath px-2 lg:px-4 w-full",
+              )}
+            >
               <ArticleSummaryLink />
             </div>
           </div>
