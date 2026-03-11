@@ -31,6 +31,10 @@ export interface CartLineItem {
       amount: string;
       currencyCode: string;
     };
+    compareAtPrice: {
+      amount: string;
+      currencyCode: string;
+    } | null;
   };
 }
 
@@ -75,6 +79,10 @@ const CART_CREATE = `
                   id
                   title
                   price {
+                    amount
+                    currencyCode
+                  }
+                  compareAtPrice {
                     amount
                     currencyCode
                   }
@@ -131,6 +139,10 @@ const CART_LINES_ADD = `
                     amount
                     currencyCode
                   }
+                  compareAtPrice {
+                    amount
+                    currencyCode
+                  }
                   product {
                     id
                     title
@@ -181,6 +193,10 @@ const CART_LINES_UPDATE = `
                   id
                   title
                   price {
+                    amount
+                    currencyCode
+                  }
+                  compareAtPrice {
                     amount
                     currencyCode
                   }
@@ -237,6 +253,10 @@ const CART_LINES_REMOVE = `
                     amount
                     currencyCode
                   }
+                  compareAtPrice {
+                    amount
+                    currencyCode
+                  }
                   product {
                     id
                     title
@@ -286,6 +306,10 @@ const CART_QUERY = `
                 id
                 title
                 price {
+                  amount
+                  currencyCode
+                }
+                compareAtPrice {
                   amount
                   currencyCode
                 }
