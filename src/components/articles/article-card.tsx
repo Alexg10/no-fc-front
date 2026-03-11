@@ -17,7 +17,7 @@ export function ArticleCard({ article, issueLabel, locale }: ArticleCardProps) {
     <Link href={articleHref} className="group flex flex-col gap-4">
       <div className="relative aspect-7/8 w-full overflow-hidden">
         {article.cover?.url && (
-          <div className="relative aspect-7/8 ">
+          <div className="relative aspect-7/8 overflow-hidden">
             <Image
               src={getStrapiImageUrl(article.cover.url)}
               alt={article.cover.alternativeText || article.title}
@@ -27,10 +27,10 @@ export function ArticleCard({ article, issueLabel, locale }: ArticleCardProps) {
               loading="lazy"
             />
             <div
-              className="absolute top-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
+              className="absolute -top-px -left-px w-[calc(100%+2px)] h-[calc(100%+2px)] bg-center bg-no-repeat mix-blend-screen"
               style={{
                 backgroundImage: `url("/images/article/carousel_texture_image.png")`,
-                backgroundSize: "calc(100% + 2px) calc(100% + 2px)",
+                backgroundSize: "100% 100%",
               }}
             />
           </div>
