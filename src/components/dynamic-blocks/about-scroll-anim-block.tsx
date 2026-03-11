@@ -501,7 +501,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           playsInline
         />
         <div
-          className="absolute top-[-40px] left-0 w-full h-[100px] bg-no-repeat"
+          className="absolute top-[-40px] left-0 w-full h-[100px] bg-repeat-x"
           style={{
             backgroundImage: `url("/images/article/article_ripped.webp")`,
             backgroundSize: "auto 65%",
@@ -517,7 +517,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           ARE WE A DESIGNERS?
         </p>
         <div
-          className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-no-repeat"
+          className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-repeat-x"
           style={{
             backgroundImage: `url("/images/article/article_ripped.webp")`,
             backgroundSize: "auto 65%",
@@ -669,14 +669,14 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           </span>
         </div>
         <div
-          className="absolute top-[-40px] left-0 w-full h-[100px] bg-no-repeat"
+          className="absolute top-[-40px] left-0 w-full h-[100px] bg-repeat-x"
           style={{
             backgroundImage: `url("/images/article/article_ripped.webp")`,
             backgroundSize: "auto 65%",
           }}
         />
         <div
-          className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-no-repeat"
+          className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-repeat-x"
           style={{
             backgroundImage: `url("/images/article/article_ripped.webp")`,
             backgroundSize: "auto 65%",
@@ -692,7 +692,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           ref={sixthSceneTopPartRef}
         >
           <div
-            className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-no-repeat"
+            className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-repeat-x"
             style={{
               backgroundImage: `url("/images/article/article_ripped.webp")`,
               backgroundSize: "auto 65%",
@@ -716,7 +716,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           ref={sixthSceneBottomPartRef}
         >
           <div
-            className="absolute top-[-40px]  left-0 w-full h-[100px] bg-no-repeat"
+            className="absolute top-[-40px]  left-0 w-full h-[100px] bg-repeat-x"
             style={{
               backgroundImage: `url("/images/article/article_ripped.webp")`,
               backgroundSize: "auto 65%",
@@ -853,14 +853,14 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           <span>Just football through the eyes of design</span>
         </div>
         <div
-          className="absolute top-[-40px] left-0 w-full h-[100px] bg-no-repeat"
+          className="absolute top-[-40px] left-0 w-full h-[100px] bg-repeat-x"
           style={{
             backgroundImage: `url("/images/article/article_ripped.webp")`,
             backgroundSize: "auto 65%",
           }}
         />
         <div
-          className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-no-repeat"
+          className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-repeat-x"
           style={{
             backgroundImage: `url("/images/article/article_ripped.webp")`,
             backgroundSize: "auto 65%",

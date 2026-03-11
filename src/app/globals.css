@@ -218,6 +218,14 @@
   column-gap: 40px;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .max-content {
   width: max-content;
 }

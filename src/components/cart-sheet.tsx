@@ -136,7 +136,7 @@ export function CartSheet() {
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 justify-between w-full">
+                          <div className="flex items-end gap-2 justify-between w-full">
                             <Button
                               variant="ghost"
                               className="underline text-black bg-transparent p-0 font-polymath-text! border-none text-[16px] normal-case"
@@ -145,12 +145,28 @@ export function CartSheet() {
                             >
                               {t("remove")}
                             </Button>
-                            <span className="font-polymath-text! text-black ">
+                            <span className="font-polymath-text! leading-[100%] gap-1 text-black flex flex-col items-center translate-y-[3px]">
                               {formatPrice(
                                 parseFloat(line.merchandise.price.amount) *
                                   line.quantity,
                                 line.merchandise.price.currencyCode,
                               )}
+
+                              {line.merchandise.compareAtPrice &&
+                                parseFloat(
+                                  line.merchandise.compareAtPrice.amount,
+                                ) >
+                                  parseFloat(line.merchandise.price.amount) && (
+                                  <span className="line-through text-grey ">
+                                    {formatPrice(
+                                      parseFloat(
+                                        line.merchandise.compareAtPrice.amount,
+                                      ) * line.quantity,
+                                      line.merchandise.compareAtPrice
+                                        .currencyCode,
+                                    )}
+                                  </span>
+                                )}
                             </span>
                           </div>
                         </div>

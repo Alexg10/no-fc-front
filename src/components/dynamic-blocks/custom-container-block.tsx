@@ -21,7 +21,7 @@ export function CustomContainerBlock({ block }: CustomContainerBlockProps) {
 
   return (
     <section
-      className={`[&+&]:pt-0 relative w-full full-width py-9 lg:py-46 lg:pb-20 ${bgColor} ${textColor}`}
+      className={`custom-container-block [&+&]:pt-0 relative w-full full-width py-9 lg:py-46 lg:pb-20 ${bgColor} ${textColor}`}
     >
       {block.backgroundImage && (
         <div

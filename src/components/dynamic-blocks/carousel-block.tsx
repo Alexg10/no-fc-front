@@ -13,9 +13,8 @@ interface CarouselBlockProps {
 }
 
 function getRotationForImage(imageId: number) {
-  const seed = Math.abs(Math.sin(imageId) * 10000);
-  const random = seed - Math.floor(seed);
-  return Math.round((random * 4 - 2) * 100) / 100;
+  const rotations = [2, -1.8, 2.2, -2.5, 1.2, -3, 2.1, -1.5, 2.8, -2.2];
+  return rotations[imageId % rotations.length];
 }
 
 export function CarouselBlock({ block }: CarouselBlockProps) {
@@ -101,7 +100,7 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
   return (
     <section
       ref={sectionRef}
-      className={`py-9 mb-15 relative lg:py-28 w-full full-width lg:mb-40 lg:cursor-none ${
+      className={`py-9 mb-15 relative lg:py-28 w-full full-width lg:mb-40 lg:cursor-none z-20 [&:has(+.custom-container-block)]:mb-0 ${
         block.backgroundColor ? ` bg-${block.backgroundColor}` : ""
       }`}
       onMouseMove={handleMouseMove}
@@ -145,15 +144,15 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
           />
         </div>
       )}
-      <div className="scroll-smooth overflow-hidden" ref={containerRef}>
+      <div className="scroll-smooth" ref={containerRef}>
         <div className="flex -ml-4 ">
           {loopSlides.map((image, index) => (
             <div
               key={`${image.id}-${index}`}
-              className="flex-[0_0_55%] pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_35%] overflow-hidden"
+              className="flex-[0_0_55%] pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_35%] "
             >
               <div
-                className="relative aspect-3/4 w-full overflow-hidden"
+                className="relative aspect-3/4 w-full "
                 style={{ transform: `rotate(${loopRotations[index]}deg)` }}
               >
                 <Image
@@ -164,10 +163,11 @@ export function CarouselBlock({ block }: CarouselBlockProps) {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
                 <div
-                  className="absolute top-0 w-full h-full bg-center bg-no-repeat mix-blend-screen"
+                  className="absolute top-[-1px] left-[-1px] w-[calc(100%+2px)] h-[calc(100%+2px)] bg-center bg-no-repeat mix-blend-screen"
                   style={{
                     backgroundImage: `url("/images/article/carousel_texture_image.png")`,
                     backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
                     transform: index % 2 === 1 ? "rotate(180deg)" : undefined,
                   }}
                 />

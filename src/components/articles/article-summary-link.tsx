@@ -57,17 +57,17 @@ export function ArticleSummaryLink() {
   };
 
   return (
-    <div className="flex flex-col gap-2 pb-4 max-h-[25vh] overflow-y-auto">
+    <div className="flex flex-col gap-2 h-full max-h-[35vh] overflow-auto no-scrollbar">
       {headings.length > 0 ? (
         headings.map((heading) => (
           <button
             key={heading.id}
             onClick={() => scrollToHeading(heading.id)}
             className={cn(
-              "text-left text-[14px] leading-[140%]hover:opacity-100 text-black cursor-pointer",
+              "text-left text-[14px] leading-[140%] hover:opacity-100 text-black cursor-pointer transition-opacity duration-300 ease-in-out",
               isCurrentSection === heading.id
                 ? "opacity-100"
-                : "opacity-40 text-polymath  ",
+                : "opacity-40 text-polymath",
             )}
           >
             {heading.text}
