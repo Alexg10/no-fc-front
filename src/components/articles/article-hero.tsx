@@ -44,7 +44,7 @@ export function ArticleHero({
       if (!hero || !container || !cover || !content) return;
 
       gsap.to(cover, {
-        yPercent: 2,
+        yPercent: 5,
         scrollTrigger: {
           trigger: cover,
           start: "top top",
@@ -59,7 +59,7 @@ export function ArticleHero({
           start: "top top",
           end: () => {
             if (!container) return "+=0";
-            return `+=${content.offsetTop + 100}`;
+            return `+=${container.offsetHeight - window.innerHeight}`;
           },
           pin: true,
           pinSpacing: false,
@@ -82,10 +82,13 @@ export function ArticleHero({
   const articleHref = article.slug ? `/articles/${article.slug}` : "#";
 
   const heroContent = (
-    <div className="relative h-[125vh] overflow-hidden" ref={containerRef}>
+    <div
+      className="relative md:aspect-square overflow-hidden"
+      ref={containerRef}
+    >
       {article.cover && (
         <div
-          className="h-[125vh] w-full overflow-hidden absolute top-0 left-0"
+          className="h-full w-full md:aspect-square overflow-hidden absolute top-0 left-0"
           ref={coverRef}
         >
           <Image

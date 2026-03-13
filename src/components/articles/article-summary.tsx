@@ -149,7 +149,7 @@ export function ArticleSummary({
   }, [mainRef, summaryRef, isUnderDesktop]);
 
   return (
-    <div className="max-w-[1464px] mx-auto w-full px-4">
+    <div className="max-w-[1464px] mx-auto w-full px-4 xl:max-w-[1920px]">
       <div className="absolute z-40 top-5" ref={summaryRef}>
         <div className="relative p-2 lg:p-4 bg-white">
           <div
