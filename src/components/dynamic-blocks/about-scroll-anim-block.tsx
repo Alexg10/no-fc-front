@@ -17,8 +17,6 @@ interface AboutScrollAnimBlockProps {
 }
 
 export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
-  console.log("[AboutScrollAnimBlock] block", block);
-
   const containerRef = useRef<HTMLDivElement>(null);
   const firstSceneRef = useRef<HTMLDivElement>(null);
   const firstImagesRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -54,7 +52,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
   const seventhSceneSecondTitleRef = useRef<HTMLDivElement>(null);
 
   const parallaxValues = [100, -150, 120, -80];
-  const fourthSceneParallaxValues = [470, -400, -220, -380];
+  const fourthSceneParallaxValues = [400, -400, -220, -380];
 
   useGSAP(
     () => {
@@ -108,7 +106,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=1300%",
+          end: "+=1400%",
           pin: true,
           pinSpacing: true,
           scrub: 1,
@@ -133,7 +131,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           secondSceneRef.current,
           {
             height: "100vh",
-            duration: 0.3,
+            duration: 0.8,
           },
           "secondSceneRef",
         )
@@ -154,7 +152,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           },
           "secondSceneTitle-=0.6",
         )
-        .to({}, { duration: 0.5 })
+        .to({}, { duration: 0.8 })
         .to(
           thirdSceneRef.current,
           {
@@ -176,11 +174,11 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           thirdSceneImageRef.current,
           {
             yPercent: 100,
-            duration: 0.5,
+            duration: 0.8,
           },
           "thirdSceneImage-=0.3",
         )
-        .to({}, { duration: 0.5 })
+        .to({}, { duration: 1 })
         .to(
           fourthSceneRef.current,
           {
@@ -225,7 +223,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           fifthSceneRef.current,
           {
             height: "100vh",
-            duration: 0.5,
+            duration: 0.8,
           },
           "fifthScene",
         )
@@ -360,7 +358,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           },
           "sixthSceneTitleThreeSplit",
         )
-        .to({}, { duration: 0.5 })
+        .to({}, { duration: 0.7 })
         .to(
           seventhSceneRef.current,
           {
@@ -579,7 +577,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
                   ? "top-[0%] left-[25%] lg:top-[-60%] lg:left-[44%] -rotate-6"
                   : index === 1
                     ? "bottom-[-10%] right-[2%] lg:bottom-[-50%] lg:right-[6%] rotate-[5deg]"
-                    : "bottom-[-5%] left-[-8%] lg:bottom-[-40%] lg:left-[12%] rotate-8",
+                    : "bottom-[-5%] left-[-8%] lg:bottom-[-45%] lg:left-[12%] rotate-8",
               ].join(" ")}
               ref={(el) => {
                 fourthSceneImages.current[index] = el;
@@ -699,7 +697,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             }}
           />
           <div
-            className="h-full w-[70%] absolute bottom-0 left-0 hidden"
+            className="h-full w-[70%] top-0 left-0 absolute hidden"
             ref={sixthScenePictureOne}
           >
             <Image
@@ -742,51 +740,49 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             src={"/images/about/sixthScenePictureThree.webp"}
             alt="Papper texture about"
             className="object-cover"
-            fill
+            width={620}
+            height={1354}
           />
         </div>
         <div
-          className="h-full w-[620px] absolute -bottom-1/3 left-0 translate-x-[15%] hidden"
+          className=" absolute h-[150%] aspect-4/7 bottom-[-50%] left-[5%] hidden"
           ref={sixthScenePictureFour}
         >
           <Image
             src={"/images/about/sixthScenePictureFour.webp"}
             alt="Papper texture about"
-            width={811}
-            height={1442}
+            className="h-full w-full top-0 left-0"
+            fill
           />
         </div>
         <div
-          className="h-full w-[620px] absolute -bottom-[40%] left-0 -translate-x-[25%] hidden"
+          className="h-[125%] aspect-3/7 absolute -bottom-[50%] left-0 -translate-x-[25%] hidden"
           ref={sixthScenePictureFive}
         >
           <Image
             src={"/images/about/sixthScenePictureFive.webp"}
             alt="Papper texture about"
-            width={593}
-            height={1354}
+            fill
           />
         </div>
         <div
-          className="h-full w-[620px] absolute top-[-5%] right-[10%] hidden"
+          className="h-[150%] aspect-4/7  absolute top-[-15%] right-[7%] hidden"
           ref={sixthScenePictureSix}
         >
           <Image
             src={"/images/about/sixthScenePictureSeven.webp"}
             alt="Papper texture about"
-            width={610}
-            height={1085}
+            fill
           />
         </div>
         <div
-          className="h-1/2 w-[557px] absolute bottom-[5%] right-[10%] hidden"
+          className="h-[100%] aspect-2/3 absolute bottom-[-30%] right-0 hidden"
           ref={sixthScenePictureSeven}
         >
           <Image
             src={"/images/about/sixthScenePictureSix.webp"}
             alt="Papper texture about"
-            width={557}
-            height={874}
+            fill
           />
         </div>
         <p
