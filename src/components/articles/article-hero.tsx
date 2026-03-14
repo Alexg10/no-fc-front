@@ -43,7 +43,7 @@ export function ArticleHero({
       const content = contentRef.current;
       if (!hero || !container || !cover || !content) return;
 
-      gsap.to(cover, {
+      const coverTween = gsap.to(cover, {
         yPercent: 5,
         scrollTrigger: {
           trigger: cover,
@@ -53,7 +53,7 @@ export function ArticleHero({
         },
       });
 
-      gsap.to(hero, {
+      const heroTween = gsap.to(hero, {
         scrollTrigger: {
           trigger: hero,
           start: "top top",
@@ -69,7 +69,10 @@ export function ArticleHero({
       });
 
       return () => {
-        ScrollTrigger.getAll().forEach((st) => st.kill());
+        coverTween.scrollTrigger?.kill();
+        coverTween.kill();
+        heroTween.scrollTrigger?.kill();
+        heroTween.kill();
         gsap.set([hero, cover], { clearProps: "all" });
       };
     },
