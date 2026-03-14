@@ -12,7 +12,7 @@ export function ArticleCardBadge({
       <span className="border-r border-black text-xl-obviously lg:text-[16px] px-[8px] p-[6px]">
         {issueLabel}
       </span>
-      <span className=" text-black text-xl-obviously lg:text-[16px] p-[6px]">
+      <span className=" text-black text-xl-obviously lg:text-[16px] p-[6px] lg:px-[7px]">
         N°{issueNumber}
       </span>
     </div>

@@ -126,7 +126,7 @@ export function ArticleHero({
               <BlockRendererClient
                 content={article.shortDescription}
                 className={cn(
-                  "text-l-polymath lg:mt-6",
+                  "text-l-polymath lg:mt-6 [&>p]:m-0",
                   getColorClass(resolvedTitleColor),
                 )}
               />

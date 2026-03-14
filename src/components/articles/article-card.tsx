@@ -22,7 +22,7 @@ export function ArticleCard({ article, issueLabel, locale }: ArticleCardProps) {
               src={getStrapiImageUrl(article.cover.url)}
               alt={article.cover.alternativeText || article.title}
               fill
-              className="object-cover group-hover:scale-110 transition-all duration-300"
+              className="object-cover transition-all duration-300"
               sizes="(max-width: 768px) 100vw, 50vw"
               loading="lazy"
             />
