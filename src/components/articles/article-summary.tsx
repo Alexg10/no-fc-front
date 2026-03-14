@@ -75,7 +75,9 @@ export function ArticleSummary({
     const mainEl = mainRef.current;
     if (!mainEl || !progressBarRef.current) return;
 
-    gsap.to(progressBarRef.current, {
+    const progressBar = progressBarRef.current;
+
+    const progressTween = gsap.to(progressBar, {
       scrollTrigger: {
         trigger: mainEl,
         start: "top 75%",
@@ -83,8 +85,8 @@ export function ArticleSummary({
         scrub: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          if (progressBarRef.current) {
-            progressBarRef.current.style.width = `${self.progress * 100}%`;
+          if (progressBar) {
+            progressBar.style.width = `${self.progress * 100}%`;
           }
         },
       },
@@ -95,7 +97,6 @@ export function ArticleSummary({
     let refreshTimeout: ReturnType<typeof setTimeout>;
     const resizeObserver = new ResizeObserver(() => {
       const newHeight = mainEl.offsetHeight;
-      // Only refresh for significant size changes (>50px), not minor reflows
       if (Math.abs(newHeight - lastHeight) > 50) {
         lastHeight = newHeight;
         clearTimeout(refreshTimeout);
@@ -107,9 +108,9 @@ export function ArticleSummary({
     return () => {
       clearTimeout(refreshTimeout);
       resizeObserver.disconnect();
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger === mainEl) st.kill();
-      });
+      progressTween.scrollTrigger?.kill();
+      progressTween.kill();
+      gsap.set(progressBar, { clearProps: "all" });
     };
   }, [mainRef]);
 
@@ -118,8 +119,10 @@ export function ArticleSummary({
     const mainEl = mainRef.current;
     if (!summaryEl || !mainEl) return;
 
+    let pinTween: gsap.core.Tween | null = null;
+
     const timeoutId = setTimeout(() => {
-      gsap.to(summaryEl, {
+      pinTween = gsap.to(summaryEl, {
         scrollTrigger: {
           trigger: summaryEl,
           start: isUnderDesktop ? "bottom bottom-=16px" : "center bottom-=64px",
@@ -142,9 +145,11 @@ export function ArticleSummary({
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("resize", handleResize);
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger === summaryEl) st.kill();
-      });
+      if (pinTween) {
+        pinTween.scrollTrigger?.kill();
+        pinTween.kill();
+      }
+      gsap.set(summaryEl, { clearProps: "all" });
     };
   }, [mainRef, summaryRef, isUnderDesktop]);
 

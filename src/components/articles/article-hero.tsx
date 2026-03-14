@@ -67,6 +67,11 @@ export function ArticleHero({
           invalidateOnRefresh: true,
         },
       });
+
+      return () => {
+        ScrollTrigger.getAll().forEach((st) => st.kill());
+        gsap.set([hero, cover], { clearProps: "all" });
+      };
     },
     { scope: containerRef },
   );
