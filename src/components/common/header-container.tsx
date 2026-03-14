@@ -1,38 +1,27 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export function HeaderContainer({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isHomepage = pathname === "/" || pathname === "/fr";
   const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
 
-  useGSAP(
-    () => {
-      if (isHomepage) return;
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+    setIsHidden(currentScrollY > lastScrollY.current && currentScrollY > 100);
+    lastScrollY.current = currentScrollY;
+  }, []);
 
-      ScrollTrigger.create({
-        trigger: "body",
-        start: "top top",
-        end: "bottom bottom",
-        onUpdate: (self) => {
-          setIsHidden(self.direction === 1);
-        },
-      });
+  useEffect(() => {
+    if (isHomepage) return;
 
-      return () => {
-        ScrollTrigger.getAll().forEach((t) => t.kill());
-      };
-    },
-    { dependencies: [pathname] },
-  );
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isHomepage, handleScroll]);
 
   return (
     <div
