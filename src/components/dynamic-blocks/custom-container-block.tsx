@@ -52,15 +52,14 @@ export function CustomContainerBlock({ block }: CustomContainerBlockProps) {
         {block.image && (
           <div className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-17">
             <figure className="relative max-w-[280px] lg:max-w-full mx-auto">
-              <div className="absolute -top-14 -right-14">
+              <div className="absolute -top-6 z-10 -right-7 w-[30%] min-w-[150px] aspect-video lg:-top-16 lg:-right-25">
                 <Image
                   src={"/images/article/image_scotch.png"}
                   alt={block.image.alternativeText || "Custom container image"}
-                  width={319}
-                  height={186}
-                  className="w-full h-auto"
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   loading="lazy"
+                  fill
                 />
               </div>
               <Image
