@@ -6,6 +6,7 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { CartProvider } from "@/contexts/cart-context";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 import Marquee from "react-fast-marquee";
 
 export default async function NotFound() {
@@ -16,7 +17,9 @@ export default async function NotFound() {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <CartProvider>
-        <Header locale={locale} />
+        <Suspense>
+          <Header locale={locale} />
+        </Suspense>
 
         <main
           className="relative z-20 h-screen overflow-hidden bg-black flex flex-col items-center justify-center gap-8 lg:gap-12"
