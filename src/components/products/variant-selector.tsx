@@ -123,13 +123,12 @@ export function VariantSelector({
         </div>
       </div>
 
-      {/* Bouton Add to Cart + Prix */}
-      <div className="bg-black text-white p-2 max-content">
+      <div className="bg-black text-white p-2 md:max-content lg:w-fit">
         <div className="flex items-stretch border border-white">
           <button
             onClick={handleAddToCart}
             disabled={!selectedVariant?.availableForSale || isAdding}
-            className={`flex-1 flex items-center text-nowrap justify-center gap-3 lg:text-[24px] px-6 py-4 lg:px-2 text-obviously uppercase md:flex-2  transition-all duration-200 border-r border-white
+            className={`flex-1 flex items-center text-nowrap justify-center gap-3 pb-[13px] lg:text-[24px] px-6 py-4 lg:px-4 text-obviously uppercase md:flex-2  transition-all duration-200 border-r border-white
               ${
                 selectedVariant?.availableForSale
                   ? "hover:bg-black hover:text-white"
@@ -138,15 +137,17 @@ export function VariantSelector({
             `}
           >
             <CartIcon />
-            {isAdding ? t("adding") : t("addToCart")}
+            <span className="-translate-y-[2px]">
+              {isAdding ? t("adding") : t("addToCart")}
+            </span>
           </button>
-          <div className="flex flex-1 text-nowrap items-center justify-center px-8 text-[18px] gap-2">
+          <div className="flex flex-1 text-nowrap items-center justify-center px-8 text-[18px] gap-2 lg:px-12">
             {hasDiscount && selectedCompareAtPrice && (
               <span className="line-through opacity-50">
                 {parseFloat(selectedCompareAtPrice.amount).toFixed(2)} €
               </span>
             )}
-            <span>
+            <span className="lg:translate-y-[2px]">
               {selectedPrice
                 ? `${parseFloat(selectedPrice.amount).toFixed(2)} €`
                 : "—"}
@@ -155,7 +156,6 @@ export function VariantSelector({
         </div>
       </div>
 
-      {/* Message de disponibilité */}
       {selectedVariant && !selectedVariant.availableForSale && (
         <p className="text-red-600 font-semibold">{t("outOfStock")}</p>
       )}

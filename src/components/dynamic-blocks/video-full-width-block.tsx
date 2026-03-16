@@ -83,6 +83,7 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
                   "object-cover transition-opacity duration-300 ",
                   embedUrl && "group-hover:opacity-80",
                 )}
+                quality={90}
               />
             </button>
           )}
