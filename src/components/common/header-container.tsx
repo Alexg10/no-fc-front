@@ -26,7 +26,7 @@ export function HeaderContainer({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        "col-span-full flex relative items-center justify-between top-4 lg:top-6",
+        "col-span-full flex relative items-center justify-between top-4",
         "transition-transform duration-500 ease-in-out",
         isHidden && "-translate-y-[200px]",
       )}

@@ -77,7 +77,7 @@ export function CustomContainerBlock({ block }: CustomContainerBlockProps) {
           </div>
         )}
         {block.video && (
-          <div className="col-span-full lg:col-start-1 lg:col-end-12">
+          <div className="col-span-full">
             <VideoFullWidthBlock block={block.video} />
           </div>
         )}
