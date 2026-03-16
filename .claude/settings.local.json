@@ -31,11 +31,9 @@
       "Bash(env)",
       "Bash(git diff:*)",
       "Bash(python3:*)",
-      "Bash(find /Users/alexguerard/Documents/Projects/nofc/no-fc-front/src/app/[locale] -type f -name \"*.tsx\")",
-      "Bash(find /Users/alexguerard/Documents/Projects/nofc/no-fc-front/src/app/[locale] -type d)",
-      "mcp__Claude_Preview__preview_start",
-      "WebFetch(domain:localhost)",
-      "Bash(xargs kill -9)"
+      "Bash(git stash:*)",
+      "WebFetch(domain:excellent-cheese-5ba4677c1a.strapiapp.com)",
+      "Bash(node -e:*)"
     ],
     "deny": [],
     "ask": []

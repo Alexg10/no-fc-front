@@ -1,13 +1,12 @@
-import { strapiFetch } from "@/lib/strapi";
+import { strapiQuery, strapiFetch } from "@/lib/strapi";
 import type { StrapiPage, StrapiPageResponse } from "@/types/strapi/page";
-import qs from "qs";
 
 export async function getPageBySlug(
   slug: string,
   locale: string = "en",
 ): Promise<StrapiPage | null> {
   try {
-    const query = qs.stringify({
+    const query = strapiQuery({
       filters: {
         slug: {
           $eq: slug,
