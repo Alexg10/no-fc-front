@@ -43,8 +43,8 @@ export function ArticleHero({
       const content = contentRef.current;
       if (!hero || !container || !cover || !content) return;
 
-      gsap.to(cover, {
-        yPercent: 2,
+      const coverTween = gsap.to(cover, {
+        yPercent: 5,
         scrollTrigger: {
           trigger: cover,
           start: "top top",
@@ -53,13 +53,13 @@ export function ArticleHero({
         },
       });
 
-      gsap.to(hero, {
+      const heroTween = gsap.to(hero, {
         scrollTrigger: {
           trigger: hero,
           start: "top top",
           end: () => {
             if (!container) return "+=0";
-            return `+=${content.offsetTop + 100}`;
+            return `+=${container.offsetHeight - window.innerHeight}`;
           },
           pin: true,
           pinSpacing: false,
@@ -67,6 +67,14 @@ export function ArticleHero({
           invalidateOnRefresh: true,
         },
       });
+
+      return () => {
+        coverTween.scrollTrigger?.kill();
+        coverTween.kill();
+        heroTween.scrollTrigger?.kill();
+        heroTween.kill();
+        gsap.set([hero, cover], { clearProps: "all" });
+      };
     },
     { scope: containerRef },
   );
@@ -82,10 +90,13 @@ export function ArticleHero({
   const articleHref = article.slug ? `/articles/${article.slug}` : "#";
 
   const heroContent = (
-    <div className="relative h-[125vh] overflow-hidden" ref={containerRef}>
+    <div
+      className="relative md:aspect-square overflow-hidden"
+      ref={containerRef}
+    >
       {article.cover && (
         <div
-          className="h-[125vh] w-full overflow-hidden absolute top-0 left-0"
+          className="h-full w-full md:aspect-square overflow-hidden absolute top-0 left-0"
           ref={coverRef}
         >
           <Image
@@ -123,7 +134,7 @@ export function ArticleHero({
               <BlockRendererClient
                 content={article.shortDescription}
                 className={cn(
-                  "text-l-polymath lg:mt-6",
+                  "text-l-polymath lg:mt-6 [&>p]:m-0",
                   getColorClass(resolvedTitleColor),
                 )}
               />

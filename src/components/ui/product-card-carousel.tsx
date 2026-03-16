@@ -69,7 +69,7 @@ export function ProductCardCarousel({
         src={currentImage.url}
         alt={currentImage.altText || productTitle}
         fill
-        className="object-cover transition-transform duration-300 group-hover:scale-105"
+        className="object-cover"
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
         loading={isAboveFold ? "eager" : "lazy"}
         priority={isAboveFold}

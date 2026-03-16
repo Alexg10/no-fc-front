@@ -1,9 +1,9 @@
 import { BreadcrumbSchema } from "@/components/breadcrumb-schema";
 import { BlockRenderer } from "@/components/common/block-renderer";
 import { PreFooterMarquee } from "@/components/common/pre-footer-marquee";
-import { RelatedProducts } from "@/components/products/related-products";
 import { ProductContent } from "@/components/products/product-content";
 import { ProductSchema } from "@/components/products/product-schema";
+import { RelatedProducts } from "@/components/products/related-products";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { generateProductMetadata } from "@/lib/metadata";
 import { getProductWithCustomizations } from "@/lib/products";
@@ -58,8 +58,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
     { name: tCommon("products"), url: `${siteUrl}/${locale}/products` },
     { name: product.title, url: `${siteUrl}/${locale}/products/${handle}` },
   ];
-
-  console.log(strapiProduct);
 
   return (
     <div className="bg-off-white md:pt-4 lg:pt-6">

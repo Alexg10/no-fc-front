@@ -23,11 +23,7 @@ function SectionPushContent({ block }: SectionPushBlockProps) {
             src={getStrapiImageUrl(block.cover.url)}
             alt={block.cover.alternativeText || "Cover image"}
             fill
-            className={cn(
-              "object-cover",
-              block.button?.link &&
-                "group-hover:scale-105 transition-all duration-300",
-            )}
+            className="object-cover"
           />
         </div>
       )}

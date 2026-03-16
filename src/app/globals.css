@@ -276,3 +276,8 @@
 .block-renderer ul ul ul {
   list-style-type: square;
 }
+
+@keyframes kickFloat {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+}
