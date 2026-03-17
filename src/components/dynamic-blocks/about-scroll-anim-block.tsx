@@ -543,15 +543,14 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           </p>
         </div>
         <div
-          className=" absolute -bottom-10 left-1/2 -translate-x-1/2"
+          className="absolute -bottom-10 left-1/2 -translate-x-1/2 aspect-4/7 size-full"
           ref={thirdSceneImageRef}
         >
           <Image
             src={"/images/about/wdc.png"}
             alt="Papper texture about"
+            fill
             className="object-contain"
-            width={830}
-            height={830}
           />
         </div>
       </div>
