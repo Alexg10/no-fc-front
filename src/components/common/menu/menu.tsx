@@ -119,17 +119,6 @@ export function Menu({
       // Kill all existing ScrollTriggers to prevent stale triggers
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 
-      burgerTimeline.current = gsap
-        .timeline({
-          paused: true,
-        })
-        .to(".burger-line", {
-          y: 0,
-          duration: 0.4,
-          ease: "power2.inOut",
-          stagger: 0.1,
-        });
-
       // Only apply ScrollTrigger behavior on homepage
       if (isHomepage) {
         ScrollTrigger.create({
