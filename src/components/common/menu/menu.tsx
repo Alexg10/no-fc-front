@@ -12,13 +12,15 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import LottiePlayer from "react-lottie-player";
-import Tagline from "../../../../public/lotties/tagline.json";
-import { BurgerIcon } from "./burger-icon";
+import Burger from "../../../../public/lotties/burger.json";
 import { MenuMarquee } from "./menu-marquee";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const FRAME_BURGER = 117;
+const FRAME_CROSS = 155;
 
 export function Menu({
   menu,
@@ -30,19 +32,68 @@ export function Menu({
   const pathname = usePathname();
   const isHomepage = pathname === "/" || pathname === "/fr";
   const { isUnderDesktop } = useBreakpoints();
-  const isUnderDesktopRef = useRef(isUnderDesktop);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [isTaglinePlaying, setIsTaglinePlaying] = useState(false);
-  const [isTaglineIsReversed, setIsTaglineIsReversed] = useState(false);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [isInScrollZone, setIsInScrollZone] = useState(isHomepage);
   const burgerTimeline = useRef<GSAPTimeline>(null);
 
-  // Keep ref in sync with current value
-  useEffect(() => {
-    isUnderDesktopRef.current = isUnderDesktop;
-  }, [isUnderDesktop]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const lottieRef = useRef<any>(null);
+  // Store current enterFrame listener so we can clean it up before starting a new one
+  const activeListenerRef = useRef<(() => void) | null>(null);
+  // Initial frame for mount — null once imperative control takes over
+  const [initialGoTo] = useState(() => (isHomepage ? 0 : FRAME_BURGER));
+
+  const clearActiveListener = useCallback(() => {
+    const anim = lottieRef.current;
+    if (anim && activeListenerRef.current) {
+      anim.removeEventListener("enterFrame", activeListenerRef.current);
+      activeListenerRef.current = null;
+    }
+  }, []);
+
+  // Play forward to frame, then pause
+  const playTo = useCallback(
+    (frame: number) => {
+      const anim = lottieRef.current;
+      if (!anim) return;
+      clearActiveListener();
+      anim.setDirection(1);
+      const onFrame = () => {
+        if (anim.currentFrame >= frame - 1) {
+          anim.pause();
+          anim.removeEventListener("enterFrame", onFrame);
+          activeListenerRef.current = null;
+        }
+      };
+      activeListenerRef.current = onFrame;
+      anim.addEventListener("enterFrame", onFrame);
+      anim.play();
+    },
+    [clearActiveListener],
+  );
+
+  // Play reverse to frame, then pause
+  const reverseTo = useCallback(
+    (frame: number) => {
+      const anim = lottieRef.current;
+      if (!anim) return;
+      clearActiveListener();
+      anim.setDirection(-1);
+      const onFrame = () => {
+        if (anim.currentFrame <= frame + 1) {
+          anim.pause();
+          anim.removeEventListener("enterFrame", onFrame);
+          activeListenerRef.current = null;
+        }
+      };
+      activeListenerRef.current = onFrame;
+      anim.addEventListener("enterFrame", onFrame);
+      anim.play();
+    },
+    [clearActiveListener],
+  );
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setIsMounted(true));
@@ -87,26 +138,29 @@ export function Menu({
           end: "+=125%",
           onLeave: () => {
             setIsMenuVisible(false);
-            setIsTaglineIsReversed(false);
-            setIsTaglinePlaying(true);
             setIsInScrollZone(false);
             setMenuIsOpen(false);
+            // Play lottie 0 → 70 (burger appears)
+            playTo(FRAME_BURGER);
             burgerTimeline.current?.play();
           },
           onEnterBack: () => {
             setIsInScrollZone(true);
-            if (!isUnderDesktopRef.current) {
+            // Reverse lottie → 0 (burger disappears)
+            reverseTo(0);
+            if (!isUnderDesktop) {
               setIsMenuVisible(true);
               burgerTimeline.current?.reverse();
-              setTimeout(() => {
-                setIsTaglineIsReversed(true);
-                setIsTaglinePlaying(true);
-              }, 500);
             }
           },
         });
       } else {
         burgerTimeline.current?.play();
+        // On non-homepage pages, jump directly to burger frame
+        const anim = lottieRef.current;
+        if (anim) {
+          anim.goToAndStop(FRAME_BURGER, true);
+        }
       }
     },
     { dependencies: [isUnderDesktop, pathname] },
@@ -128,6 +182,7 @@ export function Menu({
                 onLinkClick={() => {
                   setIsMenuVisible(false);
                   setMenuIsOpen(false);
+                  reverseTo(FRAME_BURGER);
                 }}
               />
             )}
@@ -136,6 +191,7 @@ export function Menu({
               onLinkClick={() => {
                 setIsMenuVisible(false);
                 setMenuIsOpen(false);
+                reverseTo(FRAME_BURGER);
               }}
             />
             <div className="flex border-t border-black pt-4">
@@ -165,24 +221,28 @@ export function Menu({
                   if (isHomepage && isInScrollZone && !isUnderDesktop) {
                     return;
                   }
-                  setIsMenuVisible(!isMenuVisible);
-                  setMenuIsOpen(!menuIsOpen);
+                  const opening = !menuIsOpen;
+                  setIsMenuVisible(opening);
+                  setMenuIsOpen(opening);
+                  if (opening) {
+                    // Play lottie 70 → 155 (burger → cross)
+                    playTo(FRAME_CROSS);
+                  } else {
+                    // Reverse lottie 155 → 70 (cross → burger)
+                    reverseTo(FRAME_BURGER);
+                  }
                 }}
               >
-                {isHomepage ? (
-                  <div className="lg:scale-[1.06]">
-                    <LottiePlayer
-                      animationData={Tagline}
-                      play={isTaglinePlaying}
-                      direction={isTaglineIsReversed ? -1 : 1}
-                      className="size-16 lg:size-25"
-                      loop={false}
-                    />
-                  </div>
-                ) : (
-                  <BurgerIcon isOpen={menuIsOpen} />
-                )}
-                {isHomepage && <BurgerIcon isOpen={menuIsOpen} />}
+                <div className="scale-[0.80] lg:scale-100">
+                  <LottiePlayer
+                    ref={lottieRef}
+                    animationData={Burger}
+                    play={false}
+                    goTo={initialGoTo}
+                    className="size-12"
+                    loop={false}
+                  />
+                </div>
               </button>
             </div>
             {!isUnderDesktop && (
@@ -200,6 +260,7 @@ export function Menu({
                         onLinkClick={() => {
                           setIsMenuVisible(false);
                           setMenuIsOpen(false);
+                          reverseTo(FRAME_BURGER);
                         }}
                       />
                     )}
