@@ -543,7 +543,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           </p>
         </div>
         <div
-          className="absolute -bottom-10 left-1/2 -translate-x-1/2 aspect-4/7 size-full"
+          className="absolute -bottom-10 left-1/2 -translate-x-1/2 aspect-4/7 size-[85%]"
           ref={thirdSceneImageRef}
         >
           <Image
