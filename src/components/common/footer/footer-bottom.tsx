@@ -14,7 +14,7 @@ export function FooterBottom({
   return (
     <div className="relative py-6 flex flex-col md:flex-row gap-4 md:items-center md:gap-6">
       <div className="flex gap-4 flex-col mb-6 md:mb-0">
-        <LogoIcons className="size-10 md:size-18" />
+        <LogoIcons className="size-18 md:size-18" />
       </div>
       <div className="flex flex-col gap-4 md:order-3 md:flex-row md:absolute md:right-0 md:gap-6">
         {footerBottomLinks?.map((footerBottomLink) => (
