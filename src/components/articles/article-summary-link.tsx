@@ -5,14 +5,16 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 interface Heading {
-  id: string;
+  index: number;
   text: string;
+  element: HTMLHeadingElement;
 }
 
 export function ArticleSummaryLink() {
   const mainRef = useArticleRef();
   const [headings, setHeadings] = useState<Heading[]>([]);
-  const [isCurrentSection, setIsCurrentSection] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+
   useEffect(() => {
     if (!mainRef.current) return;
 
@@ -20,11 +22,10 @@ export function ArticleSummaryLink() {
     const headingsList: Heading[] = [];
 
     h2Elements.forEach((h2, index) => {
-      const id = h2.id || `heading-${index}`;
-      h2.id = id;
       headingsList.push({
-        id,
+        index,
         text: h2.textContent || "",
+        element: h2,
       });
     });
 
@@ -34,7 +35,8 @@ export function ArticleSummaryLink() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setIsCurrentSection(entry.target.id);
+            const idx = headingsList.findIndex((h) => h.element === entry.target);
+            if (idx !== -1) setCurrentIndex(idx);
           }
         });
       },
@@ -49,23 +51,16 @@ export function ArticleSummaryLink() {
     };
   }, [mainRef]);
 
-  const scrollToHeading = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <div className="flex flex-col gap-2 h-full max-h-[35vh] overflow-auto no-scrollbar">
       {headings.length > 0 ? (
         headings.map((heading) => (
           <button
-            key={heading.id}
-            onClick={() => scrollToHeading(heading.id)}
+            key={heading.index}
+            onClick={() => heading.element.scrollIntoView({ behavior: "smooth" })}
             className={cn(
               "text-left text-[14px] leading-[140%] hover:opacity-100 text-black cursor-pointer transition-opacity duration-300 ease-in-out",
-              isCurrentSection === heading.id
+              currentIndex === heading.index
                 ? "opacity-100"
                 : "opacity-40 text-polymath",
             )}
