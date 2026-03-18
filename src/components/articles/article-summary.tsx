@@ -130,6 +130,16 @@ export function ArticleSummary({
           pin: true,
           pinSpacing: false,
           invalidateOnRefresh: true,
+          onLeave: () => {
+            if (isUnderDesktop) {
+              gsap.to(summaryEl, { opacity: 0, duration: 0.3, ease: "power2.inOut" });
+            }
+          },
+          onEnterBack: () => {
+            if (isUnderDesktop) {
+              gsap.to(summaryEl, { opacity: 1, duration: 0.3, ease: "power2.inOut" });
+            }
+          },
         },
       });
 

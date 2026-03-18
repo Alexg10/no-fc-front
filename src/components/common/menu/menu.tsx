@@ -175,14 +175,6 @@ export function Menu({
                 }}
               />
             )}
-            <NavigationMenuContainer
-              menu={menu as StrapiMenu}
-              onLinkClick={() => {
-                setIsMenuVisible(false);
-                setMenuIsOpen(false);
-                reverseTo(FRAME_BURGER);
-              }}
-            />
             <div className="flex border-t border-black pt-4">
               <LanguageSwitcher />
             </div>

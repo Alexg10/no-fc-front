@@ -4,7 +4,7 @@ import { getStrapiImageUrl } from "@/lib/strapi";
 import { cn } from "@/lib/utils";
 import type { StrapiArticleImageStack, StrapiImage } from "@/types/strapi";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ImageStackBlockProps {
   block: StrapiArticleImageStack;
@@ -17,46 +17,76 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
   >({});
   const [draggedImageId, setDraggedImageId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
 
-  const handleMouseDown = (e: React.MouseEvent, imageId: number) => {
-    e.preventDefault();
+  // Native touchmove listener with { passive: false } to allow preventDefault
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const handler = (e: TouchEvent) => {
+      if (isDraggingRef.current) e.preventDefault();
+    };
+    el.addEventListener("touchmove", handler, { passive: false });
+    return () => el.removeEventListener("touchmove", handler);
+  }, []);
+
+  const startDrag = (clientX: number, clientY: number, imageId: number) => {
     const offset = offsets[imageId] || { x: 0, y: 0 };
     setDraggedImageId(imageId);
+    isDraggingRef.current = true;
     setDragOffset({
-      x: e.clientX - offset.x,
-      y: e.clientY - offset.y,
+      x: clientX - offset.x,
+      y: clientY - offset.y,
     });
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const moveDrag = (clientX: number, clientY: number) => {
     if (draggedImageId === null) return;
-
-    const newX = e.clientX - dragOffset.x;
-    const newY = e.clientY - dragOffset.y;
-
     setOffsets((prev) => ({
       ...prev,
-      [draggedImageId]: { x: newX, y: newY },
+      [draggedImageId]: {
+        x: clientX - dragOffset.x,
+        y: clientY - dragOffset.y,
+      },
     }));
   };
 
-  const handleMouseUp = () => {
+  const endDrag = () => {
     setDraggedImageId(null);
+    isDraggingRef.current = false;
+  };
+
+  const handleMouseDown = (e: React.MouseEvent, imageId: number) => {
+    e.preventDefault();
+    startDrag(e.clientX, e.clientY, imageId);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent, imageId: number) => {
+    const touch = e.touches[0];
+    startDrag(touch.clientX, touch.clientY, imageId);
   };
 
   return (
     <section className="py-10 mb-7 lg:h-[calc(100%-240px)] flex">
       <div className="flex w-full px-4 max-w-[1424px] mx-auto lg:grid lg:grid-cols-12 lg:gap-6">
         <div
+          ref={containerRef}
           className={cn(
             "col-span-full",
             images.length === 2
               ? "flex gap-4 lg:col-start-2 lg:col-end-12"
               : "flex flex-wrap lg:col-span-full lg:justify-between",
           )}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
+          onMouseMove={(e) => moveDrag(e.clientX, e.clientY)}
+          onMouseUp={endDrag}
+          onMouseLeave={endDrag}
+          onTouchMove={(e) => {
+            const t = e.touches[0];
+            moveDrag(t.clientX, t.clientY);
+          }}
+          onTouchEnd={endDrag}
+          onTouchCancel={endDrag}
         >
           {images.length > 0 &&
             images.map((image: StrapiImage) => {
@@ -75,8 +105,9 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                     transform: `translate(${offset.x}px, ${offset.y}px)`,
                   }}
                   onMouseDown={(e) => handleMouseDown(e, image.id)}
+                  onTouchStart={(e) => handleTouchStart(e, image.id)}
                 >
-                  <div className="relative inline-block h-full overflow-hidden">
+                  <div className="relative inline-block overflow-hidden">
                     <Image
                       src={getStrapiImageUrl(image.url)}
                       alt={image.alternativeText || ""}
