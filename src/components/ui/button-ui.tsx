@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { useState } from "react";
 import Lottie from "react-lottie-player";
+import EyeButtonLight from "../../../public/lotties/eye-button-light.json";
 import EyeButton from "../../../public/lotties/eye-button.json";
 
 const buttonUiVariants = cva(
@@ -54,7 +55,7 @@ export function ButtonUi({
     >
       <div
         className={cn(
-          "flex items-center gap-2 border p-2 px-4",
+          "flex items-center gap-2 border p-2 px-4 cursor-pointer",
           variant === "secondary"
             ? "border-black text-black"
             : "border-white text-white",
@@ -63,7 +64,9 @@ export function ButtonUi({
         {hasIcon && (
           <span className="size-5 bg-black">
             <Lottie
-              animationData={EyeButton}
+              animationData={
+                variant === "secondary" ? EyeButtonLight : EyeButton
+              }
               loop
               play={isHover}
               className=""
