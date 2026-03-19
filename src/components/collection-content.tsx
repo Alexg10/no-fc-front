@@ -5,6 +5,7 @@ import {
   getCollectionProducts,
   getCollections,
   getProductOptions,
+  getProducts,
   ProductSortKey,
 } from "@/lib/shopify";
 import { getTranslations } from "next-intl/server";
@@ -32,6 +33,26 @@ export async function CollectionContent({
   const after = searchParams.after;
   const before = searchParams.before;
   const sortParam = searchParams.sort || "RELEVANCE";
+  const minPrice = searchParams.minPrice
+    ? parseFloat(searchParams.minPrice)
+    : undefined;
+  const maxPrice = searchParams.maxPrice
+    ? parseFloat(searchParams.maxPrice)
+    : undefined;
+
+  // Extraire les filtres de variants depuis les paramètres URL
+  const variantFilters: Record<string, string[]> = {};
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (key.startsWith("variant_") && value) {
+      const optionName = key.replace("variant_", "");
+      variantFilters[optionName] = value.split(",").filter(Boolean);
+    }
+  }
+
+  const hasVariantFilters = Object.values(variantFilters).some(
+    (v) => v.length > 0,
+  );
+  const hasPriceFilters = minPrice !== undefined || maxPrice !== undefined;
 
   // Gérer le tri avec reverse
   let sortKey: ProductSortKey | undefined;
@@ -47,16 +68,39 @@ export async function CollectionContent({
     sortKey = sortParam as ProductSortKey;
   }
 
+  // Si des filtres de prix sont actifs, utiliser getProducts avec collection:handle
+  // car getCollectionProducts ne supporte pas les filtres de prix
+  // Les filtres de variants sont appliqués côté serveur après le fetch
+  const productsDataPromise = hasPriceFilters
+    ? getProducts({
+        first: hasVariantFilters ? 50 : 12,
+        after: hasVariantFilters ? undefined : (page === 1 ? undefined : after),
+        before: hasVariantFilters ? undefined : before,
+        last: hasVariantFilters ? undefined : (before ? 12 : undefined),
+        sortKey,
+        reverse,
+        collection: handle,
+        minPrice,
+        maxPrice,
+      })
+    : hasVariantFilters
+      ? getCollectionProducts(handle, {
+          first: 50,
+          sortKey,
+          reverse,
+        })
+      : getCollectionProducts(handle, {
+          first: 12,
+          after: page === 1 ? undefined : after,
+          before: before,
+          last: before ? 12 : undefined,
+          sortKey,
+          reverse,
+        });
+
   const [collectionsData, productsData, variantOptions] = await Promise.all([
     getCollections(),
-    getCollectionProducts(handle, {
-      first: 12,
-      after: page === 1 ? undefined : after,
-      before: before,
-      last: before ? 12 : undefined,
-      sortKey,
-      reverse,
-    }),
+    productsDataPromise,
     getProductOptions(handle),
   ]);
 
@@ -68,13 +112,37 @@ export async function CollectionContent({
     notFound();
   }
 
-  const { edges: products, pageInfo } = productsData;
+  const { edges: allProducts, pageInfo } = productsData;
+
+  // Filtrer les produits par variant options côté serveur
+  const products = hasVariantFilters
+    ? allProducts.filter(({ node: product }) => {
+        const productOptions = (
+          product as typeof product & {
+            options?: { name: string; values: string[] }[];
+          }
+        ).options;
+        if (!productOptions) return true;
+
+        return Object.entries(variantFilters).every(
+          ([optionName, selectedValues]) => {
+            if (selectedValues.length === 0) return true;
+            const productOption = productOptions.find(
+              (o) => o.name === optionName,
+            );
+            if (!productOption) return false;
+            return selectedValues.some((v) => productOption.values.includes(v));
+          },
+        );
+      })
+    : allProducts;
 
   return (
     <>
       <ProductsFilters
         defaultCollection={handle}
         variantOptions={variantOptions}
+        collections={collections}
       />
 
       {products.length === 0 ? (

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/lib/navigation";
 import { ShopifyPageInfo } from "@/lib/shopify";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 
 interface ProductsPaginationProps {
@@ -18,7 +17,6 @@ export function ProductsPagination({
 }: ProductsPaginationProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const t = useTranslations("common");
   const { hasNextPage, hasPreviousPage, endCursor, startCursor } = pageInfo;
 
   // Préserver les filtres dans l'URL
@@ -29,18 +27,12 @@ export function ProductsPagination({
   ) => {
     const params = new URLSearchParams();
 
-    // Ajouter les filtres existants
-    const sort = searchParams.get("sort");
-    const minPrice = searchParams.get("minPrice");
-    const maxPrice = searchParams.get("maxPrice");
-    const available = searchParams.get("available");
-    const collection = searchParams.get("collection");
-
-    if (sort) params.set("sort", sort);
-    if (minPrice) params.set("minPrice", minPrice);
-    if (maxPrice) params.set("maxPrice", maxPrice);
-    if (available) params.set("available", available);
-    if (collection) params.set("collection", collection);
+    // Préserver tous les filtres existants (sort, priceRanges, minPrice, maxPrice, variant_*, collections, etc.)
+    for (const [key, value] of searchParams.entries()) {
+      if (key !== "page" && key !== "after" && key !== "before") {
+        params.set(key, value);
+      }
+    }
 
     // Ajouter la pagination
     if (page > 1) {

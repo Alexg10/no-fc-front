@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import {
   getCollectionProducts,
   getCollections,
+  getProductOptions,
   getProducts,
   ProductSortKey,
   ShopifyCollection,
@@ -22,6 +23,9 @@ interface ProductsContentProps {
     minPrice?: string;
     maxPrice?: string;
     available?: string;
+    collections?: string;
+    priceRanges?: string;
+    [key: string]: string | undefined;
   };
 }
 
@@ -44,6 +48,24 @@ export async function ProductsContent({
     : undefined;
   const availableOnly = searchParams.available === "true";
 
+  // Extraire les filtres de variants depuis les paramètres URL (variant_Couleur=Vert, variant_Taille=M,L)
+  const variantFilters: Record<string, string[]> = {};
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (key.startsWith("variant_") && value) {
+      const optionName = key.replace("variant_", "");
+      variantFilters[optionName] = value.split(",").filter(Boolean);
+    }
+  }
+
+  const hasVariantFilters = Object.values(variantFilters).some(
+    (v) => v.length > 0,
+  );
+
+  // Extraire les collections sélectionnées
+  const selectedCollections = searchParams.collections
+    ? searchParams.collections.split(",").filter(Boolean)
+    : [];
+
   // Gérer le tri avec reverse
   let sortKey: ProductSortKey | undefined;
   let reverse = false;
@@ -58,49 +80,76 @@ export async function ProductsContent({
     sortKey = sortParam as ProductSortKey;
   }
 
+  // Déterminer la collection pour le fetch
+  // Si une seule collection est sélectionnée dans les filtres, l'utiliser
+  const effectiveCollection =
+    collection || (selectedCollections.length === 1 ? selectedCollections[0] : undefined);
+
   // Récupérer les produits avec filtres
-  // Si une collection est sélectionnée, utiliser getCollectionProducts
-  // Sinon, utiliser getProducts avec les autres filtres
+  // Les filtres de variants sont appliqués côté serveur après le fetch
   let productsDataPromise;
 
-  if (collection) {
-    // Utiliser getCollectionProducts pour une collection spécifique
-    productsDataPromise = getCollectionProducts(collection, {
-      first: 12,
-      after: page === 1 ? undefined : after,
-      before: before,
-      last: before ? 12 : undefined,
+  if (effectiveCollection && selectedCollections.length <= 1) {
+    productsDataPromise = getCollectionProducts(effectiveCollection, {
+      first: hasVariantFilters ? 50 : 12,
+      after: hasVariantFilters ? undefined : (page === 1 ? undefined : after),
+      before: hasVariantFilters ? undefined : before,
+      last: hasVariantFilters ? undefined : (before ? 12 : undefined),
       sortKey,
       reverse,
     });
   } else {
-    // Utiliser getProducts pour tous les produits avec filtres
     productsDataPromise = getProducts({
-      first: 12,
-      after: page === 1 ? undefined : after,
-      before: before,
-      last: before ? 12 : undefined,
+      first: hasVariantFilters ? 50 : 12,
+      after: hasVariantFilters ? undefined : (page === 1 ? undefined : after),
+      before: hasVariantFilters ? undefined : before,
+      last: hasVariantFilters ? undefined : (before ? 12 : undefined),
       sortKey,
       reverse,
       minPrice,
       maxPrice,
       availableOnly,
+      collection: selectedCollections.length > 0 ? selectedCollections[0] : undefined,
     });
   }
 
-  // Paralléliser: récupérer collections et produits en même temps
-  const [collectionsData, productsData] = await Promise.all([
+  // Paralléliser: récupérer collections, produits et options de variants en même temps
+  const [collectionsData, productsData, variantOptions] = await Promise.all([
     getCollections(),
     productsDataPromise,
+    getProductOptions(effectiveCollection),
   ]);
 
   const collections = collectionsData.edges.map((edge) => edge.node);
 
-  const { edges: products, pageInfo } = productsData;
+  const { edges: allProducts, pageInfo } = productsData;
+
+  // Filtrer les produits par variant options côté serveur
+  const products = hasVariantFilters
+    ? allProducts.filter(({ node: product }) => {
+        const productOptions = (
+          product as typeof product & {
+            options?: { name: string; values: string[] }[];
+          }
+        ).options;
+        if (!productOptions) return true;
+
+        return Object.entries(variantFilters).every(
+          ([optionName, selectedValues]) => {
+            if (selectedValues.length === 0) return true;
+            const productOption = productOptions.find(
+              (o) => o.name === optionName,
+            );
+            if (!productOption) return false;
+            return selectedValues.some((v) => productOption.values.includes(v));
+          },
+        );
+      })
+    : allProducts;
 
   // Récupérer le titre de la collection si disponible
   let collectionTitle: string | null = null;
-  if (collection) {
+  if (effectiveCollection) {
     const collectionData = productsData as typeof productsData & {
       collection?: ShopifyCollection;
     };
@@ -108,7 +157,7 @@ export async function ProductsContent({
       collectionTitle = collectionData.collection.title;
     } else {
       collectionTitle =
-        collections.find((c) => c.handle === collection)?.title || null;
+        collections.find((c) => c.handle === effectiveCollection)?.title || null;
     }
   }
 
@@ -130,7 +179,10 @@ export async function ProductsContent({
         {collectionTitle || t("title")}
       </h1>
 
-      <ProductsFilters />
+      <ProductsFilters
+        variantOptions={variantOptions}
+        collections={collections}
+      />
 
       {products.length === 0 ? (
         <div className="text-center py-12">
