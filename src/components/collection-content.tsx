@@ -78,9 +78,9 @@ export async function CollectionContent({
   const productsDataPromise = hasPriceFilters
     ? getProducts({
         first: hasVariantFilters ? 50 : 12,
-        after: hasVariantFilters ? undefined : (page === 1 ? undefined : after),
+        after: hasVariantFilters ? undefined : page === 1 ? undefined : after,
         before: hasVariantFilters ? undefined : before,
-        last: hasVariantFilters ? undefined : (before ? 12 : undefined),
+        last: hasVariantFilters ? undefined : before ? 12 : undefined,
         sortKey,
         reverse,
         collection: handle,
@@ -156,7 +156,7 @@ export async function CollectionContent({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {products.map(({ node: product }, index) => (
             <ProductCard
               key={product.id}
@@ -167,9 +167,10 @@ export async function CollectionContent({
         </div>
       )}
 
-      {products.length > 0 && (pageInfo.hasNextPage || pageInfo.hasPreviousPage) && (
-        <ProductsPagination pageInfo={pageInfo} currentPage={page} />
-      )}
+      {products.length > 0 &&
+        (pageInfo.hasNextPage || pageInfo.hasPreviousPage) && (
+          <ProductsPagination pageInfo={pageInfo} currentPage={page} />
+        )}
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { BackLink } from "@/components/common/back-link";
 import Grid from "@/components/common/grid";
 import { LogoIcons } from "@/components/icons/logo-icons";
 import { Title } from "@/components/ui/title";
@@ -6,9 +7,10 @@ import Marquee from "react-fast-marquee";
 interface PageHeaderProps {
   title: string;
   marquee?: string;
+  backHref?: string;
 }
 
-export function PageHeader({ title, marquee }: PageHeaderProps) {
+export function PageHeader({ title, marquee, backHref }: PageHeaderProps) {
   return (
     <header className="bg-off-white text-black uppercase text-center ">
       <Grid className="px-4 pt-34 pb-6 lg:pt-6 lg:gap-y-10">
@@ -25,6 +27,7 @@ export function PageHeader({ title, marquee }: PageHeaderProps) {
           </div>
         )}
         <div className="col-span-full lg:col-start-5 lg:col-end-9">
+          {backHref && <BackLink href={backHref} className="lg:hidden" />}
           <Title level={2} className="lg:text-[64px]">
             {title}
           </Title>
