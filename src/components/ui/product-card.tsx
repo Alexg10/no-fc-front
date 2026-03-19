@@ -41,9 +41,9 @@ export function ProductCard({
             <Marquee
               autoFill
               speed={30}
-              className="text-nowrap text-obviously text-[24px] uppercase py-4"
+              className="text-nowrap text-obviously text-[24px] uppercase py-[15px]"
             >
-              <span className="mx-4">Sold out</span>
+              <span className="mx-2">Sold out</span>
             </Marquee>
           </div>
         )}

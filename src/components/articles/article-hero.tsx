@@ -6,13 +6,13 @@ import { Link } from "@/lib/navigation";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import { cn, getColorClass } from "@/lib/utils";
 import { ColorList, StrapiArticle } from "@/types/strapi/article";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
-
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { ButtonUi } from "../ui/button-ui";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -30,6 +30,7 @@ export function ArticleHero({
   titleColor,
 }: ArticleHeroProps) {
   const t = useTranslations("article");
+  const tCommon = useTranslations("common");
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const resolvedTitleColor = titleColor ?? mainColor;
@@ -59,7 +60,9 @@ export function ArticleHero({
           start: "top top",
           end: () => {
             if (!container) return "+=0";
-            return `+=${container.offsetHeight - window.innerHeight}`;
+            const contentBottom = content.offsetTop + content.offsetHeight;
+            const containerBottom = container.offsetHeight;
+            return `+=${containerBottom - contentBottom - 100}`;
           },
           pin: true,
           pinSpacing: false,
@@ -138,6 +141,11 @@ export function ArticleHero({
                   getColorClass(resolvedTitleColor),
                 )}
               />
+              {isLink && (
+                <ButtonUi variant="secondary">
+                  {tCommon("readArticle")}
+                </ButtonUi>
+              )}
             </div>
           </div>
         </Grid>

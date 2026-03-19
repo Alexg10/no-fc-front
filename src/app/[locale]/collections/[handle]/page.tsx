@@ -1,4 +1,5 @@
 import { CollectionContent } from "@/components/collection-content";
+import { BackLink } from "@/components/common/back-link";
 import { PageHeader } from "@/components/common/page-header";
 import { ProductsPageLoading } from "@/components/skeleton/products-page-loading";
 import { getCollections } from "@/lib/shopify";
@@ -78,7 +79,7 @@ export default async function CollectionPage({
   const selectedCollections = general?.selectedCollections;
   return (
     <section className="bg-off-white">
-      <PageHeader title={`${handle}`} marquee="SHOP" />
+      <PageHeader title={`${handle}`} marquee="SHOP" backHref="/products" />
       <main className=" pb-20 lg:pb-27">
         <Grid>
           <div className="col-span-full">
@@ -90,6 +91,10 @@ export default async function CollectionPage({
         <hr className="border-black" />
         <Grid>
           <div className="col-span-full pt-6">
+            <BackLink
+              href="/products"
+              className="hidden lg:block lg:absolute lg:translate-y-4"
+            />
             <Suspense fallback={<ProductsPageLoading />}>
               <CollectionContent
                 locale={locale}

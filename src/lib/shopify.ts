@@ -265,6 +265,10 @@ const GET_PRODUCTS = `
               currencyCode
             }
           }
+          options {
+            name
+            values
+          }
         }
         cursor
       }
@@ -394,6 +398,10 @@ const GET_COLLECTION_PRODUCTS = `
                 }
               }
             }
+            options {
+              name
+              values
+            }
           }
           cursor
         }
@@ -472,6 +480,7 @@ export type ProductSortKey =
   | "TITLE"
   | "PRICE"
   | "CREATED_AT"
+  | "CREATED"
   | "BEST_SELLING"
   | "RELEVANCE"
   | "ID";
@@ -487,7 +496,6 @@ export interface GetProductsOptions {
   minPrice?: number;
   maxPrice?: number;
   availableOnly?: boolean;
-  variantOptions?: Record<string, string>;
 }
 
 /**
@@ -508,7 +516,6 @@ export async function getProducts(
       minPrice,
       maxPrice,
       availableOnly,
-      variantOptions,
     } = options;
 
     // Construire la requête de filtre
@@ -528,15 +535,6 @@ export async function getProducts(
 
     if (availableOnly) {
       queryParts.push("available_for_sale:true");
-    }
-
-    // Ajouter les filtres de variants
-    if (variantOptions) {
-      for (const [optionName, value] of Object.entries(variantOptions)) {
-        if (value) {
-          queryParts.push(`variant_options.${optionName}:${value}`);
-        }
-      }
     }
 
     const query = queryParts.length > 0 ? queryParts.join(" AND ") : undefined;

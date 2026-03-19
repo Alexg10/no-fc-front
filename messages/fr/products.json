@@ -9,11 +9,26 @@
   "outOfStock": "Rupture de stock",
   "addToCart": "Ajouter au panier",
   "adding": "Ajout en cours...",
+  "filters": {
+    "title": "Filtres",
+    "shopByPrice": "Acheter par prix",
+    "under10": "Moins de 10€",
+    "range10to50": "10€ - 50€",
+    "range50to100": "50€ - 100€",
+    "over100": "Plus de 100€",
+    "gender": "Genre",
+    "men": "Homme",
+    "women": "Femme",
+    "unisex": "Unisexe",
+    "collection": "Collection"
+  },
   "sort": {
+    "title": "Trier par",
+    "featured": "En vedette",
     "relevance": "Pertinence",
     "newest": "Plus récent",
-    "priceAsc": "Prix (croissant)",
-    "priceDesc": "Prix (décroissant)",
+    "priceAsc": "Prix : croissant",
+    "priceDesc": "Prix : décroissant",
     "nameAsc": "Nom (A-Z)",
     "nameDesc": "Nom (Z-A)",
     "bestSelling": "Meilleures ventes"
