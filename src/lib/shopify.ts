@@ -480,6 +480,7 @@ export type ProductSortKey =
   | "TITLE"
   | "PRICE"
   | "CREATED_AT"
+  | "CREATED"
   | "BEST_SELLING"
   | "RELEVANCE"
   | "ID";

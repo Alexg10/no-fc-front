@@ -55,6 +55,7 @@ export async function CollectionContent({
   const hasPriceFilters = minPrice !== undefined || maxPrice !== undefined;
 
   // Gérer le tri avec reverse
+  // Note: ProductCollectionSortKeys utilise "CREATED" (pas "CREATED_AT")
   let sortKey: ProductSortKey | undefined;
   let reverse = false;
 
@@ -63,6 +64,9 @@ export async function CollectionContent({
     reverse = true;
   } else if (sortParam === "TITLE_REVERSE") {
     sortKey = "TITLE";
+    reverse = true;
+  } else if (sortParam === "CREATED_AT") {
+    sortKey = "CREATED" as ProductSortKey;
     reverse = true;
   } else if (sortParam && sortParam !== "RELEVANCE") {
     sortKey = sortParam as ProductSortKey;
@@ -163,7 +167,7 @@ export async function CollectionContent({
         </div>
       )}
 
-      {products.length > 0 && (
+      {products.length > 0 && (pageInfo.hasNextPage || pageInfo.hasPreviousPage) && (
         <ProductsPagination pageInfo={pageInfo} currentPage={page} />
       )}
     </>

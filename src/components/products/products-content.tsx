@@ -76,6 +76,9 @@ export async function ProductsContent({
   } else if (sortParam === "TITLE_REVERSE") {
     sortKey = "TITLE";
     reverse = true;
+  } else if (sortParam === "CREATED_AT") {
+    sortKey = "CREATED_AT" as ProductSortKey;
+    reverse = true;
   } else if (sortParam && sortParam !== "RELEVANCE") {
     sortKey = sortParam as ProductSortKey;
   }
@@ -201,7 +204,7 @@ export async function ProductsContent({
           ))}
         </div>
       )}
-      {products.length > 0 && (
+      {products.length > 0 && (pageInfo.hasNextPage || pageInfo.hasPreviousPage) && (
         <ProductsPagination pageInfo={pageInfo} currentPage={page} />
       )}
     </>

@@ -62,9 +62,11 @@ export function SortControl({ value, onChange }: SortControlProps) {
       {open && (
         <div className="absolute top-full right-0 z-50 mt-1 w-[240px] bg-white border border-black p-4 space-y-2">
           {SORT_OPTIONS.map((option) => (
-            <label
+            <button
               key={option.value}
-              className="flex items-center gap-2 cursor-pointer text-sm text-black"
+              type="button"
+              className="flex items-center gap-2 cursor-pointer text-sm text-black w-full text-left"
+              onClick={() => handleSelect(option.value)}
             >
               <span
                 className={cn(
@@ -75,14 +77,8 @@ export function SortControl({ value, onChange }: SortControlProps) {
                   <span className="size-2.5 rounded-full bg-black" />
                 )}
               </span>
-              <button
-                type="button"
-                className="text-left cursor-pointer"
-                onClick={() => handleSelect(option.value)}
-              >
-                {tSort(option.key)}
-              </button>
-            </label>
+              {tSort(option.key)}
+            </button>
           ))}
         </div>
       )}
