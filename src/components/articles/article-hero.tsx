@@ -60,7 +60,9 @@ export function ArticleHero({
           start: "top top",
           end: () => {
             if (!container) return "+=0";
-            return `+=${container.offsetHeight - window.innerHeight}`;
+            const contentBottom = content.offsetTop + content.offsetHeight;
+            const containerBottom = container.offsetHeight;
+            return `+=${containerBottom - contentBottom - 100}`;
           },
           pin: true,
           pinSpacing: false,
@@ -140,7 +142,9 @@ export function ArticleHero({
                 )}
               />
               {isLink && (
-                <ButtonUi variant="secondary">{tCommon("readArticle")}</ButtonUi>
+                <ButtonUi variant="secondary">
+                  {tCommon("readArticle")}
+                </ButtonUi>
               )}
             </div>
           </div>
