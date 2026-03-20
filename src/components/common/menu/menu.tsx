@@ -37,6 +37,7 @@ export function Menu({
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [isInScrollZone, setIsInScrollZone] = useState(isHomepage);
   const burgerTimeline = useRef<GSAPTimeline>(null);
+  const menuScrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lottieRef = useRef<any>(null);
@@ -116,12 +117,13 @@ export function Menu({
 
   useGSAP(
     () => {
-      // Kill all existing ScrollTriggers to prevent stale triggers
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      // Only clean up the trigger owned by this component.
+      menuScrollTriggerRef.current?.kill();
+      menuScrollTriggerRef.current = null;
 
       // Only apply ScrollTrigger behavior on homepage
       if (isHomepage) {
-        ScrollTrigger.create({
+        menuScrollTriggerRef.current = ScrollTrigger.create({
           trigger: "body",
           start: "top center",
           end: "+=125%",
@@ -151,6 +153,11 @@ export function Menu({
           anim.goToAndStop(FRAME_BURGER, true);
         }
       }
+
+      return () => {
+        menuScrollTriggerRef.current?.kill();
+        menuScrollTriggerRef.current = null;
+      };
     },
     { dependencies: [isUnderDesktop, pathname] },
   );
