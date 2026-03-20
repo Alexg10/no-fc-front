@@ -2,6 +2,7 @@
 import { IssueNumberBadge } from "@/components/articles/issue-number-badge";
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import Grid from "@/components/common/grid";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { Link } from "@/lib/navigation";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import { cn, getColorClass } from "@/lib/utils";
@@ -31,6 +32,7 @@ export function ArticleHero({
 }: ArticleHeroProps) {
   const t = useTranslations("article");
   const tCommon = useTranslations("common");
+  const { isUnderDesktop } = useBreakpoints();
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const resolvedTitleColor = titleColor ?? mainColor;
@@ -44,9 +46,11 @@ export function ArticleHero({
       const content = contentRef.current;
       if (!hero || !container || !cover || !content) return;
 
+      ScrollTrigger.getById("article-hero-cover")?.kill();
       const coverTween = gsap.to(cover, {
         yPercent: 5,
         scrollTrigger: {
+          id: "article-hero-cover",
           trigger: cover,
           start: "top top",
           end: "bottom top",
@@ -54,15 +58,18 @@ export function ArticleHero({
         },
       });
 
+      ScrollTrigger.getById("article-hero-pin")?.kill();
       const heroTween = gsap.to(hero, {
         scrollTrigger: {
+          id: "article-hero-pin",
           trigger: hero,
           start: "top top",
           end: () => {
             if (!container) return "+=0";
             const contentBottom = content.offsetTop + content.offsetHeight;
             const containerBottom = container.offsetHeight;
-            return `+=${containerBottom - contentBottom - 100}`;
+            const offset = isUnderDesktop ? 50 : 100;
+            return `+=${containerBottom - contentBottom - offset}`;
           },
           pin: true,
           pinSpacing: false,
@@ -79,7 +86,7 @@ export function ArticleHero({
         gsap.set([hero, cover], { clearProps: "all" });
       };
     },
-    { scope: containerRef },
+    { scope: containerRef, dependencies: [isUnderDesktop] },
   );
 
   useEffect(() => {
