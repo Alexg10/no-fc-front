@@ -7,30 +7,35 @@ import qs from "qs";
 export async function getGeneral(
   locale?: string,
 ): Promise<StrapiGeneral | null> {
-  const query = qs.stringify({
-    populate: {
-      socials: {
-        fields: ["label", "link", "target"],
+  try {
+    const query = qs.stringify({
+      populate: {
+        socials: {
+          fields: ["label", "link", "target"],
+        },
+        marquee: {
+          fields: ["label", "link"],
+        },
+        bottomMarquee: {
+          fields: ["firstText", "secondText"],
+        },
+        shippingInfos: {
+          fields: ["title", "content"],
+        },
+        selectedCollections: {
+          fields: ["title", "handle", "nbProductToShow"],
+        },
       },
-      marquee: {
-        fields: ["label", "link"],
-      },
-      bottomMarquee: {
-        fields: ["firstText", "secondText"],
-      },
-      shippingInfos: {
-        fields: ["title", "content"],
-      },
-      selectedCollections: {
-        fields: ["title", "handle", "nbProductToShow"],
-      },
-    },
-  });
-  const result = await strapiFetchWithFallback(`/general?${query}`, locale, {
-    next: { revalidate: 86400 },
-  });
+    });
+    const result = await strapiFetchWithFallback(`/general?${query}`, locale, {
+      next: { revalidate: 86400 },
+    });
 
-  return result.data?.data as StrapiGeneral;
+    return result.data?.data as StrapiGeneral;
+  } catch (error) {
+    console.error("Failed to fetch general from Strapi:", error);
+    return null;
+  }
 }
 
 interface StrapiBottomMarquee {
