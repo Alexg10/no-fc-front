@@ -13,6 +13,8 @@ export async function Header({ locale }: { locale: string }) {
     getGeneral(locale),
   ]);
 
+  if (!menu) return null;
+
   return (
     <header className="fixed flex justify-center top-0 z-50 w-full">
       <Grid>
