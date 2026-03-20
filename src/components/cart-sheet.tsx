@@ -89,9 +89,9 @@ export function CartSheet() {
                           </Link>
                         )}
 
-                        <div className="flex-1 flex flex-col gap-2 justify-between ">
+                        <div className="flex-1 flex flex-col gap-2 justify-between relative">
                           <div className="flex flex-col items-start h-full gap-0">
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-col gap-1 lg:max-w-[270px]">
                               <Link
                                 href={`/products/${productHandle}`}
                                 onClick={closeCart}
@@ -145,7 +145,7 @@ export function CartSheet() {
                             >
                               {t("remove")}
                             </Button>
-                            <span className="font-polymath-text! leading-[100%] gap-1 text-black flex flex-col items-center translate-y-[3px]">
+                            <span className="font-polymath-text! leading-[100%] gap-1 text-black flex flex-col items-center translate-y-[3px] lg:absolute lg:right-0 lg:top-0">
                               {formatPrice(
                                 parseFloat(line.merchandise.price.amount) *
                                   line.quantity,
