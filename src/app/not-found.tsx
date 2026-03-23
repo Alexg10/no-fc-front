@@ -2,7 +2,6 @@ import { CartSheet } from "@/components/cart-sheet";
 import { Header } from "@/components/common/header";
 import { LogoIcons } from "@/components/icons/logo-icons";
 import { JugglingGame } from "@/components/not-found/juggling-game";
-import { ButtonLink } from "@/components/ui/button-link";
 import { CartProvider } from "@/contexts/cart-context";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
@@ -49,18 +48,6 @@ export default async function NotFound() {
               NO PAGE.
             </h1>
           </div>
-
-          {/* Back home button */}
-          <ButtonLink
-            href="/"
-            variant="secondary"
-            hasIcon={false}
-            className="flex flex-row items-center gap-2 [&>div>div]:flex [&>div>div]:items-center"
-          >
-            <LogoIcons className="size-5 mr-3 text-black translate-y-px" />
-            {t("backHome")}
-          </ButtonLink>
-
           {/* Juggling game overlay */}
           <JugglingGame />
         </main>

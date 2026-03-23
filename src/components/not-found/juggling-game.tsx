@@ -17,11 +17,13 @@ const BALL_IMAGES = [
 ];
 
 const BALL_SIZE = 130;
-const HIT_ZONE = 200;
-const GRAVITY = 0.45;
-const FRICTION = 0.998;
+const HIT_ZONE = 300;
+const GRAVITY = 0.36;
+const FRICTION = 0.997;
 const BOUNCE_DAMPENING = 0.55;
-const KICK_FORCE_Y = -18;
+const KICK_FORCE_Y = -15;
+const KICK_FORCE_X = 6.5;
+const INITIAL_VX = 1;
 
 interface BallState {
   x: number;
@@ -31,7 +33,7 @@ interface BallState {
 }
 
 export function JugglingGame() {
-  const ballStateRef = useRef<BallState>({ x: 0, y: 0, vx: 1.5, vy: 0 });
+  const ballStateRef = useRef<BallState>({ x: 0, y: 0, vx: INITIAL_VX, vy: 0 });
   const angleRef = useRef(0);
   const jugglesRef = useRef(0);
   const ballImageRef = useRef(0);
@@ -55,7 +57,7 @@ export function JugglingGame() {
       ballStateRef.current = {
         x: w * 0.78,
         y: h * 0.45,
-        vx: 1.5,
+        vx: INITIAL_VX,
         vy: 0,
       };
       setBallPos({ x: w * 0.78, y: h * 0.45 });
@@ -98,7 +100,7 @@ export function JugglingGame() {
         }
       }
 
-      angleRef.current += state.vx * 1.5;
+      angleRef.current += state.vx * 1.25;
       setBallAngle(angleRef.current);
       setBallPos({ x: state.x, y: state.y });
 
@@ -120,7 +122,8 @@ export function JugglingGame() {
 
     if (distance < HIT_ZONE / 2) {
       state.vy = KICK_FORCE_Y;
-      state.vx = (dx / (BALL_SIZE / 2)) * 8;
+      const horizontalKick = (-dx / (BALL_SIZE / 2)) * KICK_FORCE_X;
+      state.vx = horizontalKick;
 
       jugglesRef.current += 1;
       setJuggles(jugglesRef.current);
@@ -196,12 +199,13 @@ export function JugglingGame() {
             alt="Football"
             width={BALL_SIZE}
             height={BALL_SIZE}
-            className="w-full h-full object-contain drop-shadow-2xl"
+            draggable={false}
+            onDragStart={(e) => e.preventDefault()}
+            className="h-full w-full select-none object-contain drop-shadow-2xl [-webkit-user-drag:none]"
             priority
           />
         </div>
       </div>
-
     </div>
   );
 }
