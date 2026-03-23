@@ -91,8 +91,8 @@ export function VariantSelector({
       </Title>
 
       {/* Sélecteur de taille */}
-      <div className="space-y-3 ">
-        <div className="flex gap-5 lg:gap-3">
+      <div className="mb-3 lg:mb-10 ">
+        <div className="flex border border-black w-fit">
           {AVAILABLE_SIZES.map((size) => {
             const variant = sizeVariants[size];
             const isAvailable = variant?.availableForSale;
@@ -105,14 +105,14 @@ export function VariantSelector({
                   variant && isAvailable && setSelectedVariant(variant)
                 }
                 disabled={!isAvailable}
-                className={`text-[18px] px-[4px] uppercase p-1 min-w-[27px] h-[27px]
-                  transition-all duration-200 text-polymath max-content
+                className={`text-[18px] px-[4px] uppercase p-1 min-w-[50px] h-[50px]
+                  transition-all duration-200 text-polymath max-content aspect-square last:border-r-0  border-r border-r-black
                   ${
                     isSelected
                       ? "bg-black text-white "
                       : isAvailable
                         ? "bg-white text-black hover:border-black  cursor-pointer"
-                        : "text-black/20 cursor-not-allowed "
+                        : "text-black/20 cursor-not-allowed bg-white line-through"
                   }
                 `}
               >
@@ -122,7 +122,12 @@ export function VariantSelector({
           })}
         </div>
       </div>
-
+      {hasDiscount && selectedCompareAtPrice && (
+        <span className="flex gap-1 mb-1">
+          {t("oldPrice")}
+          {parseFloat(selectedCompareAtPrice.amount).toFixed(2)} €
+        </span>
+      )}
       <div className="bg-black text-white p-2 md:max-content lg:w-fit">
         <div className="flex items-stretch border border-white">
           <button
@@ -142,11 +147,6 @@ export function VariantSelector({
             </span>
           </button>
           <div className="flex flex-1 text-nowrap items-center justify-center px-8 text-[18px] gap-2 lg:px-12">
-            {hasDiscount && selectedCompareAtPrice && (
-              <span className="line-through opacity-50">
-                {parseFloat(selectedCompareAtPrice.amount).toFixed(2)} €
-              </span>
-            )}
             <span className="lg:translate-y-[2px]">
               {selectedPrice
                 ? `${parseFloat(selectedPrice.amount).toFixed(2)} €`

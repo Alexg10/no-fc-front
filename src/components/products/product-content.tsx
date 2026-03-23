@@ -11,6 +11,7 @@ import { StrapiShippingInfos } from "@/services/strapi/generalService";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import { ProductDescription } from "./product-description";
 import { ProductImageCarousel } from "./product-image-carousel";
@@ -25,6 +26,7 @@ export function ProductContent({
   product,
   shippingInfos,
 }: ProductContentProps) {
+  const t = useTranslations("products");
   const firstImage = product.images.edges[0]?.node;
   const price = product.priceRange.minVariantPrice;
   const compareAtPrice = product.compareAtPriceRange?.minVariantPrice;
@@ -128,6 +130,12 @@ export function ProductContent({
             <Title level={1} className="lg:text-[64px] text-left mb-8 lg:mb-10">
               {product.title}
             </Title>
+            {hasDiscount && compareAtPrice && (
+              <div className="flex gap-1 mb-1">
+                {t("oldPrice")}
+                {parseFloat(compareAtPrice.amount).toFixed(2)} €
+              </div>
+            )}
             <div className="bg-black text-white p-2 max-content">
               <div className="flex items-stretch border border-white">
                 <AddToCartButton
@@ -138,11 +146,6 @@ export function ProductContent({
                   variantTitle={product.variants.edges[0].node.title}
                 />
                 <div className="flex flex-1 flex-col border-l border-white items-center justify-center py-4 pb-3 px-8 lg:pb-2 text-[18px]">
-                  {hasDiscount && compareAtPrice && (
-                    <span className="text-nowrap line-through opacity-50">
-                      {parseFloat(compareAtPrice.amount).toFixed(2)} €
-                    </span>
-                  )}
                   <span className="text-nowrap">
                     {parseFloat(price.amount).toFixed(2)} €
                   </span>
