@@ -1,9 +1,14 @@
+"use client";
+
 import { ArticleCardBadge } from "@/components/articles/article-card-badge";
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import { Link } from "@/lib/navigation";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import { StrapiArticle } from "@/types/strapi/article";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useCallback, useState } from "react";
+
 interface ArticleCardProps {
   article: StrapiArticle;
   issueLabel: string;
@@ -11,11 +16,32 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ article, issueLabel, locale }: ArticleCardProps) {
-  const articleHref = `${locale ? `/${locale}` : ""}/articles/${article.slug}`;
+  const t = useTranslations("common");
+  const articleHref = `/articles/${article.slug}`;
+
+  const [hoverActive, setHoverActive] = useState(false);
+  const [cursor, setCursor] = useState({ x: 0, y: 0 });
+
+  const onImagePointerMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const offsetX = 14;
+      const offsetY = 4;
+      setCursor({
+        x: e.clientX + offsetX,
+        y: e.clientY - offsetY,
+      });
+    },
+    [],
+  );
 
   return (
     <Link href={articleHref} className="group flex flex-col gap-4">
-      <div className="relative aspect-7/8 w-full overflow-hidden">
+      <div
+        className="relative aspect-7/8 w-full overflow-hidden"
+        onMouseEnter={() => setHoverActive(true)}
+        onMouseLeave={() => setHoverActive(false)}
+        onMouseMove={onImagePointerMove}
+      >
         {article.cover?.url && (
           <div className="relative aspect-7/8 overflow-hidden">
             <Image
@@ -41,6 +67,20 @@ export function ArticleCard({ article, issueLabel, locale }: ArticleCardProps) {
               issueNumber={article.issueNumber}
               issueLabel={issueLabel}
             />
+          </div>
+        )}
+
+        {hoverActive && (
+          <div
+            className="pointer-events-none fixed z-100 bg-white p-2 hidden md:block"
+            style={{ left: cursor.x, top: cursor.y }}
+            aria-hidden
+          >
+            <div className="flex items-center justify-center border border-black px-4 py-[6px]">
+              <span className="text-center text-nowrap text-obviously uppercase tracking-wide text-black text-[13px] leading-none md:text-[15px]">
+                {t("readArticle")}
+              </span>
+            </div>
           </div>
         )}
       </div>
