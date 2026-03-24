@@ -255,12 +255,13 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         .to(
           fifthSceneSecondTitleRef.current,
           {
-            x: "-100vw",
-            duration: 1,
+            x: "-170vw",
+            duration: 1.3,
             ease: "linear",
           },
           "sixthScene",
         )
+        .to({}, { duration: 1 })
         .from(
           sixthSceneTopPartRef.current,
           {
@@ -656,11 +657,11 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           <span>No clubs</span>
         </div>
         <div
-          className="heading-xl-obviously hidden whitespace-nowrap justify-center lg:text-[320px] text-pink w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="heading-xl-obviously hidden whitespace-nowrap h-full justify-start items-center text-[160px] lg:text-[320px] text-pink w-full "
           ref={fifthSceneSecondTitleRef}
         >
-          <span>No colors</span>
-          <span className="absolute left-full ml-20 flex gap-40">
+          <span className="flex gap-20 justify-start items-center">
+            <span>No colors</span>
             <span>No colors</span>
             <span>No colors</span>
           </span>
@@ -842,7 +843,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           <span>No Games</span>
         </div>
         <div
-          className="heading-xl-obviously hidden whitespace-nowrap justify-start px-10 lg:text-[320px] text-pink w-full text-left absolute top-1/2 left-0 -translate-y-1/2"
+          className="heading-xl-obviously hidden whitespace-nowrap justify-start px-10 text-[160px] lg:text-[320px] text-pink w-full text-left absolute top-1/2 left-0 -translate-y-1/2"
           ref={seventhSceneSecondTitleRef}
         >
           <span>Just football through the eyes of design</span>

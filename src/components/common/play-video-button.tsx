@@ -29,16 +29,16 @@ export function PlayVideoButton({
           </div>
         ) : (
           <Marquee
-            className="text-white text-nowrap gap-4 -translate-y-0.5 py-2"
+            className="text-white text-nowrap gap-3 -translate-y-0.5 py-2"
             play={marqueeIsPlaying}
           >
-            <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px]">
+            <div className="flex items-center justify-center gap-2 heading-s-obviously lg:text-[16px] translate-y-px">
               <div>Play video</div>
-              <PlayIcon />
+              <PlayIcon className="size-[13px] translate-y-px" />
               <div>Play video</div>
-              <PlayIcon />
+              <PlayIcon className="size-[13px] translate-y-px" />
               <div>Play video</div>
-              <PlayIcon />
+              <PlayIcon className="size-[13px] translate-y-px" />
             </div>
           </Marquee>
         )}
