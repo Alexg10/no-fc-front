@@ -38,17 +38,16 @@ export function VariantSelector({
   const t = useTranslations("products");
   const { addToCart } = useCart();
   const [selectedVariant, setSelectedVariant] = useState<VariantOption | null>(
-    variants.find((v) => v.availableForSale) || null,
+    () => variants.find((v) => v.availableForSale) ?? null,
   );
   const [isAdding, setIsAdding] = useState(false);
 
-  // Grouper les variants par taille (mémorisé)
   const sizeVariants = useMemo(
     () =>
       variants.reduce(
         (acc, variant) => {
-          const sizeOpt = variant.selectedOptions.find(
-            (opt) => opt.name === "Size" || opt.name === "Taille",
+          const sizeOpt = variant.selectedOptions.find((opt) =>
+            /^(size|taille)$/i.test(opt.name.trim()),
           );
           if (sizeOpt) {
             acc[sizeOpt.value] = variant;
@@ -82,7 +81,6 @@ export function VariantSelector({
 
   return (
     <div className="space-y-10 lg:space-y-6">
-      {/* Titre du produit */}
       <Title
         level={1}
         className="text-left tracking-normal mb-8 lg:text-[64px] lg:mb-10"
@@ -90,7 +88,6 @@ export function VariantSelector({
         {productTitle}
       </Title>
 
-      {/* Sélecteur de taille */}
       <div className="mb-3 lg:mb-10 ">
         <div className="flex border border-black w-fit">
           {AVAILABLE_SIZES.map((size) => {
