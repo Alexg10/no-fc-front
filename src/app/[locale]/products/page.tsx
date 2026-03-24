@@ -95,7 +95,7 @@ export default async function ProductsPage({ params }: ProductsPageProps) {
             );
           })}
       </main>
-      <PreFooterMarquee />
+      <PreFooterMarquee locale={locale} />
     </section>
   );
 }

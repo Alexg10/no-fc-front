@@ -2,8 +2,8 @@ import { LogoIcons } from "@/components/icons/logo-icons";
 import { getGeneral } from "@/services/strapi/generalService";
 import Marquee from "react-fast-marquee";
 
-export async function PreFooterMarquee() {
-  const general = await getGeneral();
+export async function PreFooterMarquee({ locale }: { locale: string }) {
+  const general = await getGeneral(locale);
   const bottomMarquee = general?.bottomMarquee;
   return (
     <Marquee autoFill={true} className="bg-black text-white text-nowrap">

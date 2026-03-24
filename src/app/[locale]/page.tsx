@@ -86,7 +86,7 @@ export default async function Home({ params }: HomePageProps) {
           <HomeBlocks blocks={homepage?.blocks} locale={locale} />
         )}
       </Suspense>
-      <PreFooterMarquee />
+      <PreFooterMarquee locale={locale} />
     </main>
   );
 }

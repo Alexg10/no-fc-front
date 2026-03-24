@@ -26,7 +26,7 @@ export default async function AboutPage({
           </Suspense>
         ))}
       </div>
-      <PreFooterMarquee />
+      <PreFooterMarquee locale={locale} />
     </div>
   );
 }
