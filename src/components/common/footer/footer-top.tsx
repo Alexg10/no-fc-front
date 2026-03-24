@@ -21,6 +21,7 @@ export function FooterTop({
               href={footerTopLink.link}
               target={footerTopLink.target}
               key={footerTopLink.id}
+              className="link-hover-line w-fit"
             >
               {footerTopLink.label}
             </Link>
@@ -32,6 +33,7 @@ export function FooterTop({
               href={socialLink.link}
               target={socialLink.target}
               key={socialLink.id}
+              className="link-hover-line w-fit"
             >
               {socialLink.label}
             </Link>

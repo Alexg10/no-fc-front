@@ -22,6 +22,7 @@ export function FooterBottom({
             href={footerBottomLink.link}
             target={footerBottomLink.target}
             key={footerBottomLink.id}
+            className="link-hover-line w-fit"
           >
             {footerBottomLink.label}
           </Link>
