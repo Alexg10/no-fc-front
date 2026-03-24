@@ -17,16 +17,18 @@ export function FooterBottom({
         <LogoIcons className="size-18 md:size-18" />
       </div>
       <div className="flex flex-col gap-4 md:order-3 md:flex-row md:absolute md:right-0 md:gap-6">
-        {footerBottomLinks?.map((footerBottomLink) => (
-          <Link
-            href={footerBottomLink.link}
-            target={footerBottomLink.target}
-            key={footerBottomLink.id}
-            className="link-hover-line w-fit"
-          >
-            {footerBottomLink.label}
-          </Link>
-        ))}
+        {footerBottomLinks
+          ?.filter((footerBottomLink) => footerBottomLink.link)
+          .map((footerBottomLink) => (
+            <Link
+              href={footerBottomLink.link}
+              target={footerBottomLink.target}
+              key={footerBottomLink.id}
+              className="link-hover-line w-fit"
+            >
+              {footerBottomLink.label}
+            </Link>
+          ))}
       </div>
       <div className="flex md:flex-col gap-1 md:order-2 md:gap-0 text-[16px]">
         <span>
