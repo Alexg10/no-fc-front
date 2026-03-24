@@ -96,7 +96,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                 <div
                   key={image.id}
                   className={cn(
-                    "relative cursor-grab active:cursor-grabbing transition-shadow hover:shadow-lg",
+                    "relative cursor-grab active:cursor-grabbing self-start",
                     images.length === 2
                       ? "first:-rotate-6 last:rotate-[4deg] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[30px]"
                       : "max-w-1/2 lg:max-w-[474px] first:-rotate-6 nth-2:lg:translate-y-[90px] nth-2:z-10 nth-2:lg:translate-x-[-140px] last:lg:rotate-[-4deg] last:lg:rotate-[4deg] nth-2:lg:rotate-[-6deg] nth-2:rotate-[7deg] nth-3:rotate-[4deg] nth-3:lg:translate-x-[150px] nth-3:lg:translate-y-[-180px] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[-20px] last:lg:translate-y-[30px] last:z-10 last:lg:translate-y-[-200px]",
@@ -107,7 +107,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                   onMouseDown={(e) => handleMouseDown(e, image.id)}
                   onTouchStart={(e) => handleTouchStart(e, image.id)}
                 >
-                  <div className="relative inline-block overflow-hidden">
+                  <div className="relative inline-block overflow-hidden  transition-shadow hover:shadow-lg">
                     <Image
                       src={getStrapiImageUrl(image.url)}
                       alt={image.alternativeText || ""}
