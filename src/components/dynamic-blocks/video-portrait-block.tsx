@@ -39,7 +39,7 @@ export function VideoPortraitBlock({ block }: VideoPortraitBlockProps) {
           )}
 
           <div
-            className="relative aspect-[9/16] w-full max-w-md overflow-hidden"
+            className="relative aspect-9/16 w-full max-w-md overflow-hidden"
             onMouseEnter={() => setMarqueeIsPlaying(true)}
             onMouseLeave={() => setMarqueeIsPlaying(false)}
           >
@@ -47,7 +47,7 @@ export function VideoPortraitBlock({ block }: VideoPortraitBlockProps) {
               <video
                 ref={videoRef}
                 src={getStrapiImageUrl(block.video.url)}
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-contain"
                 playsInline
                 loop
                 controls={true}
