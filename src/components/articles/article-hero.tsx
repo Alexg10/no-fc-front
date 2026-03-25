@@ -84,8 +84,8 @@ export function ArticleHero({
       });
 
       return () => {
-        coverTween.scrollTrigger?.kill();
-        coverTween.kill();
+        // coverTween.scrollTrigger?.kill();
+        // coverTween.kill();
         heroTween.scrollTrigger?.kill();
         heroTween.kill();
         gsap.set([hero, cover], { clearProps: "all" });
