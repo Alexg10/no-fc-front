@@ -17,7 +17,7 @@ export async function getGeneral(
           fields: ["label", "link"],
         },
         bottomMarquee: {
-          fields: ["firstText", "secondText"],
+          fields: ["firstText", "secondText", "marqueeLink"],
         },
         shippingInfos: {
           fields: ["title", "content"],
@@ -41,6 +41,7 @@ export async function getGeneral(
 interface StrapiBottomMarquee {
   firstText: string;
   secondText: string;
+  marqueeLink?: string;
 }
 
 export interface StrapiShippingInfos {

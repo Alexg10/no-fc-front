@@ -28,6 +28,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
   const thirdSceneImageRef = useRef<HTMLDivElement>(null);
   const fourthSceneRef = useRef<HTMLDivElement>(null);
   const fourthSceneTitleRef = useRef<HTMLParagraphElement>(null);
+  const fourthSceneBackgroundRef = useRef<HTMLDivElement>(null);
   const fourthSceneTopImageRef = useRef<HTMLDivElement>(null);
   const fourthSceneBottomImageRef = useRef<HTMLDivElement>(null);
   const fourthSceneImages = useRef<(HTMLDivElement | null)[]>([]);
@@ -188,13 +189,36 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           "fourthSceneTitleSplit",
         )
         .from(
+          fourthSceneTopImageRef.current,
+          {
+            yPercent: -100,
+            duration: 1,
+          },
+          "fourthSceneTitleSplit",
+        )
+        .from(
+          fourthSceneBottomImageRef.current,
+          {
+            yPercent: 100,
+            duration: 1,
+          },
+          "fourthSceneTitleSplit",
+        )
+        .set(
+          fourthSceneBackgroundRef.current,
+          {
+            display: "flex",
+          },
+          "fourthSceneBackgroundRef",
+        )
+        .from(
           fourthSceneTitleSplit.words,
           {
             opacity: 0,
             stagger: { each: 0.1 },
             duration: 0.1,
           },
-          "fourthSceneTitleSplit",
+          "fourthSceneBackgroundRef",
         )
         .to(
           fourthSceneTopImageRef.current,
@@ -202,7 +226,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             yPercent: -100,
             duration: 1,
           },
-          "fourthSceneImage-=0.3",
+          "fourthSceneEnd",
         )
         .to(
           fourthSceneBottomImageRef.current,
@@ -210,7 +234,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             yPercent: 100,
             duration: 1,
           },
-          "fourthSceneImage-=0.3",
+          "fourthSceneEnd",
         )
         .to(
           fifthSceneRef.current,
@@ -412,9 +436,10 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             y: fourthSceneParallaxValues[
               index % fourthSceneParallaxValues.length
             ],
-            duration: 1,
+            duration: 1.2,
+            scrub: 1.5,
           },
-          "fourthSceneImage-=0.3",
+          "fourthSceneBackgroundRef+=0.5",
         );
       });
 
@@ -559,7 +584,10 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         className="w-full h-screen hidden justify-center items-center absolute inset-0 z-30"
         ref={fourthSceneRef}
       >
-        <div className="w-full h-full absolute inset-0">
+        <div
+          className="w-full h-full absolute inset-0 hidden"
+          ref={fourthSceneBackgroundRef}
+        >
           <Image
             src={"/images/about/papper-texture-about.jpg"}
             alt="Papper texture about"
