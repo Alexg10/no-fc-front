@@ -20,27 +20,29 @@ async function NewestArticles({
   ]);
 
   return (
-    <Grid className="gap-y-10">
-      <div className="col-span-full flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        {title && (
-          <BlockRendererClient
-            content={title}
-            className="heading-m-obviously! [&>p]:heading-m-obviously!"
-          />
-        )}
-        <ButtonLink href={`/${locale}/articles`}>{t("seeMore")}</ButtonLink>
-      </div>
-      <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-10">
-        {articles.map((article) => (
-          <ArticleCard
-            key={article.id}
-            article={article}
-            locale={locale}
-            issueLabel={t("issue")}
-          />
-        ))}
-      </div>
-    </Grid>
+    <section className="pb-20">
+      <Grid className="gap-y-10">
+        <div className="col-span-full flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          {title && (
+            <BlockRendererClient
+              content={title}
+              className="heading-m-obviously! [&>p]:heading-m-obviously!"
+            />
+          )}
+          <ButtonLink href={`/${locale}/articles`}>{t("seeMore")}</ButtonLink>
+        </div>
+        <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-10">
+          {articles.map((article) => (
+            <ArticleCard
+              key={article.id}
+              article={article}
+              locale={locale}
+              issueLabel={t("issue")}
+            />
+          ))}
+        </div>
+      </Grid>
+    </section>
   );
 }
 
