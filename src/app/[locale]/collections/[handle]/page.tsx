@@ -105,7 +105,7 @@ export default async function CollectionPage({
           </div>
         </Grid>
       </main>
-      <PreFooterMarquee />
+      <PreFooterMarquee locale={locale} />
     </section>
   );
 }

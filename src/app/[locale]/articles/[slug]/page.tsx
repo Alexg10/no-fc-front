@@ -5,14 +5,61 @@ import { ArticlePageWrapper } from "@/components/articles/article-page-wrapper";
 import { ArticleSeeOthers } from "@/components/articles/article-see-others";
 import { BlockRenderer } from "@/components/common/block-renderer";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
+import { getStrapiImageUrl } from "@/lib/strapi";
 import { getArticleBySlug } from "@/services/strapi/articleService";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
-export default async function ArticlePage({
-  params,
-}: {
+interface ArticlePageProps {
   params: Promise<{ slug: string; locale: string }>;
-}) {
+}
+
+export async function generateMetadata({
+  params,
+}: ArticlePageProps): Promise<Metadata> {
+  const { slug, locale } = await params;
+  const article = await getArticleBySlug(slug, locale);
+  const t = await getTranslations({ locale, namespace: "metadata" });
+
+  if (!article) {
+    return {
+      title: t("articles.title"),
+    };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const articleUrl = `${siteUrl}/${locale}/articles/${slug}`;
+
+  const title = article.seo?.metaTitle || article.title;
+  const description = article.seo?.metaDescription || article.excerpt;
+
+  return {
+    title,
+    description,
+    keywords: article.seo?.keywords,
+    openGraph: {
+      title,
+      description,
+      url: articleUrl,
+      type: "article",
+      locale: locale === "en" ? "en_US" : "fr_FR",
+      ...(article.cover && {
+        images: [
+          {
+            url: getStrapiImageUrl(article.cover.url),
+            alt: article.cover.alternativeText || article.title,
+          },
+        ],
+      }),
+    },
+    alternates: {
+      canonical: articleUrl,
+    },
+  };
+}
+
+export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug, locale } = await params;
   const article = await getArticleBySlug(slug, locale);
 

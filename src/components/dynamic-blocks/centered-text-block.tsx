@@ -15,7 +15,7 @@ export function CenteredTextBlock({ block }: CenteredTextBlockProps) {
   const button = block.button;
 
   return (
-    <section>
+    <section className="pb-4 pt-11 lg:pb-14 lg:pt-20">
       <Grid>
         <div className="col-span-full">
           {title && (

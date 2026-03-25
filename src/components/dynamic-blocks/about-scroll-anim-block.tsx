@@ -766,7 +766,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           />
         </div>
         <div
-          className="h-[150%] aspect-4/7  absolute top-[-15%] right-[7%] hidden"
+          className="h-[150%] aspect-2/3  absolute top-[-15%] right-[7%] hidden"
           ref={sixthScenePictureSix}
         >
           <Image

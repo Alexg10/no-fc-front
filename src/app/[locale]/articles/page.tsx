@@ -47,7 +47,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
           </Suspense>
         </main>
       </Grid>
-      <PreFooterMarquee />
+      <PreFooterMarquee locale={locale} />
     </div>
   );
 }

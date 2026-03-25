@@ -85,7 +85,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <Suspense fallback={<BlockSkeleton />}>
         <RelatedProducts productHandle={handle} locale={locale} />
       </Suspense>
-      <PreFooterMarquee />
+      <PreFooterMarquee locale={locale} />
     </div>
   );
 }

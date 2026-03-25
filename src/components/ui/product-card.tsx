@@ -49,8 +49,8 @@ export function ProductCard({
         )}
       </div>
 
-      <div className="p-4 flex flex-col lg:flex-row justify-between gap-4 border-t-2 border-black lg:pb-13 bg-off-white">
-        <h2 className="text-polymath-display text-[16px] mb-2 line-clamp-2 ">
+      <div className="p-4 flex flex-col lg:flex-row justify-between gap-4 border-t-2 border-black bg-off-white">
+        <h2 className="text-polymath-display text-[16px] line-clamp-2 ">
           {product.title}
         </h2>
         <div className="text-polymath flex-col text-[16px] text-black text-nowrap flex">
