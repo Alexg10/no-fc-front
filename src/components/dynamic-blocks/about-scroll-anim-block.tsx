@@ -40,11 +40,15 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
   const sixthSceneBottomPartRef = useRef<HTMLDivElement>(null);
   const sixthScenePictureOne = useRef<HTMLDivElement>(null);
   const sixthScenePictureTwo = useRef<HTMLDivElement>(null);
+  const sixthScenePictureTwoBis = useRef<HTMLDivElement>(null);
   const sixthScenePictureThree = useRef<HTMLDivElement>(null);
+  const sixthScenePictureThreeBis = useRef<HTMLDivElement>(null);
   const sixthScenePictureFour = useRef<HTMLDivElement>(null);
+  const sixthScenePictureFourBis = useRef<HTMLDivElement>(null);
   const sixthScenePictureFive = useRef<HTMLDivElement>(null);
   const sixthScenePictureSix = useRef<HTMLDivElement>(null);
   const sixthScenePictureSeven = useRef<HTMLDivElement>(null);
+  const sixthScenePictureFiveBis = useRef<HTMLDivElement>(null);
   const sixthSceneTitleRef = useRef<HTMLDivElement>(null);
   const sixthSceneTitleTwoRef = useRef<HTMLDivElement>(null);
   const sixthSceneTitleThreeRef = useRef<HTMLDivElement>(null);
@@ -326,6 +330,13 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           "sixthSceneTitleSplit+=0.1",
         )
         .to(
+          sixthScenePictureTwoBis.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleSplit+=0.1",
+        )
+        .to(
           sixthScenePictureThree.current,
           {
             display: "flex",
@@ -333,7 +344,21 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           "sixthSceneTitleSplit+=0.5",
         )
         .to(
+          sixthScenePictureThreeBis.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleSplit+=0.5",
+        )
+        .to(
           sixthScenePictureFour.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleSplit+=0.9",
+        )
+        .to(
+          sixthScenePictureFourBis.current,
           {
             display: "flex",
           },
@@ -355,7 +380,13 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         .to(sixthScenePictureFive.current, {
           display: "flex",
         })
-
+        .to(
+          sixthScenePictureFiveBis.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleTwoSplit+=0.1",
+        )
         .to(
           sixthScenePictureSix.current,
           {
@@ -725,13 +756,13 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             }}
           />
           <div
-            className="h-full w-[70%] top-0 left-0 absolute hidden"
+            className="h-[120%] aspect-3/2 -top-[10%] left-[25%] absolute hidden"
             ref={sixthScenePictureOne}
           >
             <Image
               src={"/images/about/sixthScenePictureOne.webp"}
               alt="Papper texture about"
-              className="object-cover"
+              className="object-contain"
               fill
             />
           </div>
@@ -761,6 +792,17 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           />
         </div>
         <div
+          className="aspect-5/4 w-auto h-[70%] absolute -bottom-[80px] left-[25%] hidden"
+          ref={sixthScenePictureTwoBis}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureTwoBis.webp"}
+            alt="Papper texture about"
+            className="object-contain"
+            fill
+          />
+        </div>
+        <div
           className="h-[50%] w-[620px] absolute bottom-0 left-1/2 -translate-x-1/2 hidden"
           ref={sixthScenePictureThree}
         >
@@ -773,7 +815,18 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           />
         </div>
         <div
-          className=" absolute h-[150%] aspect-4/7 bottom-[-50%] left-[5%] hidden"
+          className="h-[60%] w-auto aspect-square absolute -top-20 left-[60%] -translate-x-1/2 hidden"
+          ref={sixthScenePictureThreeBis}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureThreeBis.webp"}
+            alt="Papper texture about"
+            className="object-contain"
+            fill
+          />
+        </div>
+        <div
+          className=" absolute h-[150%] aspect-4/7 bottom-[-50%] left-[5%] hidden xl:bottom-[-47%]"
           ref={sixthScenePictureFour}
         >
           <Image
@@ -783,8 +836,20 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             fill
           />
         </div>
+
         <div
-          className="h-[125%] aspect-3/7 absolute -bottom-[50%] left-0 -translate-x-[25%] hidden"
+          className=" absolute h-[75%] aspect-5/8 bottom-[-15%] left-[50%] hidden"
+          ref={sixthScenePictureFourBis}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureFourBis.webp"}
+            alt="Papper texture about"
+            className="h-full w-full top-0 left-0"
+            fill
+          />
+        </div>
+        <div
+          className="h-[125%] aspect-3/7 z-30 absolute -bottom-[50%] left-0 -translate-x-[25%] hidden"
           ref={sixthScenePictureFive}
         >
           <Image
@@ -794,7 +859,17 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           />
         </div>
         <div
-          className="h-[150%] aspect-2/3  absolute top-[-15%] right-[7%] hidden"
+          className="h-[70%] aspect-7/10 absolute top-[-10%] left-20 -translate-x-[25%] hidden"
+          ref={sixthScenePictureFiveBis}
+        >
+          <Image
+            src={"/images/about/sixthScenePictureFiveBis.webp"}
+            alt="Papper texture about"
+            fill
+          />
+        </div>
+        <div
+          className="h-[150%] aspect-2/3  absolute top-[-15%] right-[7%] xl:right-[4%] hidden"
           ref={sixthScenePictureSix}
         >
           <Image
