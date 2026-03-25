@@ -7,7 +7,7 @@ export async function getHomepage(
   const query = strapiQuery({
     populate: {
       seo: {
-        fields: ["metaTitle", "metaDescription", "keywords"],
+        populate: { metaImage: { fields: ["url", "alternativeText", "width", "height"] } },
       },
       heroArticle: {
         populate: {

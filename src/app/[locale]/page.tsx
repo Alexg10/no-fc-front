@@ -1,6 +1,7 @@
 import { ArticleHero } from "@/components/articles/article-hero";
 import { HomeBlocks } from "@/components/common/homepage/home-blocks";
 import { PreFooterMarquee } from "@/components/common/pre-footer-marquee";
+import { getStrapiImageUrl } from "@/lib/strapi";
 import { getLastArticle } from "@/services/strapi/articleService";
 import { getHomepage } from "@/services/strapi/homepageService";
 import type { Metadata } from "next";
@@ -28,29 +29,55 @@ export async function generateMetadata({
   const homepage = await getHomepage(locale);
 
   if (homepage?.seo) {
+    const title = homepage.seo.metaTitle || t("metadata.home.title");
+    const description =
+      homepage.seo.metaDescription || t("metadata.home.description");
+
+    const ogImage = homepage.seo.metaImage
+      ? {
+          url: getStrapiImageUrl(homepage.seo.metaImage.url),
+          alt: homepage.seo.metaImage.alternativeText || title,
+          width: homepage.seo.metaImage.width,
+          height: homepage.seo.metaImage.height,
+        }
+      : undefined;
+
     return {
-      title: homepage.seo.metaTitle || t("metadata.home.title"),
-      description:
-        homepage.seo.metaDescription || t("metadata.home.description"),
+      title,
+      description,
       keywords: homepage.seo.keywords,
       openGraph: {
-        title: homepage.seo.metaTitle || t("metadata.home.title"),
-        description:
-          homepage.seo.metaDescription || t("metadata.home.description"),
+        title,
+        description,
         type: "website",
         locale: locale === "en" ? "en_US" : "fr_FR",
+        ...(ogImage && { images: [ogImage] }),
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        ...(ogImage && { images: [ogImage.url] }),
       },
     };
   }
 
+  const defaultTitle = t("metadata.home.title");
+  const defaultDescription = t("metadata.home.description");
+
   return {
-    title: t("metadata.home.title"),
-    description: t("metadata.home.description"),
+    title: defaultTitle,
+    description: defaultDescription,
     openGraph: {
-      title: t("metadata.home.title"),
-      description: t("metadata.home.description"),
+      title: defaultTitle,
+      description: defaultDescription,
       type: "website",
       locale: locale === "en" ? "en_US" : "fr_FR",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: defaultTitle,
+      description: defaultDescription,
     },
   };
 }
