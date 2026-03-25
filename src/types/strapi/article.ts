@@ -1,4 +1,4 @@
-import { StrapiBlock, StrapiImage } from "@/types/strapi";
+import { StrapiBlock, StrapiImage, StrapiSeo } from "@/types/strapi";
 import { BlocksContent } from "@strapi/blocks-react-renderer";
 
 export interface StrapiArticle {
@@ -15,6 +15,7 @@ export interface StrapiArticle {
   issueNumber: string;
   titleColor: ColorList | null;
   localizations?: Array<{ slug: string; locale: string }>;
+  seo?: StrapiSeo;
 }
 
 export type ColorList = "blue" | "lime" | "pink" | "black" | "white" | "grey";

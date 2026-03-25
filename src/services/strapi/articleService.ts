@@ -35,6 +35,9 @@ export async function getArticleBySlug(
       localizations: {
         fields: ["slug", "locale"],
       },
+      seo: {
+        fields: ["metaTitle", "metaDescription", "keywords"],
+      },
       blocks: {
         populate: "*",
         on: {
