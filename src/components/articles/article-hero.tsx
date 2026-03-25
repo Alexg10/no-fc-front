@@ -52,16 +52,16 @@ export function ArticleHero({
       ScrollTrigger.refresh();
 
       ScrollTrigger.getById("article-hero-cover")?.kill();
-      const coverTween = gsap.to(cover, {
-        yPercent: 5,
-        scrollTrigger: {
-          id: "article-hero-cover",
-          trigger: cover,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
+      // const coverTween = gsap.to(cover, {
+      //   yPercent: 5,
+      //   scrollTrigger: {
+      //     id: "article-hero-cover",
+      //     trigger: cover,
+      //     start: "top top",
+      //     end: "bottom top",
+      //     scrub: 1,
+      //   },
+      // });
 
       ScrollTrigger.getById("article-hero-pin")?.kill();
       const heroTween = gsap.to(hero, {
