@@ -35,7 +35,9 @@ export function ArticleSummaryLink() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const idx = headingsList.findIndex((h) => h.element === entry.target);
+            const idx = headingsList.findIndex(
+              (h) => h.element === entry.target,
+            );
             if (idx !== -1) setCurrentIndex(idx);
           }
         });
@@ -52,17 +54,19 @@ export function ArticleSummaryLink() {
   }, [mainRef]);
 
   return (
-    <div className="flex flex-col gap-2 h-full max-h-[35vh] overflow-auto no-scrollbar">
+    <div className="flex flex-col gap-2 h-full max-h-[35vh] lg:max-h-none overflow-auto no-scrollbar">
       {headings.length > 0 ? (
         headings.map((heading) => (
           <button
             key={heading.index}
-            onClick={() => heading.element.scrollIntoView({ behavior: "smooth" })}
+            onClick={() =>
+              heading.element.scrollIntoView({ behavior: "smooth" })
+            }
             className={cn(
               "text-left text-[14px] leading-[140%] hover:opacity-100 text-black cursor-pointer transition-opacity duration-300 ease-in-out",
               currentIndex === heading.index
-                ? "opacity-100"
-                : "opacity-40 text-polymath",
+                ? "opacity-100 text-polymath-display"
+                : "opacity-40 text-polymath-normal font-polymath ",
             )}
           >
             {heading.text}

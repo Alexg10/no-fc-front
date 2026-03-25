@@ -274,6 +274,9 @@
 @utility text-polymath {
   @apply text-[14px] lg:text-[16px] font-medium leading-[120%] tracking-[-1%];
 }
+@utility text-polymath-normal {
+  @apply text-[14px] lg:text-[16px] font-normal leading-[120%] tracking-[-1%];
+}
 @utility text-polymath-display {
   @apply font-polymath-display text-[14px] lg:text-[16px] font-medium leading-[120%] tracking-[-1%];
 }

@@ -61,7 +61,7 @@ export function SectionPushBlock({ block }: SectionPushBlockProps) {
   return (
     <section
       className={cn(
-        "py-4 lg:py-6 lg:px-2",
+        "py-4 lg:py-6 lg:px-2 pb-20 lg:pb-20",
         block.whiteText ? "text-white" : "text-black dark:text-white",
       )}
     >

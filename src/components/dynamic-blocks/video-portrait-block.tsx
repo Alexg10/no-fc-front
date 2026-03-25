@@ -26,7 +26,7 @@ export function VideoPortraitBlock({ block }: VideoPortraitBlockProps) {
   };
 
   return (
-    <section className="relative w-full">
+    <section className="relative w-full pb-20 lg:pb-30">
       <Grid>
         <div className="col-span-full flex flex-col items-center gap-8">
           {block.title && (
