@@ -657,26 +657,22 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         </div>
         <div
           className="w-full h-1/3 absolute top-0 left-0"
+          style={{
+            backgroundImage: `url("/images/about/fourth-top.webp")`,
+            backgroundSize: "cover",
+            backgroundPosition: "bottom center",
+          }}
           ref={fourthSceneTopImageRef}
-        >
-          <Image
-            src={"/images/about/fourth-top.webp"}
-            alt="Papper texture about"
-            className="object-cover"
-            fill
-          />
-        </div>
+        ></div>
         <div
           className="w-full h-1/3 absolute bottom-0 left-0"
+          style={{
+            backgroundImage: `url("/images/about/fourth-bottom.webp")`,
+            backgroundSize: "cover",
+            backgroundPosition: "top center",
+          }}
           ref={fourthSceneBottomImageRef}
-        >
-          <Image
-            src={"/images/about/fourth-bottom.webp"}
-            alt="Papper texture about"
-            className="object-cover"
-            fill
-          />
-        </div>
+        ></div>
 
         <p
           className="heading-xl-obviously text-pink text-center px-10 relative z-10"
