@@ -10,6 +10,9 @@ interface ProductCardProps {
   href?: string;
 }
 
+const BEST_SELLER_COLLECTION_HANDLE = "best-sellers";
+const NEW_COLLECTION_HANDLE = "new";
+
 export function ProductCard({
   product,
   locale = "",
@@ -24,6 +27,12 @@ export function ProductCard({
     parseFloat(compareAtPrice.amount) > parseFloat(price.amount);
   const productHref =
     href || `${locale ? `/${locale}` : ""}/products/${product.handle}`;
+  const isBestSeller = product.collections?.edges.some(
+    ({ node }) => node.handle === BEST_SELLER_COLLECTION_HANDLE,
+  );
+  const isNew = product.collections?.edges.some(
+    ({ node }) => node.handle === NEW_COLLECTION_HANDLE,
+  );
 
   return (
     <Link
@@ -36,6 +45,18 @@ export function ProductCard({
           productTitle={product.title}
           isAboveFold={isAboveFold}
         />
+        <div className="absolute top-2 left-2 z-10 flex gap-2">
+          {isNew && (
+            <span className="z-10 bg-lime text-black font-obviously-narrow font-medium uppercase text-xs px-2 py-1.5">
+              <div className="-translate-y-px flex">New in</div>
+            </span>
+          )}
+          {isBestSeller && (
+            <span className="z-10 bg-blue text-black font-obviously-narrow font-medium uppercase text-xs px-2 py-1.5">
+              <div className="-translate-y-px flex">Best-seller</div>
+            </span>
+          )}
+        </div>
         {product.availableForSale === false && (
           <div className="absolute bottom-0 left-0 w-full bg-black text-white overflow-hidden">
             <Marquee

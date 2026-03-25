@@ -67,6 +67,13 @@ export interface ShopifyProduct {
       currencyCode: string;
     };
   };
+  collections?: {
+    edges: Array<{
+      node: {
+        handle: string;
+      };
+    }>;
+  };
 }
 
 export interface ShopifyProductEdge {
@@ -182,6 +189,13 @@ const GET_PRODUCT_BY_HANDLE = `
           currencyCode
         }
       }
+      collections(first: 5) {
+        edges {
+          node {
+            handle
+          }
+        }
+      }
     }
   }
 `;
@@ -263,6 +277,13 @@ const GET_PRODUCTS = `
             maxVariantPrice {
               amount
               currencyCode
+            }
+          }
+          collections(first: 5) {
+            edges {
+              node {
+                handle
+              }
             }
           }
           options {
@@ -395,6 +416,13 @@ const GET_COLLECTION_PRODUCTS = `
                     name
                     value
                   }
+                }
+              }
+            }
+            collections(first: 5) {
+              edges {
+                node {
+                  handle
                 }
               }
             }
