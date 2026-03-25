@@ -46,6 +46,11 @@ export function ArticleHero({
       const content = contentRef.current;
       if (!hero || !container || !cover || !content) return;
 
+      // Reset scroll position and clear any stale GSAP transforms
+      // before creating ScrollTriggers (fixes parallax offset on client-side navigation)
+      gsap.set(cover, { yPercent: 0 });
+      ScrollTrigger.refresh();
+
       ScrollTrigger.getById("article-hero-cover")?.kill();
       const coverTween = gsap.to(cover, {
         yPercent: 5,
