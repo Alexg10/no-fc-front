@@ -8,6 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { useState } from "react";
 import Marquee from "react-fast-marquee";
 import Lottie from "react-lottie-player";
+import EyeButtonLight from "../../../public/lotties/eye-button-light.json";
 import EyeButton from "../../../public/lotties/eye-button.json";
 
 const buttonLinkVariants = cva(
@@ -61,7 +62,9 @@ export function ButtonLink({
         {hasIcon && (
           <span className="size-5 bg-black">
             <Lottie
-              animationData={EyeButton}
+              animationData={
+                variant === "secondary" ? EyeButtonLight : EyeButton
+              }
               loop
               play={isHover}
               className=""
