@@ -1,4 +1,4 @@
-import { strapiQuery, strapiFetchWithFallback } from "@/lib/strapi";
+import { strapiFetchWithFallback, strapiQuery } from "@/lib/strapi";
 import { StrapiArticle } from "@/types/strapi/article";
 import qs from "qs";
 
@@ -36,7 +36,9 @@ export async function getArticleBySlug(
         fields: ["slug", "locale"],
       },
       seo: {
-        fields: ["metaTitle", "metaDescription", "keywords"],
+        populate: {
+          metaImage: { fields: ["url", "alternativeText", "width", "height"] },
+        },
       },
       blocks: {
         populate: "*",

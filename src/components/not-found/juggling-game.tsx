@@ -148,7 +148,7 @@ export function JugglingGame() {
   };
 
   return (
-    <div className="fixed inset-0 pointer-events-none bg-cover bg-center bg-repeat">
+    <div className="fixed inset-0 pointer-events-none bg-cover bg-center bg-repeat z-50">
       {/* Juggle count */}
       {juggles > 0 && (
         <div
@@ -174,7 +174,7 @@ export function JugglingGame() {
       )}
 
       <div
-        className="absolute pointer-events-auto cursor-pointer select-none"
+        className="absolute pointer-events-auto cursor-pointer select-none "
         style={{
           left: ballPos.x - HIT_ZONE / 2,
           top: ballPos.y - HIT_ZONE / 2,

@@ -332,4 +332,5 @@ export interface StrapiSeo {
   metaTitle?: string;
   metaDescription?: string;
   keywords?: string;
+  metaImage?: StrapiImage;
 }

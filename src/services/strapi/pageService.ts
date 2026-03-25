@@ -16,6 +16,9 @@ export async function getPageBySlug(
         localizations: {
           fields: ["slug", "locale"],
         },
+        seo: {
+          populate: { metaImage: { fields: ["url", "alternativeText", "width", "height"] } },
+        },
         blocks: {
           populate: "*",
           on: {

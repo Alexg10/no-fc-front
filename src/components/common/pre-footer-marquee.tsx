@@ -1,22 +1,34 @@
 import { LogoIcons } from "@/components/icons/logo-icons";
+import { Link } from "@/lib/navigation";
 import { getGeneral } from "@/services/strapi/generalService";
 import Marquee from "react-fast-marquee";
 
 export async function PreFooterMarquee({ locale }: { locale: string }) {
   const general = await getGeneral(locale);
   const bottomMarquee = general?.bottomMarquee;
+
+  const marqueeContent = (
+    <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px] mr-4">
+      <div className="">{bottomMarquee?.firstText}</div>
+      <LogoIcons className="w-6" />
+      {bottomMarquee?.secondText && (
+        <>
+          <div className="">{bottomMarquee?.secondText}</div>
+          <LogoIcons className="w-6" />
+        </>
+      )}
+    </div>
+  );
+
   return (
     <Marquee autoFill={true} className="bg-black text-white text-nowrap">
-      <div className="flex items-center justify-center gap-4 heading-s-obviously lg:text-[24px] mr-4">
-        <div className="">{bottomMarquee?.firstText}</div>
-        <LogoIcons className="w-6" />
-        {bottomMarquee?.secondText && (
-          <>
-            <div className="">{bottomMarquee?.secondText}</div>
-            <LogoIcons className="w-6" />
-          </>
-        )}
-      </div>
+      {bottomMarquee?.marqueeLink ? (
+        <Link href={bottomMarquee.marqueeLink} className="block">
+          {marqueeContent}
+        </Link>
+      ) : (
+        marqueeContent
+      )}
     </Marquee>
   );
 }

@@ -34,6 +34,16 @@ export async function generateMetadata({
   const title = article.seo?.metaTitle || article.title;
   const description = article.seo?.metaDescription || article.excerpt;
 
+  const img = article.seo?.metaImage || article.cover;
+  const ogImage = img
+    ? {
+        url: getStrapiImageUrl(img.url),
+        alt: img.alternativeText || article.title,
+        width: img.width,
+        height: img.height,
+      }
+    : undefined;
+
   return {
     title,
     description,
@@ -44,14 +54,13 @@ export async function generateMetadata({
       url: articleUrl,
       type: "article",
       locale: locale === "en" ? "en_US" : "fr_FR",
-      ...(article.cover && {
-        images: [
-          {
-            url: getStrapiImageUrl(article.cover.url),
-            alt: article.cover.alternativeText || article.title,
-          },
-        ],
-      }),
+      ...(ogImage && { images: [ogImage] }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(ogImage && { images: [ogImage.url] }),
     },
     alternates: {
       canonical: articleUrl,

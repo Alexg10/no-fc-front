@@ -1,4 +1,4 @@
-import type { StrapiBlock } from "../strapi";
+import type { StrapiBlock, StrapiSeo } from "../strapi";
 
 export interface StrapiPage {
   id: number;
@@ -12,6 +12,7 @@ export interface StrapiPage {
   publishedAt: string;
   locale: string;
   localizations?: Array<{ slug: string; locale: string }>;
+  seo?: StrapiSeo;
 }
 
 export interface StrapiPageResponse {

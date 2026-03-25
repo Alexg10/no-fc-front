@@ -1,6 +1,7 @@
 import { AlternateLinksUpdater } from "@/components/common/alternate-links-updater";
 import { BlockRenderer } from "@/components/common/block-renderer";
 import Grid from "@/components/common/grid";
+import { getStrapiImageUrl } from "@/lib/strapi";
 import { BlockSkeleton } from "@/components/skeleton/block-skeleton";
 import { routing } from "@/routing";
 import { getPageBySlug } from "@/services/strapi/pageService";
@@ -35,12 +36,41 @@ export async function generateMetadata({
     };
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const pageUrl = `${siteUrl}${pagePath(locale, slug)}`;
+
+  const title = page.seo?.metaTitle || page.title;
+  const description = page.seo?.metaDescription;
+
+  const ogImage = page.seo?.metaImage
+    ? {
+        url: getStrapiImageUrl(page.seo.metaImage.url),
+        alt: page.seo.metaImage.alternativeText || title,
+        width: page.seo.metaImage.width,
+        height: page.seo.metaImage.height,
+      }
+    : undefined;
+
   return {
-    title: page.title,
+    title,
+    description,
+    keywords: page.seo?.keywords,
     openGraph: {
-      title: page.title,
+      title,
+      description,
+      url: pageUrl,
       type: "website",
       locale: locale === "en" ? "en_US" : "fr_FR",
+      ...(ogImage && { images: [ogImage] }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(ogImage && { images: [ogImage.url] }),
+    },
+    alternates: {
+      canonical: pageUrl,
     },
   };
 }
