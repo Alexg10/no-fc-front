@@ -111,7 +111,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=1400%",
+          end: "+=1600%",
           pin: true,
           pinSpacing: true,
           scrub: 1,
@@ -344,13 +344,6 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           "sixthSceneTitleSplit+=0.5",
         )
         .to(
-          sixthScenePictureThreeBis.current,
-          {
-            display: "flex",
-          },
-          "sixthSceneTitleSplit+=0.5",
-        )
-        .to(
           sixthScenePictureFour.current,
           {
             display: "flex",
@@ -458,6 +451,17 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           ease: "linear",
         })
         .to({}, { duration: 1 });
+
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 1921px)", () => {
+        aboutTimeline.to(
+          sixthScenePictureThreeBis.current,
+          {
+            display: "flex",
+          },
+          "sixthSceneTitleSplit+=0.5",
+        );
+      });
 
       fourthSceneImages.current.forEach((img, index) => {
         if (!img) return;
