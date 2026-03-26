@@ -16,14 +16,25 @@ const BALL_IMAGES = [
   "/images/balls/ball-10.png",
 ];
 
-const BALL_SIZE = 130;
-const HIT_ZONE = 300;
+const BALL_SIZE_DESKTOP = 130;
+const BALL_SIZE_MOBILE = 80;
+const HIT_ZONE_DESKTOP = 300;
+const HIT_ZONE_MOBILE = 200;
 const GRAVITY = 0.36;
 const FRICTION = 0.997;
 const BOUNCE_DAMPENING = 0.55;
 const KICK_FORCE_Y = -15;
 const KICK_FORCE_X = 6.5;
 const INITIAL_VX = 1;
+const LOOP_THRESHOLD = 100;
+
+function getSizes() {
+  const mobile = window.innerWidth < 768;
+  return {
+    ballSize: mobile ? BALL_SIZE_MOBILE : BALL_SIZE_DESKTOP,
+    hitZone: mobile ? HIT_ZONE_MOBILE : HIT_ZONE_DESKTOP,
+  };
+}
 
 interface BallState {
   x: number;
@@ -38,8 +49,10 @@ export function JugglingGame() {
   const jugglesRef = useRef(0);
   const ballImageRef = useRef(0);
   const animFrameRef = useRef<number>(0);
-  const isInitialized = useRef(false);
+  const sizesRef = useRef({ ballSize: BALL_SIZE_DESKTOP, hitZone: HIT_ZONE_DESKTOP });
 
+  const [ballSize, setBallSize] = useState(BALL_SIZE_DESKTOP);
+  const [hitZone, setHitZone] = useState(HIT_ZONE_DESKTOP);
   const [ballPos, setBallPos] = useState({ x: 0, y: 0 });
   const [ballAngle, setBallAngle] = useState(0);
   const [currentBallImage, setCurrentBallImage] = useState(0);
@@ -51,26 +64,33 @@ export function JugglingGame() {
   }>({ show: false, x: 0, y: 0 });
 
   useEffect(() => {
-    const initBall = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      ballStateRef.current = {
-        x: w * 0.78,
-        y: h * 0.45,
-        vx: INITIAL_VX,
-        vy: 0,
-      };
-      setBallPos({ x: w * 0.78, y: h * 0.45 });
-      isInitialized.current = true;
+    const updateSizes = () => {
+      const s = getSizes();
+      sizesRef.current = s;
+      setBallSize(s.ballSize);
+      setHitZone(s.hitZone);
     };
 
-    initBall();
+    updateSizes();
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    ballStateRef.current = {
+      x: w * 0.78,
+      y: h * 0.45,
+      vx: INITIAL_VX,
+      vy: 0,
+    };
+    setBallPos({ x: w * 0.78, y: h * 0.45 });
+
+    const handleResize = () => updateSizes();
+    window.addEventListener("resize", handleResize);
 
     const loop = () => {
       const state = ballStateRef.current;
       const w = window.innerWidth;
       const h = window.innerHeight;
-      const radius = BALL_SIZE / 2;
+      const radius = sizesRef.current.ballSize / 2;
 
       state.vy += GRAVITY;
       state.x += state.vx;
@@ -111,18 +131,20 @@ export function JugglingGame() {
 
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   const kick = (clientX: number, clientY: number) => {
     const state = ballStateRef.current;
+    const { ballSize: bs, hitZone: hz } = sizesRef.current;
     const dx = clientX - state.x;
     const dy = clientY - state.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (distance < HIT_ZONE / 2) {
+    if (distance < hz / 2) {
       state.vy = KICK_FORCE_Y;
-      const horizontalKick = (-dx / (BALL_SIZE / 2)) * KICK_FORCE_X;
+      const horizontalKick = (-dx / (bs / 2)) * KICK_FORCE_X;
       state.vx = horizontalKick;
 
       jugglesRef.current += 1;
@@ -134,7 +156,13 @@ export function JugglingGame() {
         600,
       );
 
-      if (jugglesRef.current % 10 === 0) {
+      // Loop: reset score & ball image when threshold reached or all balls cycled
+      if (jugglesRef.current >= LOOP_THRESHOLD) {
+        jugglesRef.current = 0;
+        setJuggles(0);
+        ballImageRef.current = 0;
+        setCurrentBallImage(0);
+      } else if (jugglesRef.current % 10 === 0) {
         ballImageRef.current = (ballImageRef.current + 1) % BALL_IMAGES.length;
         setCurrentBallImage(ballImageRef.current);
       }
@@ -176,10 +204,10 @@ export function JugglingGame() {
       <div
         className="absolute pointer-events-auto cursor-pointer select-none "
         style={{
-          left: ballPos.x - HIT_ZONE / 2,
-          top: ballPos.y - HIT_ZONE / 2,
-          width: HIT_ZONE,
-          height: HIT_ZONE,
+          left: ballPos.x - hitZone / 2,
+          top: ballPos.y - hitZone / 2,
+          width: hitZone,
+          height: hitZone,
         }}
         onClick={handleClick}
         onTouchStart={handleTouch}
@@ -187,18 +215,18 @@ export function JugglingGame() {
         <div
           style={{
             position: "absolute",
-            left: (HIT_ZONE - BALL_SIZE) / 2,
-            top: (HIT_ZONE - BALL_SIZE) / 2,
-            width: BALL_SIZE,
-            height: BALL_SIZE,
+            left: (hitZone - ballSize) / 2,
+            top: (hitZone - ballSize) / 2,
+            width: ballSize,
+            height: ballSize,
             transform: `rotate(${ballAngle}deg)`,
           }}
         >
           <Image
             src={BALL_IMAGES[currentBallImage]}
             alt="Football"
-            width={BALL_SIZE}
-            height={BALL_SIZE}
+            width={ballSize}
+            height={ballSize}
             draggable={false}
             onDragStart={(e) => e.preventDefault()}
             className="h-full w-full select-none object-contain drop-shadow-2xl [-webkit-user-drag:none]"

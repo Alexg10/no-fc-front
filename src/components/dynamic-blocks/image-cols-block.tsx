@@ -30,7 +30,7 @@ export function ImageColsBlock({ block }: ImageColsBlockProps) {
             {block.content && (
               <BlockRendererClient
                 content={block.content}
-                className="[&>h3]:first:mt-0"
+                className="[&>h2]:first:mt-0 [&>h3]:first:mt-0"
               />
             )}
           </div>
