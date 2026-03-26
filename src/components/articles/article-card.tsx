@@ -8,6 +8,7 @@ import { StrapiArticle } from "@/types/strapi/article";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useCallback, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface ArticleCardProps {
   article: StrapiArticle;
@@ -70,19 +71,21 @@ export function ArticleCard({ article, issueLabel, locale }: ArticleCardProps) {
           </div>
         )}
 
-        {hoverActive && (
-          <div
-            className="pointer-events-none fixed z-100 bg-white p-2 hidden md:block"
-            style={{ left: cursor.x, top: cursor.y }}
-            aria-hidden
-          >
-            <div className="flex items-center justify-center border border-black px-4 py-[6px]">
-              <span className="text-center text-nowrap text-obviously uppercase tracking-wide text-black text-[13px] leading-none md:text-[15px]">
-                {t("readArticle")}
-              </span>
-            </div>
-          </div>
-        )}
+        {hoverActive &&
+          createPortal(
+            <div
+              className="pointer-events-none fixed z-100 bg-white p-2 hidden md:block"
+              style={{ left: cursor.x, top: cursor.y }}
+              aria-hidden
+            >
+              <div className="flex items-center justify-center border border-black px-4 py-[6px]">
+                <span className="text-center text-nowrap text-obviously uppercase tracking-wide text-black text-[13px] leading-none md:text-[15px]">
+                  {t("readArticle")}
+                </span>
+              </div>
+            </div>,
+            document.body,
+          )}
       </div>
       <div className="flex flex-col gap-3">
         <h3 className="heading-s-obviously">{article.title}</h3>
