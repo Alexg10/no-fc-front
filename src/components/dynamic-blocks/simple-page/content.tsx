@@ -10,11 +10,11 @@ export function Content({ block }: ContentProps) {
   const content = block.content;
 
   return (
-    <div>
+    <section className="[&>.table-grid-block]:mb-10">
       <BlockRendererClient
         content={content as BlocksContent}
         className="text-l-polymath [&>h2]:first:mt-0!"
       />
-    </div>
+    </section>
   );
 }

@@ -14,7 +14,7 @@ export function TableGridBlock({ block }: TableGridBlockProps) {
   const [headerRow, ...bodyRows] = grid.cells;
 
   return (
-    <section className="pb-10 lg:pb-20">
+    <section className="table-grid-block pb-10 lg:pb-20">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-l-polymath border border-black">
           {caption && (
