@@ -1,4 +1,4 @@
-import { strapiQuery, strapiFetch } from "@/lib/strapi";
+import { strapiFetch, strapiQuery } from "@/lib/strapi";
 import type { StrapiPage, StrapiPageResponse } from "@/types/strapi/page";
 
 export async function getPageBySlug(
@@ -17,7 +17,11 @@ export async function getPageBySlug(
           fields: ["slug", "locale"],
         },
         seo: {
-          populate: { metaImage: { fields: ["url", "alternativeText", "width", "height"] } },
+          populate: {
+            metaImage: {
+              fields: ["url", "alternativeText", "width", "height"],
+            },
+          },
         },
         blocks: {
           populate: "*",
@@ -33,6 +37,9 @@ export async function getPageBySlug(
               populate: {
                 populate: "*",
               },
+            },
+            "common.table-grid": {
+              populate: "*",
             },
           },
         },

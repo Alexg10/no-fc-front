@@ -17,6 +17,7 @@ import { ProductBlock } from "@/components/dynamic-blocks/product-block";
 import { SectionPushBlock } from "@/components/dynamic-blocks/section-push-block";
 import { Content } from "@/components/dynamic-blocks/simple-page/content";
 import { FaqsBlock } from "@/components/dynamic-blocks/simple-page/faqs-block";
+import { TableGridBlock } from "@/components/dynamic-blocks/table-grid-block";
 import { TextImageBlock } from "@/components/dynamic-blocks/text-image-block";
 import { TitleContentBlock } from "@/components/dynamic-blocks/title-content-block";
 import { VideoFullWidthBlock } from "@/components/dynamic-blocks/video-full-width-block";
@@ -39,6 +40,7 @@ export async function BlockRenderer({
   article,
   mainColor,
 }: BlockRendererProps) {
+  console.log(block.__component);
   switch (block.__component) {
     case "common.centered-text":
       return <CenteredTextBlock block={block} />;
@@ -54,6 +56,8 @@ export async function BlockRenderer({
       return <PhotoTextRepeatBlock block={block} />;
     case "common.about-scroll-anim":
       return <AboutScrollAnimBlock block={block} />;
+    case "common.table-grid":
+      return <TableGridBlock block={block} />;
     case "homepage.home-products":
       return <HomeProductsBlock block={block} locale={locale || "en"} />;
     case "homepage.newest-articles":

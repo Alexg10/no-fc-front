@@ -272,6 +272,19 @@ export interface StrapiCommunAboutScrollAnim {
   fourthSceneImages?: StrapiImage[];
 }
 
+export interface StrapiTableGridData {
+  columns: number;
+  rows: number;
+  cells: string[][];
+}
+
+export interface StrapiCommonTableGrid {
+  __component: "common.table-grid";
+  id: number;
+  caption?: string | null;
+  grid?: StrapiTableGridData | null;
+}
+
 export type StrapiBlock =
   | StrapiCenteredText
   | StrapiHomeProducts
@@ -295,7 +308,8 @@ export type StrapiBlock =
   | StrapiCommonVideoPortrait
   | StrapiCommonTextImage
   | StrapiCommonPhotoTextRepeat
-  | StrapiCommunAboutScrollAnim;
+  | StrapiCommunAboutScrollAnim
+  | StrapiCommonTableGrid;
 
 export interface StrapiProduct {
   id: number;
