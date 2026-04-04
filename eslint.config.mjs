@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendor cookie consent (tarteaucitronjs copied to public)
+    "public/tarteaucitron/**",
   ]),
 ]);
 
