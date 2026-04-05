@@ -8,10 +8,17 @@ import { cn } from "@/lib/utils";
 import type { StrapiCommonSectionPush } from "@/types/strapi";
 import type { BlocksContent } from "@strapi/blocks-react-renderer";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
+import { useRouter } from "next/navigation";
 
 interface SectionPushBlockProps {
   block: StrapiCommonSectionPush;
+}
+
+function stripHashForNavigation(href: string): string {
+  const i = href.indexOf("#");
+  if (i === -1) return href;
+  return href.slice(0, i);
 }
 
 function SectionPushContent({ block }: SectionPushBlockProps) {
@@ -57,6 +64,33 @@ function SectionPushContent({ block }: SectionPushBlockProps) {
   );
 }
 
+function SectionPushLinkedBlock({ block }: SectionPushBlockProps) {
+  const router = useRouter();
+  const rawHref = block.button?.link ?? "";
+  const href = stripHashForNavigation(rawHref);
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    try {
+      const target = new URL(e.currentTarget.href);
+      if (target.origin !== window.location.origin) return;
+
+      e.preventDefault();
+      router.push(`${target.pathname}${target.search}`, { scroll: true });
+    } catch {
+      // mailto:, tel:, URL invalides — laisser le comportement natif
+    }
+  };
+
+  return (
+    <Link href={href} scroll={true} onClick={handleClick}>
+      <SectionPushContent block={block} />
+    </Link>
+  );
+}
+
 export function SectionPushBlock({ block }: SectionPushBlockProps) {
   return (
     <section
@@ -68,9 +102,7 @@ export function SectionPushBlock({ block }: SectionPushBlockProps) {
       <Grid>
         <div className="relative col-span-full group">
           {block.button?.link ? (
-            <Link href={block.button.link}>
-              <SectionPushContent block={block} />
-            </Link>
+            <SectionPushLinkedBlock block={block} />
           ) : (
             <SectionPushContent block={block} />
           )}
