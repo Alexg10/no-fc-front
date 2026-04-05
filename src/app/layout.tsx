@@ -1,4 +1,6 @@
+import { ScrollToTopOnRoute } from "@/components/common/scroll-to-top-on-route";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -55,7 +57,12 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/ort3gwg.css" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Suspense fallback={null}>
+          <ScrollToTopOnRoute />
+        </Suspense>
+      </body>
     </html>
   );
 }
