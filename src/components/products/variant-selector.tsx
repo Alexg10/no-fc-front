@@ -29,7 +29,8 @@ interface VariantSelectorProps {
   productTitle: string;
 }
 
-const AVAILABLE_SIZES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
+/** Ordre d’affichage pour les tailles courantes (les autres restent triées après). */
+const SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 
 export function VariantSelector({
   variants,
@@ -58,6 +59,38 @@ export function VariantSelector({
       ),
     [variants],
   );
+
+  /** Tailles issues des variantes uniquement (pas de grille vide pour XS–XXL absentes). */
+  const sizeLabelsOrdered = useMemo(() => {
+    const order = new Map<string, number>(
+      SIZE_ORDER.map((s, i) => [s, i] as [string, number]),
+    );
+    return Object.keys(sizeVariants).sort((a, b) => {
+      const ia = order.get(a) ?? SIZE_ORDER.length;
+      const ib = order.get(b) ?? SIZE_ORDER.length;
+      if (ia !== ib) return ia - ib;
+      return a.localeCompare(b);
+    });
+  }, [sizeVariants]);
+
+  /** Si aucune option « size/taille », une entrée par variante (libellé Shopify). */
+  const variantRows = useMemo(() => {
+    if (sizeLabelsOrdered.length > 0) {
+      return sizeLabelsOrdered.map((size) => ({
+        key: sizeVariants[size]!.id,
+        label: size,
+        variant: sizeVariants[size]!,
+      }));
+    }
+    return variants.map((v) => ({
+      key: v.id,
+      label:
+        v.title ||
+        v.selectedOptions.map((o) => o.value).join(" · ") ||
+        v.id,
+      variant: v,
+    }));
+  }, [sizeLabelsOrdered, sizeVariants, variants]);
 
   const handleAddToCart = async () => {
     if (!selectedVariant || !selectedVariant.availableForSale) return;
@@ -89,18 +122,16 @@ export function VariantSelector({
       </Title>
 
       <div className="mb-3 lg:mb-10 ">
-        <div className="flex border border-black w-fit">
-          {AVAILABLE_SIZES.map((size) => {
-            const variant = sizeVariants[size];
-            const isAvailable = variant?.availableForSale;
-            const isSelected = selectedVariant?.id === variant?.id;
+        <div className="flex border border-black w-fit flex-wrap">
+          {variantRows.map(({ key, label, variant }) => {
+            const isAvailable = variant.availableForSale;
+            const isSelected = selectedVariant?.id === variant.id;
 
             return (
               <button
-                key={size}
-                onClick={() =>
-                  variant && isAvailable && setSelectedVariant(variant)
-                }
+                key={key}
+                type="button"
+                onClick={() => isAvailable && setSelectedVariant(variant)}
                 disabled={!isAvailable}
                 className={`text-[18px] px-[4px] uppercase p-1 min-w-[50px] h-[50px]
                   transition-all duration-200 text-polymath max-content aspect-square last:border-r-0  border-r border-r-black
@@ -113,7 +144,7 @@ export function VariantSelector({
                   }
                 `}
               >
-                {size}
+                {label}
               </button>
             );
           })}

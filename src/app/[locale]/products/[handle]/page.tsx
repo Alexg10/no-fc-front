@@ -71,8 +71,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
         {strapiProduct?.blocks && strapiProduct.blocks.length > 0 && (
           <div className="col-span-full">
             {strapiProduct.blocks.map((block, index) => {
-              console.log(block);
-
               return (
                 <Suspense key={block.id || index} fallback={<BlockSkeleton />}>
                   <BlockRenderer block={block} locale={locale} />

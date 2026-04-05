@@ -14,6 +14,7 @@
     "component": "node scripts/create-component.js",
     "page": "node scripts/create-page.js",
     "translation": "node scripts/create-translation.js",
+    "sync:tarteaucitron": "node scripts/sync-tarteaucitron.mjs",
     "lhci:mobile": "lhci autorun",
     "lhci:desktop": "lhci autorun --collect.settings.preset=desktop"
   },
@@ -45,7 +46,8 @@
     "react-lottie-player": "^2.1.0",
     "react-share": "^5.2.2",
     "react-use-measure": "^2.1.7",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "tarteaucitronjs": "^1.31.0"
   },
   "devDependencies": {
     "@lhci/cli": "^0.15.1",

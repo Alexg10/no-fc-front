@@ -2,6 +2,58 @@ import { strapiFetchWithFallback, strapiQuery } from "@/lib/strapi";
 import { StrapiArticle } from "@/types/strapi/article";
 import qs from "qs";
 
+/** Nombre d’articles par page sur la liste. */
+export const ARTICLES_PAGE_SIZE = 12;
+
+export interface ArticlesPaginatedResult {
+  articles: StrapiArticle[];
+  page: number;
+  pageSize: number;
+  pageCount: number;
+  total: number;
+}
+
+export async function getArticlesPaginated(
+  locale: string | undefined,
+  page: number,
+): Promise<ArticlesPaginatedResult> {
+  const query = qs.stringify({
+    sort: ["publishedAt:desc"],
+    pagination: {
+      page,
+      pageSize: ARTICLES_PAGE_SIZE,
+    },
+    populate: {
+      cover: {
+        fields: ["url", "alternativeText", "width", "height", "formats"],
+      },
+    },
+  });
+  const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
+    next: { revalidate: 3600 },
+  });
+  const articles = Array.isArray(result.data?.data) ? result.data.data : [];
+  const meta = result.data?.meta as
+    | {
+        pagination?: {
+          page: number;
+          pageSize: number;
+          pageCount: number;
+          total: number;
+        };
+      }
+    | undefined;
+  const p = meta?.pagination;
+
+  return {
+    articles: articles as unknown as StrapiArticle[],
+    page: p?.page ?? page,
+    pageSize: p?.pageSize ?? ARTICLES_PAGE_SIZE,
+    pageCount: Math.max(1, p?.pageCount ?? 1),
+    total: p?.total ?? articles.length,
+  };
+}
+
 export async function getArticles(locale?: string): Promise<StrapiArticle[]> {
   const query = qs.stringify({
     sort: ["publishedAt:desc"],
