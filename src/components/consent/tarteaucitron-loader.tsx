@@ -1,5 +1,6 @@
 "use client";
 
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -8,6 +9,7 @@ let vercelServicePatchApplied = false;
 declare global {
   interface Window {
     tarteaucitron?: {
+      user: Record<string, string | undefined>;
       addInternalScript: (
         url: string,
         id: string,
@@ -71,6 +73,12 @@ function patchTarteaucitronForVercelService() {
           };
           tac.job = tac.job || [];
           tac.job.push("vercelanalytics");
+          if (GA_MEASUREMENT_ID) {
+            tac.user.gtagUa = GA_MEASUREMENT_ID;
+            if (!tac.job.includes("gtag")) {
+              tac.job.push("gtag");
+            }
+          }
           if (typeof callback === "function") {
             callback();
           }
@@ -112,7 +120,7 @@ function initTarteaucitron(privacyUrl: string) {
     useExternalJs: false,
     mandatory: true,
     mandatoryCta: false,
-    googleConsentMode: false,
+    googleConsentMode: Boolean(GA_MEASUREMENT_ID),
     bingConsentMode: false,
     pianoConsentMode: false,
     softConsentMode: false,
