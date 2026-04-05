@@ -9,6 +9,7 @@ import { Suspense } from "react";
 
 interface ArticlesPageProps {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 export async function generateMetadata({
@@ -34,8 +35,15 @@ export async function generateMetadata({
   };
 }
 
-export default async function ArticlesPage({ params }: ArticlesPageProps) {
+export default async function ArticlesPage({
+  params,
+  searchParams,
+}: ArticlesPageProps) {
   const { locale } = await params;
+  const sp = await searchParams;
+  const raw = parseInt(sp.page ?? "1", 10);
+  const page = Number.isFinite(raw) && raw >= 1 ? Math.floor(raw) : 1;
+
   const t = await getTranslations({ locale, namespace: "article" });
   return (
     <div className="bg-off-white overflow-hidden">
@@ -43,7 +51,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
       <Grid>
         <main className="col-span-full py-4 pb-10 lg:py-10 lg:pb-26">
           <Suspense fallback={<ArticlesLoading />}>
-            <ArticlesContent locale={locale} />
+            <ArticlesContent locale={locale} page={page} />
           </Suspense>
         </main>
       </Grid>
