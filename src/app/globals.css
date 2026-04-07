@@ -195,6 +195,77 @@
 #tarteaucitronRoot #tarteaucitronPrivacyUrl{
   @apply hidden;
 }
+
+#tarteaucitronRoot .tarteaucitronH1{
+  @apply text-obviously uppercase m-0! mb-2! font-obviously-narrow text-[24px] lg:text-[40px] leading-[82%] tracking-[-1%] text-left!;
+}
+
+body #tarteaucitronRoot #tarteaucitronServices{
+  @apply shadow-none! rounded-none!;
+}
+
+body #tarteaucitronRoot div#tarteaucitronInfo{
+  @apply max-w-full! text-left! m-0! border-0!;
+}
+body #tarteaucitron #tarteaucitronServices .tarteaucitronMainLine .tarteaucitronName{
+  @apply w-full! text-polymath-display border-t border-black! pt-5!;
+}
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk{
+  @apply float-left! m-0! flex! items-center! gap-4!; 
+}
+
+body #tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk .tarteaucitronAllow, 
+body #tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk .tarteaucitronDeny, 
+body .tac_activate .tarteaucitronAllow{
+  @apply bg-white text-black! m-0! hover:underline! p-0!;
+}
+
+body #tarteaucitron #tarteaucitronServices #tarteaucitronAllAllowed.tarteaucitronIsSelected{
+  @apply bg-white underline!;
+}
+
+#tarteaucitron #tarteaucitronServices #tarteaucitronAllAllowed.tarteaucitronIsSelected, #tarteaucitron #tarteaucitronServices #tarteaucitronAllDenied.tarteaucitronIsSelected, #tarteaucitron #tarteaucitronServices #tarteaucitronAllDenied2.tarteaucitronIsSelected{
+  @apply bg-white! underline!;
+}
+
+body #tarteaucitronRoot .tarteaucitronCross,
+body #tarteaucitronRoot .tarteaucitronCheck{
+  @apply hidden!;
+}
+
+body #tarteaucitronRoot .tarteaucitronH2{
+  @apply m-0 pb-4;
+}
+#tarteaucitronRoot .tarteaucitronMainLine{
+  @apply text-left! p-4!;
+}
+
+#tarteaucitronPrivacyUrlDialog{
+  @apply hidden!;
+}
+
+
+body #tarteaucitronRoot #tarteaucitronInfo{
+  @apply w-1/2! pb-0!;
+}
+
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine{
+  @apply flex! flex-col!;
+}
+
+
+html body .tarteaucitronSize-middle.tarteaucitronBeforeVisible::before, html body.tarteaucitron-modal-open div#tarteaucitronRoot::before{
+  @apply blur-none!;
+}
+body #tarteaucitronRoot div#tarteaucitron{
+  @apply bottom-6 top-auto! right-6 left-auto;
+}
+body #tarteaucitronRoot button#tarteaucitronBack {
+  background: transparent;
+}
+
+
+
 @layer utilities {
   .font-obviously {
     font-family: var(--font-obviously-narrow);
