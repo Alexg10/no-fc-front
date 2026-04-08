@@ -201,17 +201,21 @@
 }
 
 body #tarteaucitronRoot #tarteaucitronServices{
-  @apply shadow-none! rounded-none!;
+  @apply shadow-none! rounded-none! p-4! bg-white;
 }
 
 body #tarteaucitronRoot div#tarteaucitronInfo{
   @apply max-w-full! text-left! m-0! border-0!;
 }
 body #tarteaucitron #tarteaucitronServices .tarteaucitronMainLine .tarteaucitronName{
-  @apply w-full! text-polymath-display border-t border-black! pt-5!;
+  @apply w-full! text-polymath-display border-t border-black! pt-5! text-[16px]! leading-[120%]! tracking-[-1%]!;
+}
+
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronName{
+  @apply ml-0! p-0!;
 }
 #tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk{
-  @apply float-left! m-0! flex! items-center! gap-4!; 
+  @apply float-left! m-0! flex! items-center! gap-4! pt-4; 
 }
 
 body #tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk .tarteaucitronAllow, 
@@ -232,12 +236,40 @@ body #tarteaucitronRoot .tarteaucitronCross,
 body #tarteaucitronRoot .tarteaucitronCheck{
   @apply hidden!;
 }
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine,
+body #tarteaucitronMainLineOffset{
+  @apply p-0!;
+}
+#tarteaucitron{
+  width: 596px!important;
+}
+body div#tarteaucitronServices{
+  @apply mt-0!;
+}
+body #tarteaucitron #tarteaucitronClosePanel {
+  @apply top-0! z-10! text-white!;
+  /* Libellé tarteaucitron masqué visuellement ; aria-label conservé */
+  width: 55px!important;
+  height: 50px!important;
 
+  &::after {
+    content: "\00d7";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1;
+    pointer-events: none;
+    color: black;
+  }
+}
 body #tarteaucitronRoot .tarteaucitronH2{
-  @apply m-0 pb-4;
+  @apply m-0 text-[16px]! leading-[120%]!;
 }
 #tarteaucitronRoot .tarteaucitronMainLine{
-  @apply text-left! p-4!;
+  @apply text-left! p-0!;
 }
 
 #tarteaucitronPrivacyUrlDialog{
@@ -253,15 +285,41 @@ body #tarteaucitronRoot #tarteaucitronInfo{
   @apply flex! flex-col!;
 }
 
-
-html body .tarteaucitronSize-middle.tarteaucitronBeforeVisible::before, html body.tarteaucitron-modal-open div#tarteaucitronRoot::before{
-  @apply blur-none!;
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine{
+  @apply py-0!;
 }
+
+.tarteaucitron-toggle-group{
+  @apply text-polymath-display;
+}
+
+li#tarteaucitronServicesTitle_analytic  {
+  @apply border-t! border-black! pt-5!;
+}
+#tarteaucitron #tarteaucitronServicesTitle_analytic .tarteaucitronH3{
+  @apply text-polymath-display! text-[16px]! leading-[120%]! tracking-[-1%]!;
+}
+
+
+html body.tarteaucitron-modal-open.tarteaucitron-modal-open
+  div#tarteaucitronRoot#tarteaucitronRoot:before,
+html
+  body
+  .tarteaucitronSize-middle.tarteaucitronBeforeVisible.tarteaucitronBeforeVisible:before {
+    backdrop-filter: blur(0px);
+    background: transparent!important;
+    -webkit-backdrop-filter: blur(0)!important;
+}
+
 body #tarteaucitronRoot div#tarteaucitron{
   @apply bottom-6 top-auto! right-6 left-auto;
 }
 body #tarteaucitronRoot button#tarteaucitronBack {
   background: transparent;
+}
+
+#tarteaucitronRoot #tarteaucitron [aria-pressed=true]{
+  @apply bg-white! underline!;
 }
 
 
