@@ -182,7 +182,7 @@
 }
 
 #tarteaucitronRoot button#tarteaucitronCloseAlert{
-  @apply underline text-polymath text-polymath-normal! font-polymath-text! normal-case pb-0;
+  @apply underline text-polymath text-polymath-normal! text-[16px]! font-polymath-text! normal-case pb-0 w-full! text-left! pl-2!;
 }
 
 #tarteaucitronRoot #tarteaucitronAllDenied2{
@@ -291,6 +291,26 @@ body #tarteaucitron #tarteaucitronClosePanel {
   /* Libellé tarteaucitron masqué visuellement ; aria-label conservé */
   width: 55px!important;
   height: 50px!important;
+
+  &::after {
+    content: "\00d7";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1;
+    pointer-events: none;
+    color: black;
+  }
+}
+
+#tarteaucitronRoot #tarteaucitronCloseCross{
+  @apply top-[8px]! right-[8px]! z-10! text-white! p-0!;
+  /* Libellé tarteaucitron masqué visuellement ; aria-label conservé */
+  width: 25px!important;
+  height: 25px!important;
 
   &::after {
     content: "\00d7";
