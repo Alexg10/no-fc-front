@@ -93,6 +93,7 @@ export function VideoFullWidthBlock({ block }: VideoFullWidthBlockProps) {
               onClick={handlePlayClick}
               ariaLabel={block.playerText || "Play video"}
               marqueeIsPlaying={marqueeIsPlaying}
+              className="pointer-events-none"
             />
           )}
         </div>
