@@ -584,7 +584,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         />
       </div>
       <div
-        className="hidden flex-wrap gap-4 absolute justify-center inset-0 z-30 top-1/2 -translate-y-1/2 w-full h-full overflow-hidden"
+        className="hidden flex-wrap gap-4 absolute h-full justify-center inset-0 z-30 top-1/2 -translate-y-1/2 w-full h-full overflow-hidden"
         ref={thirdSceneRef}
       >
         <video
@@ -604,14 +604,14 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           </p>
         </div>
         <div
-          className="absolute -bottom-10 left-1/2 -translate-x-1/2 aspect-4/7 size-[85%]"
+          className="absolute md:h-[75%] h-1/2 w-full -bottom-10 left-1/2 -translate-x-1/2 aspect-4/7 flex items-end justify-end"
           ref={thirdSceneImageRef}
         >
           <Image
             src={"/images/about/wdc.png"}
             alt="Papper texture about"
             fill
-            className="object-contain"
+            className="lg:object-contain h-1/2 aspect-4/7"
           />
         </div>
       </div>
