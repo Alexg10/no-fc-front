@@ -459,7 +459,7 @@ body #tarteaucitronRoot button#tarteaucitronBack {
     content: "";
     display: block;
     position: absolute;
-    bottom: 3px;
+    bottom: 2px;
     right: 0;
     height: 1px;
     width: 100%;
@@ -473,7 +473,7 @@ body #tarteaucitronRoot button#tarteaucitronBack {
     content: "";
     display: block;
     position: absolute;
-    bottom: 3px;
+    bottom: 2px;
     right: 0;
     height: 1px;
     width: 100%;
