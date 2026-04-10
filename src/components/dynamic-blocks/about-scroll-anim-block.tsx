@@ -265,7 +265,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             },
             duration: 0.5,
           },
-          "fifthScene-=0.1",
+          "fifthScene",
         )
         .to(fifthSceneTitleRef.current, {
           display: "none",
