@@ -51,7 +51,7 @@ export function NewsletterForm() {
         <div className="flex flex-col gap-2">
           <Title
             level={2}
-            className="text-left text-[24px] lg:text-[40px] lg:max-w-[60%]"
+            className="text-left text-[24px] lg:text-[40px] lg:max-w-[70%]"
           >
             {t("newsletterTitle")}
           </Title>
