@@ -45,7 +45,7 @@ export function ArticleSummary({
   const [isOpen, setIsOpen] = useState(false);
   const [socialsIsOpen, setSocialsIsOpen] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
-  const [hasSummaryItems, setHasSummaryItems] = useState(false);
+  const [hasSummaryItems, setHasSummaryItems] = useState(true);
   const { isUnderDesktop } = useBreakpoints();
 
   useEffect(() => {
