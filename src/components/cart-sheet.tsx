@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { ButtonUi } from "@/components/ui/button-ui";
 import {
   Sheet,
   SheetContent,
@@ -12,7 +13,7 @@ import {
 import { useCart } from "@/contexts/cart-context";
 import { Link } from "@/lib/navigation";
 import { formatPrice } from "@/lib/utils";
-import { Minus, Plus, ShoppingBag } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { CartIcon } from "./icons/cart-icon";
@@ -49,12 +50,19 @@ export function CartSheet() {
               </div>
             </div>
           ) : cartItems.length === 0 ? (
-            <div className="flex flex-col items-center justify-center flex-1 gap-4 py-12">
-              <ShoppingBag className="w-10 h-10 text-black" />
-              <p className="text-zinc-600 dark:text-zinc-400">{t("empty")}</p>
-              <Button asChild onClick={closeCart}>
-                <Link href="/products">{tCommon("seeProducts")}</Link>
-              </Button>
+            <div className="flex flex-col items-center justify-center flex-1 gap-4 py-12 relative">
+              <p className="text-grey">{t("empty")}</p>
+              <div className="p-4 absolute bottom-0 left-0 w-full">
+                <ButtonUi
+                  onClick={closeCart}
+                  className="w-full [&>div]:w-full [&>div]:justify-center "
+                  marquee={false}
+                >
+                  <Link href="/products" className="w-full h-full">
+                    {tCommon("seeProducts")}
+                  </Link>
+                </ButtonUi>
+              </div>
             </div>
           ) : (
             <>

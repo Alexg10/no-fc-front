@@ -34,6 +34,7 @@ interface ButtonUiProps {
   loading?: boolean;
   hasIcon?: boolean;
   onClick?: () => void;
+  marquee?: boolean;
 }
 export function ButtonUi({
   children,
@@ -42,6 +43,7 @@ export function ButtonUi({
   className,
   loading = false,
   onClick,
+  marquee = true,
 }: ButtonUiProps) {
   const [isHover, setIsHover] = useState(false);
 
@@ -76,17 +78,23 @@ export function ButtonUi({
         )}
         <div className="-translate-y-px relative">
           <div className="w-full absolute top-0 left-0">
-            <Marquee
-              play={isHover}
-              speed={35}
-              gradient={false}
-              className="text-nowrap overflow-hidden"
-            >
-              <span className="mr-4">{children}</span>
-              <span className="mr-4" aria-hidden>
+            {marquee ? (
+              <Marquee
+                play={isHover}
+                speed={35}
+                gradient={false}
+                className="text-nowrap overflow-hidden"
+              >
+                <span className="mr-4">{children}</span>
+                <span className="mr-4" aria-hidden>
+                  {children}
+                </span>
+              </Marquee>
+            ) : (
+              <span className="text-nowrap overflow-hidden w-full">
                 {children}
               </span>
-            </Marquee>
+            )}
           </div>
           <div className="opacity-0">{children}</div>
         </div>
