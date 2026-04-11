@@ -26,7 +26,7 @@ export async function ArticleSeeOthers({
     <section className="bg-off-white py-12 lg:py-28 lg:pb-20">
       <Grid className="gap-y-10 lg:gap-y-12">
         <div className="col-span-full flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <Title level={2} className="text-left lg:text-[64px]">
+          <Title level={2} className="text-left lg:text-[64px] lg:max-w-[70%]">
             {t("culturalTake")}
           </Title>
           <ButtonLink href={`${locale ? `/${locale}` : ""}/articles`}>
