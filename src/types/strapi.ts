@@ -109,6 +109,7 @@ export interface StrapiArticleTitleContent {
   __component: "article.title-content";
   id: number;
   title?: string;
+  shortTitle?: string;
   twoColumns?: boolean;
   image?: StrapiImage;
   content?: BlocksContent;
