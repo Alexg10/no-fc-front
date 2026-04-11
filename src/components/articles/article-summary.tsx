@@ -137,6 +137,10 @@ export function ArticleSummary({
           pin: true,
           pinSpacing: false,
           invalidateOnRefresh: true,
+          onRefresh: () => {
+            summaryEl.style.width = "";
+            summaryEl.style.maxWidth = "";
+          },
           onLeave: () => {
             if (isUnderDesktop) {
               gsap.to(summaryEl, {
