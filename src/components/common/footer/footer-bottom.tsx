@@ -29,6 +29,15 @@ export function FooterBottom({
               {footerBottomLink.label}
             </Link>
           ))}
+        <button
+          type="button"
+          className="link-hover-line w-fit text-left cursor-pointer"
+          onClick={() => {
+            window.tarteaucitron?.userInterface?.openPanel();
+          }}
+        >
+          {t("cookies")}
+        </button>
       </div>
       <div className="flex md:flex-col gap-1 md:order-2 md:gap-0 text-[16px]">
         <span>
