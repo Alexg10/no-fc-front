@@ -129,7 +129,7 @@ export function ArticleHero({
         ref={heroRef}
       >
         <Grid>
-          <div className="relative flex items-center justify-center col-span-full  md:col-start-2 md:col-end-6 lg:col-start-3 lg:col-end-10">
+          <div className="relative flex items-center justify-center col-span-full  md:col-start-2 md:col-end-6 lg:col-start-3 lg:col-end-11">
             <div
               className=" text-center relative flex flex-col justify-center items-center gap-4"
               ref={contentRef}

@@ -396,7 +396,9 @@ body #tarteaucitronRoot button#tarteaucitronBack {
   @apply bg-white! underline!;
 }
 
-
+#tarteaucitronManager {
+  display: none !important;
+}
 
 @layer utilities {
   .font-obviously {

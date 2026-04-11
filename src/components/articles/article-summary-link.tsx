@@ -4,39 +4,67 @@ import { useArticleRef } from "@/contexts/article-context";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
-interface Heading {
+interface SummaryItem {
   index: number;
   text: string;
-  element: HTMLHeadingElement;
+  element: HTMLElement;
+}
+
+function smoothScrollTo(element: HTMLElement, duration = 600) {
+  const start = window.scrollY;
+  const startTime = performance.now();
+
+  function step(currentTime: number) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // ease-in-out cubic
+    const ease =
+      progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    // Recalcule la position cible à chaque frame
+    const currentTarget = element.getBoundingClientRect().top + window.scrollY;
+    const currentPos = start + (currentTarget - start) * ease;
+
+    window.scrollTo(0, currentPos);
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
 }
 
 export function ArticleSummaryLink() {
   const mainRef = useArticleRef();
-  const [headings, setHeadings] = useState<Heading[]>([]);
+  const [items, setItems] = useState<SummaryItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (!mainRef.current) return;
 
-    const h2Elements = mainRef.current.querySelectorAll("h2");
-    const headingsList: Heading[] = [];
+    const elements =
+      mainRef.current.querySelectorAll<HTMLElement>("[data-short]");
+    const itemsList: SummaryItem[] = [];
 
-    h2Elements.forEach((h2, index) => {
-      headingsList.push({
+    elements.forEach((el, index) => {
+      itemsList.push({
         index,
-        text: h2.textContent || "",
-        element: h2,
+        text: el.dataset.short || "",
+        element: el,
       });
     });
 
-    queueMicrotask(() => setHeadings(headingsList));
+    queueMicrotask(() => setItems(itemsList));
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const idx = headingsList.findIndex(
-              (h) => h.element === entry.target,
+            const idx = itemsList.findIndex(
+              (item) => item.element === entry.target,
             );
             if (idx !== -1) setCurrentIndex(idx);
           }
@@ -45,31 +73,29 @@ export function ArticleSummaryLink() {
       { threshold: 0.2 },
     );
 
-    h2Elements.forEach((h2) => observer.observe(h2));
+    elements.forEach((el) => observer.observe(el));
 
     return () => {
-      h2Elements.forEach((h2) => observer.unobserve(h2));
+      elements.forEach((el) => observer.unobserve(el));
       observer.disconnect();
     };
   }, [mainRef]);
 
   return (
     <div className="flex flex-col gap-2 h-full max-h-[35vh] lg:max-h-none overflow-auto no-scrollbar">
-      {headings.length > 0 ? (
-        headings.map((heading) => (
+      {items.length > 0 ? (
+        items.map((item) => (
           <button
-            key={heading.index}
-            onClick={() =>
-              heading.element.scrollIntoView({ behavior: "smooth" })
-            }
+            key={item.index}
+            onClick={() => smoothScrollTo(item.element)}
             className={cn(
               "text-left text-[14px] leading-[140%] hover:opacity-100 text-black cursor-pointer transition-opacity duration-300 ease-in-out",
-              currentIndex === heading.index
+              currentIndex === item.index
                 ? "opacity-100 text-polymath-display"
                 : "opacity-40 text-polymath-normal font-polymath ",
             )}
           >
-            {heading.text}
+            {item.text}
           </button>
         ))
       ) : (

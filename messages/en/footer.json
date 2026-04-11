@@ -22,5 +22,6 @@
   "newsletterInvalidEmail": "Please enter a valid email.",
   "newsletterAgreement": "By joining, you agree to our <termsLink>Terms of Use</termsLink> and <privacyLink>Privacy Policy</privacyLink>.",
   "termsOfUse": "Terms of Use",
-  "privacyPolicy": "Privacy Policy"
+  "privacyPolicy": "Privacy Policy",
+  "cookies": "Manage cookies"
 }

@@ -33,6 +33,9 @@ declare global {
       >;
       job: string[];
       state: Record<string, boolean>;
+      userInterface?: {
+        openPanel: () => void;
+      };
     };
     tarteaucitronForceLanguage?: string;
   }

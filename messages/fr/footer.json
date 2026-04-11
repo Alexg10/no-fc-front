@@ -22,5 +22,6 @@
   "newsletterInvalidEmail": "Veuillez entrer un email valide.",
   "newsletterAgreement": "En vous inscrivant, vous acceptez nos <termsLink>Conditions d'utilisation</termsLink> et notre <privacyLink>Politique de confidentialité</privacyLink>.",
   "termsOfUse": "Conditions d'utilisation",
-  "privacyPolicy": "Politique de confidentialité"
+  "privacyPolicy": "Politique de confidentialité",
+  "cookies": "Gérer les cookies"
 }
