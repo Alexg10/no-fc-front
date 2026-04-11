@@ -45,7 +45,8 @@ export function ArticleSummaryLink() {
   useEffect(() => {
     if (!mainRef.current) return;
 
-    const elements = mainRef.current.querySelectorAll<HTMLElement>("[data-short]");
+    const elements =
+      mainRef.current.querySelectorAll<HTMLElement>("[data-short]");
     const itemsList: SummaryItem[] = [];
 
     elements.forEach((el, index) => {
