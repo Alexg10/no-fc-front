@@ -80,8 +80,18 @@ export async function strapiFetch(
     );
   }
 
-  const data = await response.json();
-  return { data, status: response.status };
+  const text = await response.text();
+  if (!text) {
+    return { data: null, status: response.status };
+  }
+
+  try {
+    const data = JSON.parse(text);
+    return { data, status: response.status };
+  } catch {
+    console.error("Strapi returned invalid JSON:", text.slice(0, 200));
+    return { data: null, status: response.status };
+  }
 }
 
 /**
