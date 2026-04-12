@@ -40,7 +40,9 @@ export function BlockRendererClient({
             );
           },
           paragraph: ({ children }) => (
-            <p className="mb-2 text-l-polymath">{children}</p>
+            <p className="mb-2 text-l-polymath [&:last-child]:mb-0">
+              {children}
+            </p>
           ),
           heading: ({ children, level }) => {
             const classes = {
