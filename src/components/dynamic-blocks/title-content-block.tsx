@@ -14,7 +14,7 @@ interface TitleContentBlockProps {
 
 export function TitleContentBlock({ block }: TitleContentBlockProps) {
   return (
-    <section className="pb-19">
+    <section className="pb-19 columns-block [&:has(+.images-block)]:pb-0 [.images-block+.columns-block]:pb-6 [&+.columns-block]:pb-6 [.columns-block+&]:pb-6">
       <Grid className="lg:gap-y-15">
         {block.title && (
           <div

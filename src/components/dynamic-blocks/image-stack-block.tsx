@@ -75,7 +75,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
           className={cn(
             "col-span-full",
             images.length === 2
-              ? "flex gap-4 lg:col-start-2 lg:col-end-12"
+              ? "flex gap-4 lg:col-start-2 lg:col-end-12 justify-center"
               : "flex flex-wrap lg:col-span-full lg:justify-between",
           )}
           onMouseMove={(e) => moveDrag(e.clientX, e.clientY)}

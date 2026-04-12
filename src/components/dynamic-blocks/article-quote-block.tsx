@@ -26,7 +26,7 @@ export function ArticleQuoteBlock({
             <div className="mb-4">
               <BlockRendererClient
                 content={block.quote as BlocksContent}
-                className="text-xl-polymath-display [&>p]:text-xl-polymath [&>p]:text-[24px] [&>p]:lg:text-[32px] [&>p]:leading-[120%] quote-indent"
+                className="text-xl-polymath-display [&>p]:text-xl-polymath [&>p]:text-[24px] [&>p]:lg:text-[32px] [&>p]:leading-[120%] quote-indent [&>p]:mb-0"
               />
             </div>
 
