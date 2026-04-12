@@ -1,3 +1,4 @@
+import { verifyTurnstileToken } from "@/lib/turnstile";
 import { NextRequest, NextResponse } from "next/server";
 
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN;
@@ -10,6 +11,30 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
+    // Honeypot spam detection - silently reject if filled
+    const company = body.company?.trim();
+    if (company) {
+      return NextResponse.json({ success: true }, { status: 200 });
+    }
+
+    // Turnstile verification
+    const turnstileToken = body.turnstileToken;
+    if (!turnstileToken || typeof turnstileToken !== "string") {
+      return NextResponse.json(
+        { success: false, message: "Security verification required" },
+        { status: 400 }
+      );
+    }
+
+    const isHuman = await verifyTurnstileToken(turnstileToken);
+    if (!isHuman) {
+      return NextResponse.json(
+        { success: false, message: "Security verification failed" },
+        { status: 403 }
+      );
+    }
+
     const email = body.email?.trim();
 
     if (!email || typeof email !== "string") {

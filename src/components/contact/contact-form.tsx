@@ -10,6 +10,7 @@ import { useState } from "react";
 
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import { NoFcFullIcon } from "@/components/icons/nofc-full-icon";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useCallback } from "react";
 import { ButtonLink } from "../ui/button-link";
 
@@ -35,6 +36,7 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
   const t = useTranslations("contact");
   const { isDragging } = useDrag();
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -56,7 +58,7 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
         const res = await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({ ...formData, turnstileToken }),
         });
 
         const data = await res.json();
@@ -71,7 +73,7 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
         setStatus("error");
       }
     },
-    [formData]
+    [formData, turnstileToken]
   );
 
   const inputClassName =
@@ -214,10 +216,19 @@ export function ContactForm({ contact }: { contact: StrapiContact }) {
               </label>
             </div>
 
+            {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+              <Turnstile
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                onSuccess={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken("")}
+                options={{ theme: "light", size: "flexible" }}
+              />
+            )}
+
             <Button
               variant="default"
               type="submit"
-              disabled={status === "loading"}
+              disabled={status === "loading" || !turnstileToken}
               className="self-start w-full"
             >
               <div className="flex items-center gap-2 border border-white p-[14] px-6 w-full">

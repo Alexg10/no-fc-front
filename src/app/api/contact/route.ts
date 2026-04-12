@@ -1,3 +1,4 @@
+import { verifyTurnstileToken } from "@/lib/turnstile";
 import { NextRequest, NextResponse } from "next/server";
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
@@ -26,8 +27,24 @@ export async function POST(request: NextRequest) {
     // Honeypot spam detection - silently reject if filled
     const website = body.website?.trim();
     if (website) {
-      // Return success to not reveal to attacker that honeypot exists
       return NextResponse.json({ success: true }, { status: 200 });
+    }
+
+    // Turnstile verification
+    const turnstileToken = body.turnstileToken;
+    if (!turnstileToken || typeof turnstileToken !== "string") {
+      return NextResponse.json(
+        { success: false, message: "Security verification required" },
+        { status: 400 }
+      );
+    }
+
+    const isHuman = await verifyTurnstileToken(turnstileToken);
+    if (!isHuman) {
+      return NextResponse.json(
+        { success: false, message: "Security verification failed" },
+        { status: 403 }
+      );
     }
 
     // Extract and trim fields

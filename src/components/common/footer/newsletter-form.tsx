@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Title } from "@/components/ui/title";
 import { Link } from "@/lib/navigation";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
@@ -10,6 +11,8 @@ import { useState } from "react";
 export function NewsletterForm() {
   const t = useTranslations("footer");
   const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "alreadySubscribed" | "error"
   >("idle");
@@ -22,7 +25,7 @@ export function NewsletterForm() {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, company, turnstileToken }),
       });
 
       const data = await res.json();
@@ -60,30 +63,60 @@ export function NewsletterForm() {
         {(status === "idle" || status === "loading" || status === "error") && (
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 lg:flex-row"
+            className="flex flex-col gap-4"
           >
+            {/* Honeypot field - hidden from users, catches bots */}
             <input
-              type="email"
-              placeholder={t("newsletterPlaceholder")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={status === "loading"}
-              aria-invalid={status === "error"}
-              className="w-full p-2 border border-black disabled:opacity-50"
+              type="text"
+              name="company"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              style={{
+                position: "absolute",
+                left: "-9999px",
+                opacity: 0,
+                pointerEvents: "none",
+              }}
+              aria-hidden="true"
             />
-            <Button
-              variant="default"
-              type="submit"
-              disabled={status === "loading"}
-            >
-              <div className="flex items-center gap-2 border border-white p-2 px-4">
-                <div className="-translate-y-px">
-                  {status === "loading"
-                    ? t("newsletterLoading")
-                    : t("newsletterButton")}
+            <div className="flex flex-col gap-4 lg:flex-row">
+              <input
+                type="email"
+                placeholder={t("newsletterPlaceholder")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={status === "loading"}
+                aria-invalid={status === "error"}
+                className="w-full p-2 border border-black disabled:opacity-50"
+              />
+              <Button
+                variant="default"
+                type="submit"
+                disabled={status === "loading" || !turnstileToken}
+              >
+                <div className="flex items-center gap-2 border border-white p-2 px-4">
+                  <div className="-translate-y-px">
+                    {status === "loading"
+                      ? t("newsletterLoading")
+                      : t("newsletterButton")}
+                  </div>
                 </div>
-              </div>
-            </Button>
+              </Button>
+            </div>
+            {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+              <Turnstile
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                onSuccess={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken("")}
+                options={{
+                  theme: "light",
+                  size: "flexible",
+                  appearance: "interaction-only",
+                }}
+              />
+            )}
           </form>
         )}
         {status === "success" && (
