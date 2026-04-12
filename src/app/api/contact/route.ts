@@ -227,7 +227,12 @@ Politique de confidentialité acceptée : Oui
       }),
     });
 
-    const brevoData = await brevoResponse.json();
+    let brevoData: Record<string, unknown> = {};
+    try {
+      brevoData = await brevoResponse.json();
+    } catch {
+      console.error("Brevo returned invalid JSON, status:", brevoResponse.status);
+    }
 
     if (!brevoResponse.ok) {
       console.error("Brevo API error:", brevoData);
