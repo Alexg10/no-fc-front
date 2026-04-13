@@ -19,8 +19,9 @@ const BALL_IMAGES = [
 const BALL_SIZE_DESKTOP = 130;
 const BALL_SIZE_MOBILE = 80;
 const HIT_ZONE_DESKTOP = 300;
-const HIT_ZONE_MOBILE = 200;
-const GRAVITY = 0.36;
+const HIT_ZONE_MOBILE = 130;
+const GRAVITY_DESKTOP = 0.36;
+const GRAVITY_MOBILE = 0.52;
 const FRICTION = 0.997;
 const BOUNCE_DAMPENING = 0.55;
 const KICK_FORCE_Y = -15;
@@ -33,6 +34,7 @@ function getSizes() {
   return {
     ballSize: mobile ? BALL_SIZE_MOBILE : BALL_SIZE_DESKTOP,
     hitZone: mobile ? HIT_ZONE_MOBILE : HIT_ZONE_DESKTOP,
+    gravity: mobile ? GRAVITY_MOBILE : GRAVITY_DESKTOP,
   };
 }
 
@@ -49,7 +51,7 @@ export function JugglingGame() {
   const jugglesRef = useRef(0);
   const ballImageRef = useRef(0);
   const animFrameRef = useRef<number>(0);
-  const sizesRef = useRef({ ballSize: BALL_SIZE_DESKTOP, hitZone: HIT_ZONE_DESKTOP });
+  const sizesRef = useRef({ ballSize: BALL_SIZE_DESKTOP, hitZone: HIT_ZONE_DESKTOP, gravity: GRAVITY_DESKTOP });
 
   const [ballSize, setBallSize] = useState(BALL_SIZE_DESKTOP);
   const [hitZone, setHitZone] = useState(HIT_ZONE_DESKTOP);
@@ -92,7 +94,7 @@ export function JugglingGame() {
       const h = window.innerHeight;
       const radius = sizesRef.current.ballSize / 2;
 
-      state.vy += GRAVITY;
+      state.vy += sizesRef.current.gravity;
       state.x += state.vx;
       state.y += state.vy;
       state.vx *= FRICTION;

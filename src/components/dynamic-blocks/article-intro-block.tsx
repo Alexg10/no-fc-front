@@ -28,7 +28,7 @@ export function ArticleIntroBlock({
       )}
     >
       <div
-        className="absolute top-[-50px] left-0 w-full h-[100px] bg-no-repeat"
+        className="absolute top-[-50px] left-0 w-full h-[100px] bg-no-repeat z-10"
         style={{
           backgroundImage: `url("/images/article/article_ripped.webp")`,
           backgroundSize: "auto 70%",

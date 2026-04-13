@@ -45,14 +45,7 @@ export function ArticleSummary({
   const [isOpen, setIsOpen] = useState(false);
   const [socialsIsOpen, setSocialsIsOpen] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
-  const [hasSummaryItems, setHasSummaryItems] = useState(true);
   const { isUnderDesktop } = useBreakpoints();
-
-  useEffect(() => {
-    if (!mainRef.current) return;
-    const count = mainRef.current.querySelectorAll("[data-short]").length;
-    setHasSummaryItems(count > 0);
-  }, [mainRef]);
 
   const toggleSummary = () => {
     if (socialsIsOpen) {
@@ -128,6 +121,12 @@ export function ArticleSummary({
 
     let pinTween: gsap.core.Tween | null = null;
 
+    // Clear any width constraints GSAP pin sets on each frame
+    const clearInlineWidth = () => {
+      summaryEl.style.width = "";
+      summaryEl.style.maxWidth = "";
+    };
+
     const timeoutId = setTimeout(() => {
       pinTween = gsap.to(summaryEl, {
         scrollTrigger: {
@@ -137,10 +136,8 @@ export function ArticleSummary({
           pin: true,
           pinSpacing: false,
           invalidateOnRefresh: true,
-          onRefresh: () => {
-            summaryEl.style.width = "";
-            summaryEl.style.maxWidth = "";
-          },
+          onRefresh: clearInlineWidth,
+          onUpdate: clearInlineWidth,
           onLeave: () => {
             if (isUnderDesktop) {
               gsap.to(summaryEl, {
@@ -162,11 +159,13 @@ export function ArticleSummary({
         },
       });
 
+      clearInlineWidth();
       ScrollTrigger.refresh();
     }, 0);
 
     const handleResize = () => {
       ScrollTrigger.refresh();
+      clearInlineWidth();
     };
 
     window.addEventListener("resize", handleResize);
@@ -237,14 +236,12 @@ export function ArticleSummary({
               </span>
             </div>
             <div className="heading-l-obviously bg-white relative z-10 flex text-[18px]">
-              {hasSummaryItems && (
-                <button
-                  className="border-2 border-black p-4 border-r-0 cursor-pointer"
-                  onClick={toggleSummary}
-                >
-                  <SummaryMenuIcon />
-                </button>
-              )}
+              <button
+                className="border-2 border-black p-4 border-r-0 cursor-pointer"
+                onClick={toggleSummary}
+              >
+                <SummaryMenuIcon />
+              </button>
               <div
                 className={cn(
                   "border-black p-4 border-2  flex items-center overflow-hidden transition-all duration-300 ease-in-out",

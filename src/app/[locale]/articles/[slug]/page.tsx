@@ -9,6 +9,7 @@ import { getStrapiImageUrl } from "@/lib/strapi";
 import { getArticleBySlug } from "@/services/strapi/articleService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface ArticlePageProps {
@@ -73,7 +74,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const article = await getArticleBySlug(slug, locale);
 
   if (!article) {
-    return null;
+    notFound();
   }
 
   const mainColor = article?.mainColor;
