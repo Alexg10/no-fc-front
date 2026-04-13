@@ -17,11 +17,11 @@ export function PageHeader({ title, marquee, backHref }: PageHeaderProps) {
         {marquee && (
           <div className="hidden lg:flex col-span-full justify-center">
             <div className="border-2 border-black w-[170px] bg-white">
-              <Marquee autoFill={true} className="text-nowrap">
+              <Marquee autoFill={true} className="text-nowrap py-[12px]">
                 <h1 className="heading-s-obviously lg:text-[24px] mr-4">
                   {marquee}
                 </h1>
-                <LogoIcons className="w-6 mr-4" />
+                <LogoIcons className="w-6 h-6 mr-4" />
               </Marquee>
             </div>
           </div>
