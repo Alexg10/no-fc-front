@@ -19,9 +19,8 @@ export function TitleContentBlock({ block }: TitleContentBlockProps) {
         {block.title && (
           <div
             className="col-span-full lg:col-start-3 lg:col-end-11 flex flex-col gap-10 balance"
-            data-short={block.shortTitle}
           >
-            <Title className="mb-2">{block.title}</Title>
+            <Title className="mb-2" data-short={block.shortTitle}>{block.title}</Title>
           </div>
         )}
         <div

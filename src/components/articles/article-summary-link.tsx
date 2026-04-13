@@ -46,13 +46,13 @@ export function ArticleSummaryLink() {
     if (!mainRef.current) return;
 
     const elements =
-      mainRef.current.querySelectorAll<HTMLElement>("[data-short]");
+      mainRef.current.querySelectorAll<HTMLElement>("h2");
     const itemsList: SummaryItem[] = [];
 
     elements.forEach((el, index) => {
       itemsList.push({
         index,
-        text: el.dataset.short || "",
+        text: el.dataset.short || el.textContent || "",
         element: el,
       });
     });

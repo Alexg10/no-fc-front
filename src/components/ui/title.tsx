@@ -1,11 +1,9 @@
 import { createHeadingElement } from "@/lib/heading-utils";
 import { cn } from "@/lib/utils";
 
-interface TitleProps {
+interface TitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   children: React.ReactNode;
-  className?: string;
   level?: 1 | 2 | 3 | 4 | 5 | 6;
-  style?: React.CSSProperties;
 }
 
 function parseBreaks(text: React.ReactNode): React.ReactNode {
@@ -20,13 +18,13 @@ function parseBreaks(text: React.ReactNode): React.ReactNode {
   ));
 }
 
-export function Title({ children, className, level = 2, style }: TitleProps) {
+export function Title({ children, className, level = 2, ...rest }: TitleProps) {
   return createHeadingElement(level, {
     className: cn(
       "heading-l-obviously text-center uppercase balance",
       className,
     ),
-    style,
+    ...rest,
     children: parseBreaks(children),
   });
 }
