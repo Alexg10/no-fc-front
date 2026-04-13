@@ -16,7 +16,7 @@ export function FooterBottom({
       <div className="flex gap-4 flex-col mb-6 md:mb-0">
         <LogoIcons className="size-18 md:size-18" />
       </div>
-      <div className="flex flex-col gap-4 md:order-3 md:flex-row md:absolute md:right-0 md:gap-6">
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:w-1/2 md:order-3 md:flex-row md:gap-2 md:absolute lg:flex md:right-0 lg:gap-6 lg:justify-end">
         {footerBottomLinks
           ?.filter((footerBottomLink) => footerBottomLink.link)
           .map((footerBottomLink) => (
@@ -24,7 +24,7 @@ export function FooterBottom({
               href={footerBottomLink.link}
               target={footerBottomLink.target}
               key={footerBottomLink.id}
-              className="link-hover-line w-fit"
+              className="link-hover-line w-fit "
             >
               {footerBottomLink.label}
             </Link>
