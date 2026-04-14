@@ -68,7 +68,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
   };
 
   return (
-    <section className="py-10 mb-7 lg:h-[calc(100%-240px)] flex">
+    <section className="py-10 mb-7 lg:h-[calc(100%-400px)]! flex">
       <div className="flex w-full px-4 max-w-[1424px] mx-auto lg:grid lg:grid-cols-12 lg:gap-6">
         <div
           ref={containerRef}
@@ -99,7 +99,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                     "relative cursor-grab active:cursor-grabbing self-start",
                     images.length === 2
                       ? "first:-rotate-6 last:rotate-[4deg] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[30px]"
-                      : "max-w-1/2 lg:max-w-[474px] first:-rotate-6 nth-2:lg:translate-y-[90px] nth-2:z-10 nth-2:lg:translate-x-[-140px] last:lg:rotate-[-4deg] last:lg:rotate-[4deg] nth-2:lg:rotate-[-6deg] nth-2:rotate-[7deg] nth-3:rotate-[4deg] nth-3:lg:translate-x-[150px] nth-3:lg:translate-y-[-180px] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[-20px] last:lg:translate-y-[30px] last:z-10 last:lg:translate-y-[-200px]",
+                      : "max-w-1/2 lg:max-w-[474px] first:-rotate-6 nth-2:lg:translate-y-[-50px] nth-2:z-10 nth-2:lg:translate-x-[-140px] last:lg:rotate-[4deg] nth-2:lg:rotate-[-6deg] nth-2:rotate-[7deg] nth-3:rotate-[4deg] nth-3:lg:translate-x-[360px] nth-3:lg:translate-y-[-580px] first:translate-x-[5px] last:translate-x-[190px] last:translate-y-[-20px] last:z-10 last:lg:translate-y-[-440px]",
                   )}
                   style={{
                     transform: `translate(${offset.x}px, ${offset.y}px)`,
