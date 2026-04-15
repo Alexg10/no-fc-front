@@ -218,3 +218,12 @@ export async function getOtherArticles(
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];
   return articles as unknown as StrapiArticle[];
 }
+
+export async function getArticlesArchive(
+  locale?: string,
+): Promise<StrapiArticle[]> {
+  const result = await strapiFetchWithFallback(`/articles-archive`, locale, {
+    next: { revalidate: 3600 },
+  });
+  return result.data?.data as StrapiArticle[];
+}
