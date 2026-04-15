@@ -219,11 +219,15 @@ export async function getOtherArticles(
   return articles as unknown as StrapiArticle[];
 }
 
+export interface ArticlesArchive {
+  title?: string;
+}
+
 export async function getArticlesArchive(
   locale?: string,
-): Promise<StrapiArticle[]> {
+): Promise<ArticlesArchive | null> {
   const result = await strapiFetchWithFallback(`/articles-archive`, locale, {
     next: { revalidate: 3600 },
   });
-  return result.data?.data as StrapiArticle[];
+  return (result.data?.data as ArticlesArchive) ?? null;
 }
