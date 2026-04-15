@@ -248,11 +248,11 @@ export function ArticleSummary({
               )}
               <div
                 className={cn(
-                  "border-black p-4 border-2  flex items-center overflow-hidden transition-all duration-300 ease-in-out",
+                  "border-black  border-2  flex items-center overflow-hidden transition-all duration-300 ease-in-out",
                   socialsIsOpen ? "lg:w-[190px]" : "lg:w-[58px]",
                 )}
               >
-                <button className="cursor-pointer" onClick={toggleSocials}>
+                <button className="cursor-pointer p-4" onClick={toggleSocials}>
                   <ShareIcon />
                 </button>
                 {!isUnderDesktop && (
