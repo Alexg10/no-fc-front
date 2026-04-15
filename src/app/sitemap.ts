@@ -1,4 +1,5 @@
 import { getCollections, getProducts } from "@/lib/shopify";
+import { getArticlesPaginated } from "@/services/strapi/articleService";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -68,6 +69,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Error fetching products for sitemap:", error);
   }
 
-  return [...staticPages, ...collectionsPages, ...productsPages];
+  // Récupérer tous les articles Strapi (paginés)
+  let articlesPages: MetadataRoute.Sitemap = [];
+  try {
+    const allSlugs: string[] = [];
+    let page = 1;
+    let pageCount = 1;
+
+    while (page <= pageCount) {
+      const result = await getArticlesPaginated("fr", page);
+      for (const article of result.articles) {
+        if (article.slug) allSlugs.push(article.slug);
+      }
+      pageCount = result.pageCount;
+      page++;
+    }
+
+    articlesPages = allSlugs.map((slug) => ({
+      url: `${siteUrl}/articles/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error("Error fetching articles for sitemap:", error);
+  }
+
+  return [
+    ...staticPages,
+    ...collectionsPages,
+    ...productsPages,
+    ...articlesPages,
+  ];
 }
 
