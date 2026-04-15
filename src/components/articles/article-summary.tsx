@@ -45,7 +45,15 @@ export function ArticleSummary({
   const [isOpen, setIsOpen] = useState(false);
   const [socialsIsOpen, setSocialsIsOpen] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
+  const [hasHeadings, setHasHeadings] = useState(false);
   const { isUnderDesktop } = useBreakpoints();
+
+  useEffect(() => {
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+    const h2s = mainEl.querySelectorAll("h2");
+    setHasHeadings(h2s.length > 0);
+  }, [mainRef]);
 
   const toggleSummary = () => {
     if (socialsIsOpen) {
@@ -236,12 +244,14 @@ export function ArticleSummary({
               </span>
             </div>
             <div className="heading-l-obviously bg-white relative z-10 flex text-[18px]">
-              <button
-                className="border-2 border-black p-4 border-r-0 cursor-pointer"
-                onClick={toggleSummary}
-              >
-                <SummaryMenuIcon />
-              </button>
+              {hasHeadings && (
+                <button
+                  className="border-2 border-black p-4 border-r-0 cursor-pointer"
+                  onClick={toggleSummary}
+                >
+                  <SummaryMenuIcon />
+                </button>
+              )}
               <div
                 className={cn(
                   "border-black p-4 border-2  flex items-center overflow-hidden transition-all duration-300 ease-in-out",
