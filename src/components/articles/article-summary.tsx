@@ -191,25 +191,19 @@ export function ArticleSummary({
 
   return (
     <div className="max-w-[1464px] mx-auto w-full px-4 xl:max-w-[1920px]">
-      <div className="absolute z-40 top-5" ref={summaryRef}>
-        <div className="relative p-2 lg:p-4 bg-white">
+      <div className="absolute top-5 z-40" ref={summaryRef}>
+        <div className="relative p-2 lg:p-4 bg-white z-20">
           <div
             className={cn(
-              "absolute bottom-full overflow-hidden pb-0 lg:pb-0 left-0 bg-white right-0 w-full grid transition-all duration-300 ease-in-out",
-              isOpen
-                ? "grid-rows-[1fr] py-4 translate-y-0"
-                : "grid-rows-[0fr] pointer-events-none py-0 translate-y-full",
+              "absolute bottom-full  py-4 ease-in-out pb-0 left-0 right-0 w-full bg-white overflow-hidden transition-all duration-[400ms] ",
+              isOpen ? "max-h-[50vh]" : "max-h-0 py-0 pointer-events-none",
             )}
           >
-            <div
-              className={cn(
-                "overflow-hidden text-polymath px-2 lg:px-4 w-full",
-              )}
-            >
+            <div className="text-polymath px-2 lg:px-4 w-full">
               <ArticleSummaryLink />
             </div>
           </div>
-          <div className="flex gap-2 bg-white overflow-hidden">
+          <div className="flex gap-2 bg-white overflow-hidden z-40">
             {isUnderDesktop && (
               <ArticleSocialLinks
                 className={cn(
