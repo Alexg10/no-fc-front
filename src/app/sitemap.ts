@@ -2,8 +2,11 @@ import { getCollections, getProducts } from "@/lib/shopify";
 import { getArticlesPaginated } from "@/services/strapi/articleService";
 import { MetadataRoute } from "next";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
 
   // Pages statiques
   const staticPages: MetadataRoute.Sitemap = [
