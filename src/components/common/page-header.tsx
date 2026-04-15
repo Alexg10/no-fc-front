@@ -6,7 +6,7 @@ import Marquee from "react-fast-marquee";
 import { BlockRendererClient } from "./block-renderer-client";
 
 interface PageHeaderProps {
-  title: BlocksContent;
+  title: BlocksContent | string;
   marquee?: string;
   backHref?: string;
 }
@@ -29,10 +29,16 @@ export function PageHeader({ title, marquee, backHref }: PageHeaderProps) {
         )}
         <div className="col-span-full lg:col-start-4 lg:col-end-10">
           {backHref && <BackLink href={backHref} className="lg:hidden" />}
-          <BlockRendererClient
-            content={title as BlocksContent}
-            className="[&>h1]:text-[64px]! [&>h2]:text-[64px]! [&>h3]:text-[64px]! [&>h4]:text-[64px]! [&>h5]:text-[64px]! [&>h6]:text-[64px]! [&>p]:text-[64px]! [&>h1]:heading-l-obviously! [&>h2]:heading-l-obviously! [&>h3]:heading-l-obviously! [&>h4]:heading-l-obviously! [&>h5]:heading-l-obviously! [&>h6]:heading-l-obviously! [&>p]:heading-l-obviously! [&>h1]:m-0! [&>h2]:m-0! [&>h3]:m-0! [&>h4]:m-0! [&>h5]:m-0! [&>h6]:m-0! [&>p]:m-0! text-center uppercase balance"
-          />
+          {typeof title === "string" ? (
+            <h1 className="text-[64px]! heading-l-obviously! m-0! text-center uppercase balance">
+              {title}
+            </h1>
+          ) : (
+            <BlockRendererClient
+              content={title as BlocksContent}
+              className="[&>h1]:text-[64px]! [&>h2]:text-[64px]! [&>h3]:text-[64px]! [&>h4]:text-[64px]! [&>h5]:text-[64px]! [&>h6]:text-[64px]! [&>p]:text-[64px]! [&>h1]:heading-l-obviously! [&>h2]:heading-l-obviously! [&>h3]:heading-l-obviously! [&>h4]:heading-l-obviously! [&>h5]:heading-l-obviously! [&>h6]:heading-l-obviously! [&>p]:heading-l-obviously! [&>h1]:m-0! [&>h2]:m-0! [&>h3]:m-0! [&>h4]:m-0! [&>h5]:m-0! [&>h6]:m-0! [&>p]:m-0! text-center uppercase balance"
+            />
+          )}
         </div>
       </Grid>
     </header>
