@@ -2,8 +2,28 @@ import { strapiFetchWithFallback, strapiQuery } from "@/lib/strapi";
 import { StrapiArticle } from "@/types/strapi/article";
 import qs from "qs";
 
-/** Nombre d’articles par page sur la liste. */
+/** Nombre d'articles par page sur la liste. */
 export const ARTICLES_PAGE_SIZE = 12;
+
+/**
+ * Retourne la date effective d'un article :
+ * le champ `date` (renseigné manuellement) s'il existe, sinon `publishedAt`.
+ */
+function getEffectiveDate(article: StrapiArticle): string {
+  return article.date || article.publishedAt || "";
+}
+
+/**
+ * Trie les articles du plus récent au plus ancien
+ * en utilisant la date effective (date manuelle > publishedAt).
+ */
+function sortArticlesByDate(articles: StrapiArticle[]): StrapiArticle[] {
+  return [...articles].sort((a, b) => {
+    const dateA = new Date(getEffectiveDate(a)).getTime();
+    const dateB = new Date(getEffectiveDate(b)).getTime();
+    return dateB - dateA;
+  });
+}
 
 export interface ArticlesPaginatedResult {
   articles: StrapiArticle[];
@@ -18,10 +38,8 @@ export async function getArticlesPaginated(
   page: number,
 ): Promise<ArticlesPaginatedResult> {
   const query = qs.stringify({
-    sort: ["publishedAt:desc"],
     pagination: {
-      page,
-      pageSize: ARTICLES_PAGE_SIZE,
+      pageSize: 100,
     },
     populate: {
       cover: {
@@ -32,31 +50,30 @@ export async function getArticlesPaginated(
   const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
     next: { revalidate: 3600 },
   });
-  const articles = Array.isArray(result.data?.data) ? result.data.data : [];
-  const meta = result.data?.meta as
-    | {
-        pagination?: {
-          page: number;
-          pageSize: number;
-          pageCount: number;
-          total: number;
-        };
-      }
-    | undefined;
-  const p = meta?.pagination;
+  const allArticles = Array.isArray(result.data?.data) ? result.data.data : [];
+  const sorted = sortArticlesByDate(
+    allArticles as unknown as StrapiArticle[],
+  );
+  const total = sorted.length;
+  const pageCount = Math.max(1, Math.ceil(total / ARTICLES_PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, page), pageCount);
+  const start = (safePage - 1) * ARTICLES_PAGE_SIZE;
+  const articles = sorted.slice(start, start + ARTICLES_PAGE_SIZE);
 
   return {
-    articles: articles as unknown as StrapiArticle[],
-    page: p?.page ?? page,
-    pageSize: p?.pageSize ?? ARTICLES_PAGE_SIZE,
-    pageCount: Math.max(1, p?.pageCount ?? 1),
-    total: p?.total ?? articles.length,
+    articles,
+    page: safePage,
+    pageSize: ARTICLES_PAGE_SIZE,
+    pageCount,
+    total,
   };
 }
 
 export async function getArticles(locale?: string): Promise<StrapiArticle[]> {
   const query = qs.stringify({
-    sort: ["publishedAt:desc"],
+    pagination: {
+      pageSize: 100,
+    },
     populate: {
       cover: {
         fields: ["url", "alternativeText", "width", "height", "formats"],
@@ -67,7 +84,7 @@ export async function getArticles(locale?: string): Promise<StrapiArticle[]> {
     next: { revalidate: 3600 },
   });
   const articles = Array.isArray(result.data?.data) ? result.data.data : [];
-  return articles as unknown as StrapiArticle[];
+  return sortArticlesByDate(articles as unknown as StrapiArticle[]);
 }
 
 export async function getArticleBySlug(
@@ -151,44 +168,15 @@ export async function getArticleBySlug(
 export async function getLastArticle(
   locale?: string,
 ): Promise<StrapiArticle | null> {
-  const query = qs.stringify({
-    sort: ["publishedAt:desc"],
-    pagination: {
-      limit: 1,
-    },
-    populate: {
-      cover: {
-        fields: ["url", "alternativeText", "width", "height", "formats"],
-      },
-    },
-  });
-  const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
-    next: { revalidate: 3600 },
-  });
-  const articles = Array.isArray(result.data?.data) ? result.data.data : [];
-  return articles[0] ? (articles[0] as unknown as StrapiArticle) : null;
+  const articles = await getArticles(locale);
+  return articles[0] ?? null;
 }
 
 export async function getPreviousTwoArticles(
   locale?: string,
 ): Promise<StrapiArticle[]> {
-  const query = qs.stringify({
-    sort: ["publishedAt:desc"],
-    pagination: {
-      start: 1,
-      limit: 2,
-    },
-    populate: {
-      cover: {
-        fields: ["url", "alternativeText", "width", "height", "formats"],
-      },
-    },
-  });
-  const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
-    next: { revalidate: 3600 },
-  });
-  const articles = Array.isArray(result.data?.data) ? result.data.data : [];
-  return articles as unknown as StrapiArticle[];
+  const articles = await getArticles(locale);
+  return articles.slice(1, 3);
 }
 
 export async function getOtherArticles(
@@ -196,27 +184,8 @@ export async function getOtherArticles(
   limit: number = 2,
   locale?: string,
 ): Promise<StrapiArticle[]> {
-  const query = qs.stringify({
-    filters: {
-      slug: {
-        $ne: excludeSlug,
-      },
-    },
-    sort: ["publishedAt:desc"],
-    pagination: {
-      limit,
-    },
-    populate: {
-      cover: {
-        fields: ["url", "alternativeText", "width", "height", "formats"],
-      },
-    },
-  });
-  const result = await strapiFetchWithFallback(`/articles?${query}`, locale, {
-    next: { revalidate: 3600 },
-  });
-  const articles = Array.isArray(result.data?.data) ? result.data.data : [];
-  return articles as unknown as StrapiArticle[];
+  const articles = await getArticles(locale);
+  return articles.filter((a) => a.slug !== excludeSlug).slice(0, limit);
 }
 
 export interface ArticlesArchive {
