@@ -21,7 +21,9 @@ export function BlockRendererClient({
   if (!content) return null;
 
   return (
-    <div className={cn(className, "block-renderer")}>
+    <div
+      className={cn(className, "block-renderer [&>*>strong]:text-l-polymath")}
+    >
       <BlocksRenderer
         content={content}
         blocks={{
@@ -40,7 +42,7 @@ export function BlockRendererClient({
             );
           },
           paragraph: ({ children }) => (
-            <p className="mb-2 text-l-polymath [&:last-child]:mb-0">
+            <p className="mb-2 text-l-polymath [&:last-child]:mb-0 [&>strong]:text-l-polymath-display">
               {children}
             </p>
           ),
@@ -65,7 +67,12 @@ export function BlockRendererClient({
                 ? "mb-4 ml-6 list-decimal space-y-2"
                 : "mb-4 ml-6 !list-none space-y-2 [&>li]:before:content-[''] text-[18px] [&>li]:before:absolute [&>li]:before:-left-[14px] [&>li]:before:top-3 [&>li]:before:size-[3px] [&>li]:before:rounded-full [&>li]:before:bg-current";
             return (
-              <ListTag className={cn("relative [&>li]:relative", listClasses)}>
+              <ListTag
+                className={cn(
+                  "relative [&>*>strong]:text-l-polymath-display [&>li]:relative",
+                  listClasses,
+                )}
+              >
                 {children}
               </ListTag>
             );
