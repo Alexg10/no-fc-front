@@ -76,7 +76,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
             "col-span-full",
             images.length === 2
               ? "flex gap-4 lg:col-start-2 lg:col-end-12 justify-center"
-              : "flex flex-wrap lg:col-span-full lg:justify-between",
+              : "relative flex flex-wrap lg:col-span-full lg:h-[800px] lg:items-start",
           )}
           onMouseMove={(e) => moveDrag(e.clientX, e.clientY)}
           onMouseUp={endDrag}
@@ -99,7 +99,13 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                     "relative cursor-grab active:cursor-grabbing self-start",
                     images.length === 2
                       ? "first:-rotate-6 last:rotate-[4deg] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[30px]"
-                      : "max-w-1/2 lg:max-w-[474px] first:-rotate-6 nth-2:lg:mt-[-30px] nth-2:z-10 nth-2:lg:translate-x-[-290px] last:lg:rotate-[4deg] nth-2:lg:rotate-[-6deg] nth-2:rotate-[7deg] nth-3:rotate-[4deg] nth-3:lg:translate-x-[200px] nth-3:lg:mt-[-560px] first:translate-x-[5px] last:translate-x-[-10px] last:mt-[-20px] last:z-10 last:lg:mt-[-420px] last:lg:translate-x-[40px] first:lg:translate-x-[-160px]",
+                      : [
+                          "max-w-1/2 lg:max-w-[474px] lg:absolute",
+                          "first:-rotate-6 first:lg:top-[8%] first:lg:-left-10",
+                          "nth-2:rotate-4 nth-2:z-10 nth-2:lg:top-[10%] nth-2:lg:left-[23%]",
+                          "nth-3:-rotate-6 nth-3:lg:top-6 nth-3:lg:left-[50%]",
+                          "last:rotate-[4deg] last:z-10 last:lg:top-[25%] last:lg:right-[0%] last:lg:w-[374px] last:lg:translate-x-[60px]",
+                        ].join(" "),
                   )}
                   style={{
                     transform: `translate(${offset.x}px, ${offset.y}px)`,
@@ -107,7 +113,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                   onMouseDown={(e) => handleMouseDown(e, image.id)}
                   onTouchStart={(e) => handleTouchStart(e, image.id)}
                 >
-                  <div className="relative inline-block overflow-hidden  transition-shadow hover:shadow-lg">
+                  <div className="relative inline-block overflow-hidden lg:block lg:max-w-[474px] transition-shadow hover:shadow-lg">
                     <Image
                       src={getStrapiImageUrl(image.url)}
                       alt={image.alternativeText || ""}
