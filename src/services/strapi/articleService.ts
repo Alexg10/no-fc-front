@@ -176,7 +176,7 @@ export async function getPreviousTwoArticles(
   locale?: string,
 ): Promise<StrapiArticle[]> {
   const articles = await getArticles(locale);
-  return articles.slice(1, 3);
+  return articles.slice(0, 2);
 }
 
 export async function getOtherArticles(
