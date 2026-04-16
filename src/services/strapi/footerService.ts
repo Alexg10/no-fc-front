@@ -16,7 +16,7 @@ export async function getFooter(locale?: string): Promise<StrapiFooter | null> {
     });
 
     const result = await strapiFetchWithFallback(`/footer?${query}`, locale, {
-      next: { revalidate: 86400 },
+      next: { revalidate: 60 },
     });
 
     return result.data?.data as StrapiFooter;
