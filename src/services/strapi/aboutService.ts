@@ -12,7 +12,7 @@ export async function getAboutContent(
     },
   });
   const result = await strapiFetchWithFallback(`/about?${query}`, locale, {
-    next: { revalidate: 86400 },
+    next: { revalidate: 60 },
   });
 
   return result.data?.data as StrapiAboutContent;
