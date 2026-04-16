@@ -17,6 +17,10 @@ import { ButtonUi } from "../ui/button-ui";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+if (typeof window !== "undefined") {
+  ScrollTrigger.normalizeScroll(true);
+}
+
 interface ArticleHeroProps {
   article: StrapiArticle;
   mainColor: ColorList;
