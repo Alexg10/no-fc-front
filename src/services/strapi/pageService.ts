@@ -48,7 +48,7 @@ export async function getPageBySlug(
     });
 
     const result = await strapiFetch(`/pages?${query}`, {
-      next: { revalidate: 3600 },
+      next: { revalidate: 60 },
     });
 
     const pageData = result.data as StrapiPageResponse | null;
