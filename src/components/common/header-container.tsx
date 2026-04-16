@@ -14,18 +14,32 @@ function HeaderContainerInner({
   const isHomepage = pathname === "/" || pathname === "/fr";
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
+  const rafRef = useRef<number | null>(null);
 
   const handleScroll = useCallback(() => {
-    const currentScrollY = window.scrollY;
-    setIsHidden(currentScrollY > lastScrollY.current && currentScrollY > 100);
-    lastScrollY.current = currentScrollY;
+    if (rafRef.current !== null) return;
+
+    rafRef.current = requestAnimationFrame(() => {
+      const currentScrollY = Math.max(0, window.scrollY);
+      const delta = currentScrollY - lastScrollY.current;
+
+      if (Math.abs(delta) >= 5) {
+        setIsHidden(delta > 0 && currentScrollY > 100);
+        lastScrollY.current = currentScrollY;
+      }
+
+      rafRef.current = null;
+    });
   }, []);
 
   useEffect(() => {
     if (isHomepage) return;
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
   }, [isHomepage, handleScroll]);
 
   return (

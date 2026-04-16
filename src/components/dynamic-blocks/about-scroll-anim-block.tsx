@@ -898,14 +898,14 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           <br /> NOISES
         </p>
         <p
-          className="heading-xl-obviously absolute top-1/2 -translate-x-1/2 left-1/2  -translate-y-1/2 title-shadow text-white text-center px-10  z-10"
+          className="heading-xl-obviously z-30 absolute top-1/2 -translate-x-1/2 left-1/2  -translate-y-1/2 title-shadow text-white text-center px-10 "
           ref={sixthSceneTitleTwoRef}
         >
           We don’t support
           <br /> anything.
         </p>
         <p
-          className="heading-xl-obviously absolute top-1/2 -translate-x-1/2 left-1/2  -translate-y-1/2 title-shadow text-white text-center px-10  z-10"
+          className="heading-xl-obviously absolute top-1/2 -translate-x-1/2 left-1/2  -translate-y-1/2 title-shadow text-white text-center px-10  z-30"
           ref={sixthSceneTitleThreeRef}
         >
           We reinterpret
