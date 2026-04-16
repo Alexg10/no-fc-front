@@ -12,7 +12,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ButtonUi } from "../ui/button-ui";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -38,6 +38,7 @@ export function ArticleHero({
   const resolvedTitleColor = titleColor ?? mainColor;
   const coverRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [coverLoaded, setCoverLoaded] = useState(false);
   useGSAP(
     () => {
       const hero = heroRef.current;
@@ -91,7 +92,7 @@ export function ArticleHero({
         gsap.set([hero, cover], { clearProps: "all" });
       };
     },
-    { scope: containerRef, dependencies: [isUnderDesktop] },
+    { scope: containerRef, dependencies: [isUnderDesktop, coverLoaded] },
   );
 
   useEffect(() => {
@@ -120,6 +121,7 @@ export function ArticleHero({
             fill
             className="object-cover"
             priority
+            onLoad={() => setCoverLoaded(true)}
           />
           <div className="absolute inset-0 bg-black/20" />
         </div>

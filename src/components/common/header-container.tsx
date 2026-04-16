@@ -4,8 +4,13 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export function HeaderContainer({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+function HeaderContainerInner({
+  children,
+  pathname,
+}: {
+  children: React.ReactNode;
+  pathname: string;
+}) {
   const isHomepage = pathname === "/" || pathname === "/fr";
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
@@ -33,5 +38,14 @@ export function HeaderContainer({ children }: { children: React.ReactNode }) {
     >
       {children}
     </div>
+  );
+}
+
+export function HeaderContainer({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  return (
+    <HeaderContainerInner key={pathname} pathname={pathname}>
+      {children}
+    </HeaderContainerInner>
   );
 }

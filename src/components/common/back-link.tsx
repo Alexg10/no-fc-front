@@ -1,8 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { ButtonLink } from "@/components/ui/button-link";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 
 interface BackLinkProps {
   href: string;
@@ -12,14 +11,8 @@ interface BackLinkProps {
 export function BackLink({ href, className }: BackLinkProps) {
   const t = useTranslations("common");
   return (
-    <Link
-      href={href}
-      className={cn(
-        "uppercase text-center text-xl-obviously pb-3 flex items-center justify-center lg:text-[16px]",
-        className,
-      )}
-    >
+    <ButtonLink href={href} className={className}>
       {t("back")}
-    </Link>
+    </ButtonLink>
   );
 }

@@ -10,6 +10,7 @@ export interface StrapiArticle {
   cover: StrapiImage;
   blocks?: StrapiBlock[];
   publishedAt?: string;
+  date?: string;
   shortDescription: BlocksContent;
   mainColor: ColorList;
   issueNumber: string;

@@ -226,6 +226,7 @@ export interface StrapiCommonSectionPush {
   description?: BlocksContent;
   button?: StrapiLink;
   cover?: StrapiImage;
+  coverMobile?: StrapiImage;
   whiteText?: boolean;
 }
 

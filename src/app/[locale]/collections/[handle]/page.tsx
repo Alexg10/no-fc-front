@@ -93,7 +93,7 @@ export default async function CollectionPage({
           <div className="col-span-full pt-6">
             <BackLink
               href="/products"
-              className="hidden lg:block lg:absolute lg:translate-y-4"
+              className="hidden lg:block lg:absolute lg:-translate-y-1"
             />
             <Suspense fallback={<ProductsPageLoading />}>
               <CollectionContent

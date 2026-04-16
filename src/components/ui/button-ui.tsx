@@ -83,7 +83,7 @@ export function ButtonUi({
                 play={isHover}
                 speed={35}
                 gradient={false}
-                className="text-nowrap overflow-hidden"
+                className="text-nowrap overflow-hidden pb-[2px]"
               >
                 <span className="mr-4">{children}</span>
                 <span className="mr-4" aria-hidden>

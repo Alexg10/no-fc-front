@@ -3,6 +3,7 @@ import Grid from "@/components/common/grid";
 import { PageHeader } from "@/components/common/page-header";
 import { PreFooterMarquee } from "@/components/common/pre-footer-marquee";
 import { ArticlesLoading } from "@/components/skeleton/articles-loading";
+import { getArticlesArchive } from "@/services/strapi/articleService";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
@@ -43,11 +44,15 @@ export default async function ArticlesPage({
   const sp = await searchParams;
   const raw = parseInt(sp.page ?? "1", 10);
   const page = Number.isFinite(raw) && raw >= 1 ? Math.floor(raw) : 1;
+  const articlesArchive = await getArticlesArchive(locale);
 
   const t = await getTranslations({ locale, namespace: "article" });
   return (
     <div className="bg-off-white overflow-hidden">
-      <PageHeader title={t("articlesListPage.title")} marquee={"Stories"} />
+      <PageHeader
+        title={articlesArchive?.title || t("articlesListPage.title")}
+        marquee={"Stories"}
+      />
       <Grid>
         <main className="col-span-full py-4 pb-10 lg:py-10 lg:pb-26">
           <Suspense fallback={<ArticlesLoading />}>

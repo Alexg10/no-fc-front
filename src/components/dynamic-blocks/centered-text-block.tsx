@@ -21,7 +21,7 @@ export function CenteredTextBlock({ block }: CenteredTextBlockProps) {
           {title && (
             <BlockRendererClient
               content={title}
-              className="heading-m-obviously! [&>p]:heading-m-obviously! [&>h2]:heading-m-obviously!  [&>h3]:heading-m-obviously! [&>h4]:heading-m-obviously! [&>h5]:heading-m-obviously! [&>h6]:heading-m-obviously! text-center"
+              className="heading-m-obviously!  [&>*>br]:hidden  [&>*>br]:lg:flex  [&>p]:heading-m-obviously! [&>h2]:heading-m-obviously!  [&>h3]:heading-m-obviously! [&>h4]:heading-m-obviously! [&>h5]:heading-m-obviously! [&>h6]:heading-m-obviously! text-center"
             />
           )}
         </div>

@@ -534,6 +534,9 @@ body #tarteaucitronRoot button#tarteaucitronBack {
   @apply font-polymath-display text-[24px] lg:text-[24px] font-medium leading-[120%] ;
 }
 
+@utility text-l-polymath-display {
+  @apply font-polymath-display  text-[16px] lg:text-[18px] font-medium leading-[140%] tracking-[-0.25px];
+}
 @utility text-l-polymath {
   @apply text-[16px] lg:text-[18px] font-medium leading-[140%] tracking-[-0.25px];
 }

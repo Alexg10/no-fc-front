@@ -45,7 +45,15 @@ export function ArticleSummary({
   const [isOpen, setIsOpen] = useState(false);
   const [socialsIsOpen, setSocialsIsOpen] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
+  const [hasHeadings, setHasHeadings] = useState(false);
   const { isUnderDesktop } = useBreakpoints();
+
+  useEffect(() => {
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+    const h2s = mainEl.querySelectorAll("h2");
+    setHasHeadings(h2s.length > 0);
+  }, [mainRef]);
 
   const toggleSummary = () => {
     if (socialsIsOpen) {
@@ -183,25 +191,19 @@ export function ArticleSummary({
 
   return (
     <div className="max-w-[1464px] mx-auto w-full px-4 xl:max-w-[1920px]">
-      <div className="absolute z-40 top-5" ref={summaryRef}>
-        <div className="relative p-2 lg:p-4 bg-white">
+      <div className="absolute top-5 z-40" ref={summaryRef}>
+        <div className="relative p-2 lg:p-4 bg-white z-20">
           <div
             className={cn(
-              "absolute bottom-full overflow-hidden pb-0 lg:pb-0 left-0 bg-white right-0 w-full grid transition-all duration-300 ease-in-out",
-              isOpen
-                ? "grid-rows-[1fr] py-4 translate-y-0"
-                : "grid-rows-[0fr] pointer-events-none py-0 translate-y-full",
+              "absolute bottom-full  py-4 ease-in-out pb-0 left-0 right-0 w-full bg-white overflow-hidden transition-all duration-[400ms] ",
+              isOpen ? "max-h-[50vh]" : "max-h-0 py-0 pointer-events-none",
             )}
           >
-            <div
-              className={cn(
-                "overflow-hidden text-polymath px-2 lg:px-4 w-full",
-              )}
-            >
+            <div className="text-polymath px-2 lg:px-4 w-full">
               <ArticleSummaryLink />
             </div>
           </div>
-          <div className="flex gap-2 bg-white overflow-hidden">
+          <div className="flex gap-2 bg-white overflow-hidden z-40">
             {isUnderDesktop && (
               <ArticleSocialLinks
                 className={cn(
@@ -236,19 +238,21 @@ export function ArticleSummary({
               </span>
             </div>
             <div className="heading-l-obviously bg-white relative z-10 flex text-[18px]">
-              <button
-                className="border-2 border-black p-4 border-r-0 cursor-pointer"
-                onClick={toggleSummary}
-              >
-                <SummaryMenuIcon />
-              </button>
+              {hasHeadings && (
+                <button
+                  className="border-2 border-black p-4 border-r-0 cursor-pointer"
+                  onClick={toggleSummary}
+                >
+                  <SummaryMenuIcon />
+                </button>
+              )}
               <div
                 className={cn(
-                  "border-black p-4 border-2  flex items-center overflow-hidden transition-all duration-300 ease-in-out",
+                  "border-black  border-2  flex items-center overflow-hidden transition-all duration-300 ease-in-out",
                   socialsIsOpen ? "lg:w-[190px]" : "lg:w-[58px]",
                 )}
               >
-                <button className="cursor-pointer" onClick={toggleSocials}>
+                <button className="cursor-pointer p-4" onClick={toggleSocials}>
                   <ShareIcon />
                 </button>
                 {!isUnderDesktop && (
