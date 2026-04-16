@@ -19,6 +19,7 @@ export async function Footer({ locale }: { locale: string }) {
           <FooterTop
             footerTopLinks={footer?.topLinks as StrapiLink[]}
             socialLinks={general?.socials as StrapiLink[]}
+            newsletterConditionsText={footer?.newsletterConditionsText}
           />
         </div>
       </Grid>

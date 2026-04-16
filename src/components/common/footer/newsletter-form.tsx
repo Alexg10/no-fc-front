@@ -1,14 +1,22 @@
 "use client";
 
+import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import { Button } from "@/components/ui/button";
 import { Title } from "@/components/ui/title";
 import { Link } from "@/lib/navigation";
 import { Turnstile } from "@marsidev/react-turnstile";
+import type { BlocksContent } from "@strapi/blocks-react-renderer";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
 
-export function NewsletterForm() {
+interface NewsletterFormProps {
+  newsletterConditionsText?: BlocksContent;
+}
+
+export function NewsletterForm({
+  newsletterConditionsText,
+}: NewsletterFormProps) {
   const t = useTranslations("footer");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -127,20 +135,27 @@ export function NewsletterForm() {
         {status === "error" && (
           <p className="text-sm text-red-600">{t("newsletterError")}</p>
         )}
-        <p className="text-sm">
-          {t.rich("newsletterAgreement", {
-            termsLink: (chunks) => (
-              <Link href="/terms" className="underline hover:no-underline">
-                {chunks}
-              </Link>
-            ),
-            privacyLink: (chunks) => (
-              <Link href="/privacy" className="underline hover:no-underline">
-                {chunks}
-              </Link>
-            ),
-          })}
-        </p>
+        {newsletterConditionsText ? (
+          <BlockRendererClient
+            content={newsletterConditionsText}
+            className="[&>p]:text-sm  [&>p]:mb-0"
+          />
+        ) : (
+          <p className="text-sm">
+            {t.rich("newsletterAgreement", {
+              termsLink: (chunks) => (
+                <Link href="/terms" className="underline hover:no-underline">
+                  {chunks}
+                </Link>
+              ),
+              privacyLink: (chunks) => (
+                <Link href="/privacy" className="underline hover:no-underline">
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
+        )}
       </div>
     </div>
   );
