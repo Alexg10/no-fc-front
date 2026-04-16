@@ -14,7 +14,7 @@ export async function getContact(
     },
   });
   const result = await strapiFetchWithFallback(`/contact?${query}`, locale, {
-    next: { revalidate: 86400 },
+    next: { revalidate: 60 },
   });
   return result.data?.data as StrapiContact;
 }
