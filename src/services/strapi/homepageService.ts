@@ -1,4 +1,4 @@
-import { strapiQuery, strapiFetchWithFallback } from "@/lib/strapi";
+import { strapiFetchWithFallback, strapiQuery } from "@/lib/strapi";
 import { StrapiHomepage } from "@/types/strapi/homepage";
 
 export async function getHomepage(
@@ -7,7 +7,9 @@ export async function getHomepage(
   const query = strapiQuery({
     populate: {
       seo: {
-        populate: { metaImage: { fields: ["url", "alternativeText", "width", "height"] } },
+        populate: {
+          metaImage: { fields: ["url", "alternativeText", "width", "height"] },
+        },
       },
       heroArticle: {
         populate: {
@@ -71,7 +73,7 @@ export async function getHomepage(
   });
 
   const result = await strapiFetchWithFallback(`/homepage?${query}`, locale, {
-    next: { revalidate: 3600 },
+    next: { revalidate: 60 },
   });
 
   return result.data?.data as StrapiHomepage;
