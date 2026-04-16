@@ -57,7 +57,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
   const seventhSceneSecondTitleRef = useRef<HTMLDivElement>(null);
 
   const parallaxValues = [100, -150, 120, -80];
-  const fourthSceneParallaxValues = [400, -400, -220, -380];
+  const fourthSceneParallaxValues = [500, -400, -420, -380];
 
   useGSAP(
     () => {
@@ -183,7 +183,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           },
           "thirdSceneImage-=0.3",
         )
-        .to({}, { duration: 1 })
+        .to({}, { duration: 1.2 })
         .to(
           fourthSceneRef.current,
           {
@@ -228,18 +228,19 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
           fourthSceneTopImageRef.current,
           {
             yPercent: -100,
-            duration: 1,
+            duration: 1.2,
           },
-          "fourthSceneEnd",
+          "fourthSceneEnd-=0.5",
         )
         .to(
           fourthSceneBottomImageRef.current,
           {
             yPercent: 100,
-            duration: 1,
+            duration: 1.2,
           },
-          "fourthSceneEnd",
+          "fourthSceneEnd-=0.5",
         )
+        .to({}, { duration: 1 })
         .to(
           fifthSceneRef.current,
           {
@@ -465,17 +466,25 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
 
       fourthSceneImages.current.forEach((img, index) => {
         if (!img) return;
-        aboutTimeline.to(
-          img,
-          {
-            y: fourthSceneParallaxValues[
-              index % fourthSceneParallaxValues.length
-            ],
-            duration: 1.2,
-            scrub: 1.5,
-          },
-          "fourthSceneBackgroundRef+=0.5",
-        );
+        aboutTimeline
+          .set(
+            img,
+            {
+              opacity: 1,
+            },
+            "fourthSceneBackgroundRef+=0.5",
+          )
+          .to(
+            img,
+            {
+              y: fourthSceneParallaxValues[
+                index % fourthSceneParallaxValues.length
+              ],
+              duration: 1.2,
+              scrub: 1.5,
+            },
+            "fourthSceneBackgroundRef+=0.5",
+          );
       });
 
       firstImagesRefs.current.forEach((img, index) => {
@@ -635,11 +644,11 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
             <div
               key={image.id}
               className={[
-                "absolute aspect-2/3 w-[38vw] lg:w-[22vw]",
+                "absolute aspect-2/3 w-[38vw] lg:w-[22vw] opacity-0",
                 index === 0
-                  ? "top-[0%] left-[25%] lg:top-[-60%] lg:left-[44%] -rotate-6"
+                  ? "top-[0%] left-[25%] lg:top-[-55%] lg:left-[44%] -rotate-6"
                   : index === 1
-                    ? "bottom-[-10%] right-[2%] lg:bottom-[-50%] lg:right-[6%] rotate-[5deg]"
+                    ? "bottom-[-10%] right-[2%] lg:bottom-[-45%] lg:right-[6%] rotate-[5deg]"
                     : "bottom-[-5%] left-[-8%] lg:bottom-[-45%] lg:left-[12%] rotate-8",
               ].join(" ")}
               ref={(el) => {
