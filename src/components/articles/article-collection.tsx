@@ -6,16 +6,19 @@ interface ArticleCollectionProps {
   collectionHandle: string;
   title?: string;
   limit?: number;
+  locale?: string;
 }
 
 export async function ArticleCollection({
   collectionHandle,
   title,
   limit = 4,
+  locale,
 }: ArticleCollectionProps) {
   try {
     const response = await getCollectionProducts(collectionHandle, {
       first: limit,
+      locale,
     });
 
     const products = response.edges?.map((edge) => edge.node) ?? [];
