@@ -60,6 +60,9 @@ export async function getHomepage(
               cover: {
                 fields: ["url", "alternativeText", "width", "height"],
               },
+              coverMobile: {
+                fields: ["url", "alternativeText", "width", "height"],
+              },
             },
           },
         },

@@ -3,12 +3,12 @@
 import { BlockRendererClient } from "@/components/common/block-renderer-client";
 import Grid from "@/components/common/grid";
 import { ButtonUi } from "@/components/ui/button-ui";
+import { Link } from "@/lib/navigation";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import { cn } from "@/lib/utils";
 import type { StrapiCommonSectionPush } from "@/types/strapi";
 import type { BlocksContent } from "@strapi/blocks-react-renderer";
 import Image from "next/image";
-import { Link } from "@/lib/navigation";
 import { useRouter } from "next/navigation";
 
 interface SectionPushBlockProps {
@@ -24,14 +24,27 @@ function stripHashForNavigation(href: string): string {
 function SectionPushContent({ block }: SectionPushBlockProps) {
   return (
     <>
-      {block.cover && (
+      {(block.cover || block.coverMobile) && (
         <div className="relative w-full aspect-3/4 md:aspect-video overflow-hidden">
-          <Image
-            src={getStrapiImageUrl(block.cover.url)}
-            alt={block.cover.alternativeText || "Cover image"}
-            fill
-            className="object-cover"
-          />
+          {block.coverMobile && (
+            <Image
+              src={getStrapiImageUrl(block.coverMobile.url)}
+              alt={block.coverMobile.alternativeText || "Cover image"}
+              fill
+              className="object-cover md:hidden"
+            />
+          )}
+          {block.cover && (
+            <Image
+              src={getStrapiImageUrl(block.cover.url)}
+              alt={block.cover.alternativeText || "Cover image"}
+              fill
+              className={cn(
+                "object-cover",
+                block.coverMobile ? "hidden md:block" : "",
+              )}
+            />
+          )}
         </div>
       )}
 
@@ -92,6 +105,7 @@ function SectionPushLinkedBlock({ block }: SectionPushBlockProps) {
 }
 
 export function SectionPushBlock({ block }: SectionPushBlockProps) {
+  console.log(block);
   return (
     <section
       className={cn(
