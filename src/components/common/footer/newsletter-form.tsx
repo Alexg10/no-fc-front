@@ -44,7 +44,7 @@ export function NewsletterForm() {
     <div className="bg-white p-4 flex flex-col items-start gap-4 md:flex-row md:max-w-[60%] lg:col-span-5 lg:max-w-none">
       <div className="max-w-[76px] md:max-w-[147px]">
         <Image
-          src="/images/footer/newsletter_image.webp"
+          src="/images/footer/newsletter_image.jpg"
           alt="Newsletter"
           width={147}
           height={202}
@@ -61,10 +61,7 @@ export function NewsletterForm() {
           <p className="text-left text-[16px]">{t("newsletterDescription")}</p>
         </div>
         {(status === "idle" || status === "loading" || status === "error") && (
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4"
-          >
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Honeypot field - hidden from users, catches bots */}
             <input
               type="text"
