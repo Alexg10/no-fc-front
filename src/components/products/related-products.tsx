@@ -28,7 +28,7 @@ export async function RelatedProducts({
 
   // Chercher dans les collections des produits (en excluant le produit courant)
   for (const collection of collections) {
-    const result = await getCollectionProducts(collection.handle, { first: 8 });
+    const result = await getCollectionProducts(collection.handle, { first: 8, locale });
     const collectionProducts = result.edges
       .map((edge) => edge.node)
       .filter((p) => p.handle !== productHandle);

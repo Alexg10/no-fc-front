@@ -100,6 +100,7 @@ export async function ProductsContent({
       last: hasVariantFilters ? undefined : (before ? 12 : undefined),
       sortKey,
       reverse,
+      locale,
     });
   } else {
     productsDataPromise = getProducts({

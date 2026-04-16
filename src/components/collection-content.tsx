@@ -92,6 +92,7 @@ export async function CollectionContent({
           first: 50,
           sortKey,
           reverse,
+          locale,
         })
       : getCollectionProducts(handle, {
           first: 12,
@@ -100,6 +101,7 @@ export async function CollectionContent({
           last: before ? 12 : undefined,
           sortKey,
           reverse,
+          locale,
         });
 
   const [collectionsData, productsData, variantOptions] = await Promise.all([

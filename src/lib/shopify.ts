@@ -345,7 +345,8 @@ const GET_COLLECTION_PRODUCTS = `
     $last: Int
     $sortKey: ProductCollectionSortKeys
     $reverse: Boolean
-  ) {
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     collection(handle: $handle) {
       id
       title
@@ -743,6 +744,7 @@ export async function getCollectionProducts(
     last?: number;
     sortKey?: ProductSortKey;
     reverse?: boolean;
+    locale?: string;
   } = {},
 ): Promise<ShopifyProductsResponse & { collection?: ShopifyCollection }> {
   try {
@@ -753,7 +755,10 @@ export async function getCollectionProducts(
       last,
       sortKey,
       reverse = false,
+      locale,
     } = options;
+
+    const language = toShopifyLanguage(locale);
 
     const variables: {
       handle: string;
@@ -763,8 +768,10 @@ export async function getCollectionProducts(
       last?: number;
       sortKey?: ProductSortKey;
       reverse?: boolean;
+      language?: string;
     } = {
       handle,
+      language,
     };
 
     if (before && last) {

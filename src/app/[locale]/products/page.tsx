@@ -88,6 +88,7 @@ export default async function ProductsPage({ params }: ProductsPageProps) {
                     <ArticleCollection
                       collectionHandle={collection.handle}
                       limit={collection.limit}
+                      locale={locale}
                     />
                   </Suspense>
                 </div>
