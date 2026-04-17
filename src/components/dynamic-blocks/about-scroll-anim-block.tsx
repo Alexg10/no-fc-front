@@ -582,7 +582,7 @@ export function AboutScrollAnimBlock({ block }: AboutScrollAnimBlockProps) {
         >
           ARE WE A MEDIA?
           <br />
-          ARE WE A DESIGNERS?
+          ARE WE DESIGNERS?
         </p>
         <div
           className="absolute bottom-[-50px] left-0 w-full h-[100px] bg-repeat-x"
