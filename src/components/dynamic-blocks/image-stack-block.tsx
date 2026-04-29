@@ -4,7 +4,8 @@ import { getStrapiImageUrl } from "@/lib/strapi";
 import { cn } from "@/lib/utils";
 import type { StrapiArticleImageStack, StrapiImage } from "@/types/strapi";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
+import { useRef, useState } from "react";
 
 interface ImageStackBlockProps {
   block: StrapiArticleImageStack;
@@ -18,23 +19,12 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
   const [draggedImageId, setDraggedImageId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const isDraggingRef = useRef(false);
-
-  // Native touchmove listener with { passive: false } to allow preventDefault
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const handler = (e: TouchEvent) => {
-      if (isDraggingRef.current) e.preventDefault();
-    };
-    el.addEventListener("touchmove", handler, { passive: false });
-    return () => el.removeEventListener("touchmove", handler);
-  }, []);
+  const { isDesktop } = useBreakpoints();
 
   const startDrag = (clientX: number, clientY: number, imageId: number) => {
+    if (!isDesktop) return;
     const offset = offsets[imageId] || { x: 0, y: 0 };
     setDraggedImageId(imageId);
-    isDraggingRef.current = true;
     setDragOffset({
       x: clientX - offset.x,
       y: clientY - offset.y,
@@ -54,17 +44,11 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
 
   const endDrag = () => {
     setDraggedImageId(null);
-    isDraggingRef.current = false;
   };
 
   const handleMouseDown = (e: React.MouseEvent, imageId: number) => {
     e.preventDefault();
     startDrag(e.clientX, e.clientY, imageId);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent, imageId: number) => {
-    const touch = e.touches[0];
-    startDrag(touch.clientX, touch.clientY, imageId);
   };
 
   return (
@@ -81,12 +65,6 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
           onMouseMove={(e) => moveDrag(e.clientX, e.clientY)}
           onMouseUp={endDrag}
           onMouseLeave={endDrag}
-          onTouchMove={(e) => {
-            const t = e.touches[0];
-            moveDrag(t.clientX, t.clientY);
-          }}
-          onTouchEnd={endDrag}
-          onTouchCancel={endDrag}
         >
           {images.length > 0 &&
             images.map((image: StrapiImage) => {
@@ -96,7 +74,7 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                 <div
                   key={image.id}
                   className={cn(
-                    "relative cursor-grab active:cursor-grabbing self-start",
+                    "relative lg:cursor-grab lg:active:cursor-grabbing self-start",
                     images.length === 2
                       ? "first:-rotate-6 last:rotate-[4deg] first:translate-x-[5px] last:translate-x-[-10px] last:translate-y-[30px]"
                       : [
@@ -111,7 +89,6 @@ export function ImageStackBlock({ block }: ImageStackBlockProps) {
                     transform: `translate(${offset.x}px, ${offset.y}px)`,
                   }}
                   onMouseDown={(e) => handleMouseDown(e, image.id)}
-                  onTouchStart={(e) => handleTouchStart(e, image.id)}
                 >
                   <div className="relative inline-block overflow-hidden lg:block lg:max-w-[474px] transition-shadow hover:shadow-lg">
                     <Image
