@@ -28,7 +28,7 @@ export async function getGeneral(
       },
     });
     const result = await strapiFetchWithFallback(`/general?${query}`, locale, {
-      next: { revalidate: 60 },
+      next: { revalidate: 86400 },
     });
 
     return result.data?.data as StrapiGeneral;

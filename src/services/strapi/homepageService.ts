@@ -73,7 +73,7 @@ export async function getHomepage(
   });
 
   const result = await strapiFetchWithFallback(`/homepage?${query}`, locale, {
-    next: { revalidate: 60 },
+    next: { revalidate: 3600 },
   });
 
   return result.data?.data as StrapiHomepage;
